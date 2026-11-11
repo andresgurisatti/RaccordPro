@@ -66,97 +66,183 @@
 </head>
 <body class="bg-film-900 text-gray-100 h-full flex flex-col overflow-hidden select-none">
 
-  <!-- TOP BAR / HEADER -->
-  <header class="bg-film-850 border-b border-film-700 px-4 py-3 flex items-center justify-between z-20 shrink-0">
-    <div class="flex items-center space-x-2">
-      <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
-        <i data-lucide="clapperboard" class="w-5 h-5"></i>
+  <!-- ========================================== -->
+  <!-- VISTA 1: SELECTOR DE PROYECTOS             -->
+  <!-- ========================================== -->
+  <div id="view-projects" class="h-full flex flex-col">
+    <!-- Header Selector -->
+    <header class="bg-film-850 border-b border-film-700 px-4 py-3 flex items-center justify-between z-20 shrink-0">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+          <i data-lucide="clapperboard" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-base tracking-wide flex items-center gap-1.5 text-white">
+            Raccord<span class="text-amber-400 font-black">PRO</span>
+          </h1>
+          <p class="text-[10px] text-gray-400 leading-none">Proyectos y Producciones</p>
+        </div>
       </div>
-      <div>
-        <h1 class="font-bold text-base tracking-wide flex items-center gap-1.5 text-white">
-          Raccord<span class="text-amber-400 font-black">PRO</span>
-        </h1>
-        <p class="text-[10px] text-gray-400 leading-none">Continuidad & Script Supervisor</p>
+      <button id="btn-new-project" class="bg-amber-500 hover:bg-amber-400 text-film-900 text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1.5 active:scale-95 transition">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>Nuevo Proyecto</span>
+      </button>
+    </header>
+
+    <!-- Project List Container -->
+    <main class="flex-1 overflow-y-auto px-4 py-5 safe-bottom">
+      <div class="max-w-xl mx-auto">
+        <h2 class="text-xs uppercase font-bold tracking-wider text-gray-400 mb-3 flex items-center gap-1.5">
+          <i data-lucide="folder-kanban" class="w-4 h-4 text-amber-400"></i>
+          Selecciona una producción
+        </h2>
+
+        <!-- Grid de Proyectos -->
+        <div id="projects-list" class="space-y-3">
+          <!-- Renderizado dinámico -->
+        </div>
+
+        <!-- Empty state proyectos -->
+        <div id="empty-projects" class="hidden text-center py-16 px-4">
+          <div class="w-16 h-16 rounded-2xl bg-film-800 border border-film-700 flex items-center justify-center text-gray-500 mx-auto mb-4">
+            <i data-lucide="film" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-base font-semibold text-gray-300">No hay proyectos creados</h3>
+          <p class="text-xs text-gray-500 max-w-xs mx-auto mt-1">Crea tu primera película, comercial o serie para empezar a registrar el raccord.</p>
+        </div>
       </div>
-    </div>
+    </main>
+  </div>
 
-    <div class="flex items-center gap-2">
-      <button id="btn-export-json" title="Exportar Reporte JSON" class="p-2 rounded-lg bg-film-800 hover:bg-film-700 text-gray-300 border border-film-700 active:scale-95 transition">
-        <i data-lucide="download" class="w-4 h-4"></i>
-      </button>
-      <button id="btn-open-report" title="Hoja Resumen / Print" class="p-2 rounded-lg bg-film-800 hover:bg-film-700 text-gray-300 border border-film-700 active:scale-95 transition">
-        <i data-lucide="file-text" class="w-4 h-4"></i>
-      </button>
-      <div class="h-4 w-px bg-film-700 mx-0.5"></div>
-      <span id="badge-total-items" class="text-xs px-2.5 py-1 rounded-full bg-film-800 border border-film-700 text-amber-400 font-mono font-medium">
-        0 tomas
-      </span>
-    </div>
-  </header>
+  <!-- ========================================== -->
+  <!-- VISTA 2: SET Y CONTINUIDAD (ACTIVO)        -->
+  <!-- ========================================== -->
+  <div id="view-takes" class="h-full flex flex-col hidden">
+    <!-- TOP BAR / HEADER -->
+    <header class="bg-film-850 border-b border-film-700 px-3 py-2.5 flex items-center justify-between z-20 shrink-0">
+      <div class="flex items-center space-x-2">
+        <button id="btn-back-to-projects" title="Volver a proyectos" class="p-1.5 rounded-lg bg-film-800 hover:bg-film-700 text-gray-300 border border-film-700 active:scale-95 transition">
+          <i data-lucide="arrow-left" class="w-4 h-4 text-amber-400"></i>
+        </button>
+        <div>
+          <h1 id="active-project-title" class="font-bold text-sm tracking-wide text-white leading-tight truncate max-w-[150px] sm:max-w-xs">
+            Nombre del Proyecto
+          </h1>
+          <p class="text-[9px] text-gray-400 leading-none">Continuidad en Set</p>
+        </div>
+      </div>
 
-  <!-- SEARCH & FILTER TOOLBAR -->
-  <section class="bg-film-850/90 border-b border-film-800 px-3 py-2.5 shrink-0 z-10 backdrop-blur-sm">
-    <div class="flex gap-2 mb-2">
-      <div class="relative flex-1">
-        <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-2.5"></i>
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="Buscar personaje, escena o nota..." 
-          class="w-full bg-film-800 text-sm pl-9 pr-3 py-2 rounded-lg border border-film-700 focus:outline-none focus:border-amber-400 text-gray-200 placeholder-gray-500"
-        />
-        <button id="clear-search" class="hidden absolute right-2.5 top-2.5 text-gray-400 hover:text-white">
-          <i data-lucide="x" class="w-4 h-4"></i>
+      <div class="flex items-center gap-1.5">
+        <button id="btn-export-json" title="Exportar Reporte JSON" class="p-2 rounded-lg bg-film-800 hover:bg-film-700 text-gray-300 border border-film-700 active:scale-95 transition">
+          <i data-lucide="download" class="w-4 h-4"></i>
+        </button>
+        <button id="btn-open-report" title="Hoja Resumen / Print" class="p-2 rounded-lg bg-film-800 hover:bg-film-700 text-gray-300 border border-film-700 active:scale-95 transition">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+        </button>
+        <div class="h-4 w-px bg-film-700 mx-0.5"></div>
+        <span id="badge-total-items" class="text-xs px-2.5 py-1 rounded-full bg-film-800 border border-film-700 text-amber-400 font-mono font-medium">
+          0 tomas
+        </span>
+      </div>
+    </header>
+
+    <!-- SEARCH & FILTER TOOLBAR -->
+    <section class="bg-film-850/90 border-b border-film-800 px-3 py-2.5 shrink-0 z-10 backdrop-blur-sm">
+      <div class="flex gap-2 mb-2">
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-2.5"></i>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Buscar personaje, escena o nota..." 
+            class="w-full bg-film-800 text-sm pl-9 pr-3 py-2 rounded-lg border border-film-700 focus:outline-none focus:border-amber-400 text-gray-200 placeholder-gray-500"
+          />
+          <button id="clear-search" class="hidden absolute right-2.5 top-2.5 text-gray-400 hover:text-white">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <button id="btn-reset-filters" class="px-2.5 py-2 text-xs text-gray-400 hover:text-white bg-film-800 rounded-lg border border-film-700 shrink-0 flex items-center gap-1 active:scale-95">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Limpiar</span>
         </button>
       </div>
 
-      <button id="btn-reset-filters" class="px-2.5 py-2 text-xs text-gray-400 hover:text-white bg-film-800 rounded-lg border border-film-700 shrink-0 flex items-center gap-1 active:scale-95">
-        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-        <span class="hidden sm:inline">Limpiar</span>
-      </button>
-    </div>
-
-    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 text-xs">
-      <button data-dept="ALL" class="dept-chip active px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-amber-500 text-black border border-amber-400">
-        Todos
-      </button>
-      <button data-dept="Vestuario" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
-        👗 Vestuario
-      </button>
-      <button data-dept="Maquillaje/Pelo" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
-        💄 MakeUp & Pelo
-      </button>
-      <button data-dept="Props" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
-        📦 Utilería / Props
-      </button>
-      <button data-dept="Arte" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
-        🎨 Escenografía
-      </button>
-      <button data-dept="Cámara/Luz" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
-        🎥 Cámara / Luz
-      </button>
-    </div>
-  </section>
-
-  <!-- MAIN SCROLLABLE CARDS CONTAINER -->
-  <main class="flex-1 overflow-y-auto px-3.5 py-4 safe-bottom" id="cards-container">
-    <div id="records-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5"></div>
-
-    <div id="empty-state" class="hidden flex flex-col items-center justify-center text-center py-16 px-4">
-      <div class="w-16 h-16 rounded-2xl bg-film-800 border border-film-700 flex items-center justify-center text-gray-500 mb-4">
-        <i data-lucide="camera-off" class="w-8 h-8"></i>
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 text-xs">
+        <button data-dept="ALL" class="dept-chip active px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-amber-500 text-black border border-amber-400">
+          Todos
+        </button>
+        <button data-dept="Vestuario" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
+          👗 Vestuario
+        </button>
+        <button data-dept="Maquillaje/Pelo" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
+          💄 MakeUp & Pelo
+        </button>
+        <button data-dept="Props" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
+          📦 Utilería / Props
+        </button>
+        <button data-dept="Arte" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
+          🎨 Escenografía
+        </button>
+        <button data-dept="Cámara/Luz" class="dept-chip px-3 py-1.5 rounded-full font-medium whitespace-nowrap transition bg-film-800 text-gray-300 border border-film-700 hover:border-gray-500">
+          🎥 Cámara / Luz
+        </button>
       </div>
-      <h3 class="text-base font-semibold text-gray-300">Sin tomas registradas</h3>
-      <p class="text-xs text-gray-500 max-w-xs mt-1">Presiona el botón <span class="text-amber-400 font-bold">+</span> para tomar una foto y registrar la continuidad de la toma.</p>
-    </div>
-  </main>
+    </section>
 
-  <!-- FLOATING ACTION BUTTON -->
-  <div class="fixed bottom-6 right-5 z-30">
-    <button id="btn-add-entry" class="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-film-900 font-bold px-4 py-3.5 rounded-full shadow-2xl shadow-amber-500/20 active:scale-95 transition-all">
-      <i data-lucide="camera" class="w-5 h-5"></i>
-      <span class="text-sm font-black tracking-wide">NUEVO RACCORD</span>
-    </button>
+    <!-- MAIN SCROLLABLE CARDS CONTAINER -->
+    <main class="flex-1 overflow-y-auto px-3.5 py-4 safe-bottom" id="cards-container">
+      <div id="records-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5"></div>
+
+      <div id="empty-state" class="hidden flex flex-col items-center justify-center text-center py-16 px-4">
+        <div class="w-16 h-16 rounded-2xl bg-film-800 border border-film-700 flex items-center justify-center text-gray-500 mb-4">
+          <i data-lucide="camera-off" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-base font-semibold text-gray-300">Sin tomas registradas</h3>
+        <p class="text-xs text-gray-500 max-w-xs mt-1">Presiona el botón <span class="text-amber-400 font-bold">+</span> para tomar una foto y registrar la continuidad de este proyecto.</p>
+      </div>
+    </main>
+
+    <!-- FLOATING ACTION BUTTON -->
+    <div class="fixed bottom-6 right-5 z-30">
+      <button id="btn-add-entry" class="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-film-900 font-bold px-4 py-3.5 rounded-full shadow-2xl shadow-amber-500/20 active:scale-95 transition-all">
+        <i data-lucide="camera" class="w-5 h-5"></i>
+        <span class="text-sm font-black tracking-wide">NUEVO RACCORD</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: CREAR PROYECTO -->
+  <div id="project-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm hidden">
+    <div class="bg-film-850 w-full max-w-md rounded-2xl border border-film-700 flex flex-col overflow-hidden shadow-2xl">
+      <div class="px-4 py-3 border-b border-film-700 flex items-center justify-between bg-film-800">
+        <div class="flex items-center gap-2">
+          <i data-lucide="folder-plus" class="w-4 h-4 text-amber-400"></i>
+          <h2 class="font-bold text-sm tracking-wide text-white">NUEVO PROYECTO</h2>
+        </div>
+        <button id="btn-close-project-modal" class="text-gray-400 hover:text-white p-1 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <form id="project-form" class="p-4 space-y-3 text-xs">
+        <div>
+          <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Nombre de la Producción *</label>
+          <input type="text" id="proj-name" required placeholder="Ej: Largometraje 'El Despertar'" class="w-full bg-film-800 border border-film-700 rounded-lg p-2.5 text-white focus:border-amber-400 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Director / Productora (Opcional)</label>
+          <input type="text" id="proj-director" placeholder="Ej: Dir. Carlos Mendoza" class="w-full bg-film-800 border border-film-700 rounded-lg p-2.5 text-white focus:border-amber-400 focus:outline-none">
+        </div>
+        <div class="pt-2 flex items-center gap-2">
+          <button type="button" id="btn-cancel-project" class="w-1/3 py-2.5 rounded-lg bg-film-800 text-gray-300 font-semibold border border-film-700 active:scale-95 transition">
+            Cancelar
+          </button>
+          <button type="submit" class="w-2/3 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-film-900 font-bold active:scale-95 transition flex items-center justify-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Crear Proyecto
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- MODAL: ADD / EDIT ENTRY FORM -->
@@ -315,27 +401,45 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: LOGIC & SERVICE WORKER REGISTRATION -->
+  <!-- JAVASCRIPT: LOGIC -->
   <script>
     const DB_NAME = 'RaccordProDB';
-    const DB_VERSION = 1;
-    const STORE_NAME = 'takes';
+    const DB_VERSION = 2; // Version incrementada para store de proyectos
+    const STORE_PROJECTS = 'projects';
+    const STORE_TAKES = 'takes';
 
     let dbInstance = null;
+    let activeProjectId = null;
+    let activeProjectData = null;
     let currentPhotoBase64 = null;
     let activeFilterDept = 'ALL';
     let searchQuery = '';
 
+    /* ==========================================================================
+       1. INICIALIZACIÓN INDEXEDDB (Proyectos y Tomas)
+       ========================================================================== */
     function initDB() {
       return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = (e) => {
           const db = e.target.result;
-          if (!db.objectStoreNames.contains(STORE_NAME)) {
-            const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          // Store de proyectos
+          if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
+            db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+          }
+          // Store de tomas
+          if (!db.objectStoreNames.contains(STORE_TAKES)) {
+            const store = db.createObjectStore(STORE_TAKES, { keyPath: 'id' });
+            store.createIndex('projectId', 'projectId', { unique: false });
             store.createIndex('scene', 'scene', { unique: false });
             store.createIndex('dept', 'dept', { unique: false });
             store.createIndex('timestamp', 'timestamp', { unique: false });
+          } else {
+            // Si venía de la v1, asegurarse del índice projectId
+            const store = request.transaction.objectStore(STORE_TAKES);
+            if (!store.indexNames.contains('projectId')) {
+              store.createIndex('projectId', 'projectId', { unique: false });
+            }
           }
         };
         request.onsuccess = (e) => {
@@ -346,36 +450,207 @@
       });
     }
 
-    function saveTakeToDB(take) {
+    // CRUD PROYECTOS
+    function saveProjectToDB(proj) {
       return new Promise((resolve, reject) => {
-        const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-        const store = tx.objectStore(STORE_NAME);
-        const req = store.put(take);
-        req.onsuccess = () => resolve(take);
+        const tx = dbInstance.transaction([STORE_PROJECTS], 'readwrite');
+        tx.objectStore(STORE_PROJECTS).put(proj);
+        tx.oncomplete = () => resolve(proj);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    function getAllProjectsFromDB() {
+      return new Promise((resolve, reject) => {
+        const tx = dbInstance.transaction([STORE_PROJECTS], 'readonly');
+        const req = tx.objectStore(STORE_PROJECTS).getAll();
+        req.onsuccess = () => resolve(req.result || []);
         req.onerror = () => reject(req.error);
       });
     }
 
-    function getAllTakesFromDB() {
+    function deleteProjectFromDB(projId) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const tx = dbInstance.transaction([STORE_PROJECTS, STORE_TAKES], 'readwrite');
+          tx.objectStore(STORE_PROJECTS).delete(projId);
+
+          // Borrar todas las tomas asociadas a este proyecto
+          const takeStore = tx.objectStore(STORE_TAKES);
+          const req = takeStore.getAll();
+          req.onsuccess = () => {
+            const takes = req.result || [];
+            takes.filter(t => t.projectId === projId).forEach(t => takeStore.delete(t.id));
+          };
+
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    // CRUD TOMAS
+    function saveTakeToDB(take) {
       return new Promise((resolve, reject) => {
-        const tx = dbInstance.transaction([STORE_NAME], 'readonly');
-        const store = tx.objectStore(STORE_NAME);
-        const req = store.getAll();
-        req.onsuccess = () => resolve(req.result || []);
+        const tx = dbInstance.transaction([STORE_TAKES], 'readwrite');
+        tx.objectStore(STORE_TAKES).put(take);
+        tx.oncomplete = () => resolve(take);
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    function getAllTakesForProject(projId) {
+      return new Promise((resolve, reject) => {
+        const tx = dbInstance.transaction([STORE_TAKES], 'readonly');
+        const req = tx.objectStore(STORE_TAKES).getAll();
+        req.onsuccess = () => {
+          const all = req.result || [];
+          resolve(all.filter(t => t.projectId === projId));
+        };
         req.onerror = () => reject(req.error);
       });
     }
 
     function deleteTakeFromDB(id) {
       return new Promise((resolve, reject) => {
-        const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-        const store = tx.objectStore(STORE_NAME);
-        const req = store.delete(id);
-        req.onsuccess = () => resolve();
-        req.onerror = () => reject(req.error);
+        const tx = dbInstance.transaction([STORE_TAKES], 'readwrite');
+        tx.objectStore(STORE_TAKES).delete(id);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
       });
     }
 
+    /* ==========================================================================
+       2. GESTIÓN DE VISTAS (Proyectos vs Set)
+       ========================================================================== */
+    const viewProjects = document.getElementById('view-projects');
+    const viewTakes = document.getElementById('view-takes');
+    const projectsList = document.getElementById('projects-list');
+    const emptyProjects = document.getElementById('empty-projects');
+
+    async function showProjectsView() {
+      activeProjectId = null;
+      activeProjectData = null;
+      viewTakes.classList.add('hidden');
+      viewProjects.classList.remove('hidden');
+      await renderProjects();
+    }
+
+    async function openProject(projId) {
+      const allProjects = await getAllProjectsFromDB();
+      activeProjectData = allProjects.find(p => p.id === projId);
+      if (!activeProjectData) return;
+
+      activeProjectId = projId;
+      document.getElementById('active-project-title').textContent = activeProjectData.name;
+      
+      viewProjects.classList.add('hidden');
+      viewTakes.classList.remove('hidden');
+
+      // Limpiar filtros y renderizar tomas
+      activeFilterDept = 'ALL';
+      searchQuery = '';
+      document.getElementById('search-input').value = '';
+      chips.forEach(c => {
+        c.classList.remove('bg-amber-500', 'text-black', 'border-amber-400');
+        c.classList.add('bg-film-800', 'text-gray-300', 'border-film-700');
+      });
+      chips[0].classList.add('bg-amber-500', 'text-black', 'border-amber-400');
+      chips[0].classList.remove('bg-film-800', 'text-gray-300', 'border-film-700');
+
+      renderTakes();
+    }
+
+    async function renderProjects() {
+      const projects = await getAllProjectsFromDB();
+      projects.sort((a, b) => b.createdAt - a.createdAt);
+
+      if (projects.length === 0) {
+        projectsList.innerHTML = '';
+        emptyProjects.classList.remove('hidden');
+        return;
+      }
+
+      emptyProjects.classList.add('hidden');
+
+      // Cargar conteo de tomas por proyecto
+      const allTakes = await new Promise(r => {
+        const tx = dbInstance.transaction([STORE_TAKES], 'readonly');
+        const req = tx.objectStore(STORE_TAKES).getAll();
+        req.onsuccess = () => r(req.result || []);
+      });
+
+      projectsList.innerHTML = projects.map(proj => {
+        const count = allTakes.filter(t => t.projectId === proj.id).length;
+        return `
+          <div class="bg-film-850 border border-film-700 hover:border-film-600 rounded-xl p-3.5 flex items-center justify-between transition shadow-lg">
+            <div class="flex-1 cursor-pointer pr-3" onclick="openProject('${proj.id}')">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-bold text-sm text-white hover:text-amber-400 transition">${proj.name}</span>
+                <span class="text-[10px] bg-film-800 text-amber-400 border border-film-700 px-2 py-0.5 rounded-full font-mono">${count} tomas</span>
+              </div>
+              <p class="text-[11px] text-gray-400">
+                ${proj.director ? `🎬 ${proj.director} • ` : ''}Creado: ${new Date(proj.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="openProject('${proj.id}')" class="p-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 active:scale-95 transition" title="Abrir Proyecto">
+                <i data-lucide="folder-open" class="w-4 h-4"></i>
+              </button>
+              <button onclick="handleDeleteProject('${proj.id}', '${proj.name}')" class="p-2 rounded-lg bg-film-800 hover:bg-red-500/20 text-gray-500 hover:text-red-400 border border-film-700 active:scale-95 transition" title="Eliminar Proyecto">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // Modal Crear Proyecto
+    const projectModal = document.getElementById('project-modal');
+    document.getElementById('btn-new-project').addEventListener('click', () => {
+      document.getElementById('proj-name').value = '';
+      document.getElementById('proj-director').value = '';
+      projectModal.classList.remove('hidden');
+    });
+    document.getElementById('btn-close-project-modal').addEventListener('click', () => projectModal.classList.add('hidden'));
+    document.getElementById('btn-cancel-project').addEventListener('click', () => projectModal.classList.add('hidden'));
+
+    document.getElementById('project-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('proj-name').value.trim();
+      const director = document.getElementById('proj-director').value.trim();
+
+      const newProj = {
+        id: 'proj_' + Date.now(),
+        name,
+        director,
+        createdAt: Date.now()
+      };
+
+      await saveProjectToDB(newProj);
+      projectModal.classList.add('hidden');
+      showToast(`Proyecto "${name}" creado`, 'check');
+      openProject(newProj.id);
+    });
+
+    window.handleDeleteProject = async function(id, name) {
+      if (confirm(`¿Eliminar definitivamente el proyecto "${name}" y TODAS sus tomas de continuidad?`)) {
+        await deleteProjectFromDB(id);
+        renderProjects();
+        showToast('Proyecto eliminado', 'check');
+      }
+    };
+
+    document.getElementById('btn-back-to-projects').addEventListener('click', showProjectsView);
+
+    /* ==========================================================================
+       3. COMPRESIÓN DE IMÁGENES
+       ========================================================================== */
     function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.75) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -412,6 +687,9 @@
       });
     }
 
+    /* ==========================================================================
+       4. INTERFAZ Y RENDERIZADO DE TOMAS
+       ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
     const badgeTotalItems = document.getElementById('badge-total-items');
@@ -444,10 +722,11 @@
     }
 
     async function renderTakes() {
-      const allTakes = await getAllTakesFromDB();
-      allTakes.sort((a, b) => b.timestamp - a.timestamp);
+      if (!activeProjectId) return;
+      const takes = await getAllTakesForProject(activeProjectId);
+      takes.sort((a, b) => b.timestamp - a.timestamp);
 
-      const filtered = allTakes.filter(item => {
+      const filtered = takes.filter(item => {
         const matchesDept = (activeFilterDept === 'ALL') || (item.dept === activeFilterDept);
         const q = searchQuery.toLowerCase().trim();
         const matchesSearch = !q || 
@@ -525,6 +804,9 @@
       lucide.createIcons();
     }
 
+    /* ==========================================================================
+       5. MODAL Y CONTROLADOR DE FORMULARIO
+       ========================================================================== */
     const form = document.getElementById('raccord-form');
     const photoInput = document.getElementById('input-photo');
     const photoPreviewWrapper = document.getElementById('photo-preview-wrapper');
@@ -596,6 +878,7 @@
 
       const newTake = {
         id,
+        projectId: activeProjectId,
         scene,
         shot,
         take: takeNumber,
@@ -618,7 +901,7 @@
     });
 
     window.editTake = async function(id) {
-      const all = await getAllTakesFromDB();
+      const all = await getAllTakesForProject(activeProjectId);
       const target = all.find(item => item.id === id);
       if (!target) return;
 
@@ -653,9 +936,12 @@
       }
     };
 
+    /* ==========================================================================
+       6. VISOR FULLSCREEN
+       ========================================================================== */
     const imageViewerModal = document.getElementById('image-viewer-modal');
     window.openImageViewer = async function(id) {
-      const all = await getAllTakesFromDB();
+      const all = await getAllTakesForProject(activeProjectId);
       const item = all.find(t => t.id === id);
       if (!item || !item.photo) return;
 
@@ -670,11 +956,14 @@
       imageViewerModal.classList.add('hidden');
     });
 
+    /* ==========================================================================
+       7. REPORTES Y EXPORTACIÓN
+       ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     const reportContent = document.getElementById('report-content');
 
     document.getElementById('btn-open-report').addEventListener('click', async () => {
-      const all = await getAllTakesFromDB();
+      const all = await getAllTakesForProject(activeProjectId);
       all.sort((a,b) => (a.scene.localeCompare(b.scene)) || (a.take - b.take));
 
       if(all.length === 0) {
@@ -684,7 +973,7 @@
 
       reportContent.innerHTML = `
         <div class="border-b border-film-700 pb-3 mb-4">
-          <h1 class="text-lg font-black text-amber-400">INFORME DIARIO DE CONTINUIDAD / RACCORD</h1>
+          <h1 class="text-lg font-black text-amber-400">INFORME DE CONTINUIDAD — ${activeProjectData ? activeProjectData.name.toUpperCase() : ''}</h1>
           <p class="text-xs text-gray-400">Generado el: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
         </div>
         <div class="space-y-3">
@@ -711,21 +1000,27 @@
     });
 
     document.getElementById('btn-export-json').addEventListener('click', async () => {
-      const all = await getAllTakesFromDB();
+      const all = await getAllTakesForProject(activeProjectId);
       if (all.length === 0) {
         showToast('No hay datos para exportar', 'info');
         return;
       }
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(all, null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        project: activeProjectData,
+        takes: all
+      }, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `RaccordPro_Backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `Raccord_${activeProjectData.name.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
       showToast('Copia de seguridad descargada', 'check');
     });
 
+    /* ==========================================================================
+       8. FILTROS Y BÚSQUEDA
+       ========================================================================== */
     const chips = document.querySelectorAll('.dept-chip');
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
@@ -764,6 +1059,9 @@
       chips[0].click();
     });
 
+    /* ==========================================================================
+       9. TOASTS & INICIALIZACIÓN
+       ========================================================================== */
     const toast = document.getElementById('toast');
     const toastMsg = document.getElementById('toast-msg');
     let toastTimeout = null;
@@ -780,12 +1078,11 @@
       }, 2600);
     }
 
-    // REGISTRO DE SERVICE WORKER PARA MODO OFFLINE
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('RaccordPro Service Worker activo'))
-          .catch(err => console.warn('Fallo en Service Worker:', err));
+          .then(() => console.log('Service Worker activo'))
+          .catch(err => console.warn('SW err:', err));
       });
     }
 
@@ -793,7 +1090,8 @@
       lucide.createIcons();
       try {
         await initDB();
-        renderTakes();
+        // Cargar vista inicial de proyectos
+        await showProjectsView();
       } catch (err) {
         console.error('Error al inicializar:', err);
       }
