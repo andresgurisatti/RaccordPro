@@ -1,17 +1,15 @@
-const CACHE_NAME = 'raccordpro-v2';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'raccordpro-v3';
+const LOCAL_ASSETS = [
   './',
   './index.html',
-  './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://unpkg.com/lucide@latest'
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(LOCAL_ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -30,19 +28,16 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (!event.request.url.startsWith('http')) return;
+  const url = new URL(event.request.url);
+  // Solo interceptar archivos propios para nunca bloquear recursos en Android
+  if (url.origin !== self.location.origin) return;
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
+      return cachedResponse || fetch(event.request).then((networkResponse) => {
         if (event.request.method === 'GET' && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
         return networkResponse;
       }).catch(() => {
