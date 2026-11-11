@@ -185,7 +185,7 @@
       transform: scale(0.92);
     }
 
-    /* TÍTULO DE PROYECTOS CENTRADO */
+    /* TÍTULO CENTRADO SIN GUION */
     .section-label-center {
       font-size: 14px;
       text-transform: uppercase;
@@ -196,13 +196,13 @@
       text-align: center;
     }
 
-    /* CONTENEDOR DESLIZABLE (SWIPE TO DELETE) */
+    /* CONTENEDOR Y BOTÓN SWIPE ESTILO IOS */
     .swipe-item-container {
       position: relative;
       overflow: hidden;
       border-radius: 14px;
       margin-bottom: 14px;
-      background-color: var(--red);
+      background-color: var(--bg-900);
     }
 
     .swipe-delete-btn {
@@ -210,7 +210,7 @@
       top: 0;
       right: 0;
       bottom: 0;
-      width: 86px;
+      width: 88px;
       background: var(--red);
       color: #fff;
       display: flex;
@@ -219,6 +219,10 @@
       justify-content: center;
       z-index: 1;
       cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      border-top-right-radius: 14px;
+      border-bottom-right-radius: 14px;
     }
 
     .swipe-delete-btn svg {
@@ -236,13 +240,14 @@
       align-items: center;
       justify-content: space-between;
       z-index: 2;
-      transform: translateX(0px);
-      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    .project-card.swiped {
-      transform: translateX(-86px);
+    .project-card.animating {
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
     .project-card-info {
@@ -263,7 +268,7 @@
       margin: 0;
     }
 
-    /* BARRA INFERIOR CON BOTÓN NUEVO PROYECTO MÁS ALTO */
+    /* BARRA INFERIOR */
     .bottom-bar-center {
       position: fixed;
       bottom: 0;
@@ -791,7 +796,6 @@
       border-radius: 10px;
     }
 
-    /* TOAST UBICADO ABAJO */
     .toast-bar {
       position: fixed;
       bottom: calc(90px + env(safe-area-inset-bottom, 0px));
@@ -830,7 +834,7 @@
 
     <main class="scroll-area">
       <div class="container-narrow">
-        <h2 id="projects-title-counter" class="section-label-center">PROYECTOS - (0)</h2>
+        <h2 id="projects-title-counter" class="section-label-center">PROYECTOS (0)</h2>
         <div id="projects-list"></div>
 
         <div id="empty-projects" class="empty-box hidden">
@@ -1321,7 +1325,7 @@
       const projects = await getAllProjectsFromDB();
       projects.sort((a, b) => b.createdAt - a.createdAt);
 
-      projectsTitleCounter.textContent = `PROYECTOS - (${projects.length})`;
+      projectsTitleCounter.textContent = `PROYECTOS (${projects.length})`;
 
       if (projects.length === 0) {
         projectsList.innerHTML = '';
@@ -1352,44 +1356,102 @@
       initSwipeGestures();
     }
 
-    /* GESTOS TÁCTILES: SWIPE TO DELETE */
+    /* GESTOS TÁCTILES FLUIDOS TIPO IOS NATIVO (1:1 TOUCH TRACKING) */
     function initSwipeGestures() {
-      const cards = document.querySelectorAll('.project-card');
+      const containers = document.querySelectorAll('.swipe-item-container');
+      const MAX_SWIPE = 88;
 
-      cards.forEach(card => {
+      containers.forEach(container => {
+        const card = container.querySelector('.project-card');
+        const deleteBtn = container.querySelector('.swipe-delete-btn');
+
         let startX = 0;
+        let startY = 0;
         let currentX = 0;
-        let isSwiping = false;
+        let isHorizontalSwipe = false;
+        let isDecided = false;
+        let isOpen = false;
 
         card.addEventListener('touchstart', (e) => {
           startX = e.touches[0].clientX;
-          isSwiping = true;
-          // Si otra tarjeta estaba abierta, ciérrala
-          cards.forEach(c => {
-            if (c !== card) c.classList.remove('swiped');
+          startY = e.touches[0].clientY;
+          isDecided = false;
+          isHorizontalSwipe = false;
+          card.classList.remove('animating');
+
+          // Cerrar otros abiertos con animación fluida
+          containers.forEach(c => {
+            if (c !== container) {
+              const otherCard = c.querySelector('.project-card');
+              const otherBtn = c.querySelector('.swipe-delete-btn');
+              if (otherCard) {
+                otherCard.classList.add('animating');
+                otherCard.style.transform = 'translate3d(0px, 0, 0)';
+              }
+              if (otherBtn) {
+                otherBtn.style.opacity = '0';
+              }
+            }
           });
         }, { passive: true });
 
         card.addEventListener('touchmove', (e) => {
-          if (!isSwiping) return;
-          currentX = e.touches[0].clientX;
-          const diff = currentX - startX;
-          // Permitir deslizamiento hacia la izquierda
-          if (diff < -15) {
-            card.classList.add('swiped');
-          } else if (diff > 15) {
-            card.classList.remove('swiped');
+          const touchX = e.touches[0].clientX;
+          const touchY = e.touches[0].clientY;
+          const deltaX = touchX - startX;
+          const deltaY = touchY - startY;
+
+          if (!isDecided) {
+            if (Math.abs(deltaX) > 7 || Math.abs(deltaY) > 7) {
+              isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+              isDecided = true;
+            }
           }
+
+          if (!isHorizontalSwipe) return;
+
+          let targetX = isOpen ? -MAX_SWIPE + deltaX : deltaX;
+
+          // Física de resistencia elástica de iOS
+          if (targetX > 0) {
+            targetX = targetX * 0.2; // Rubber-band al arrastrar hacia la derecha
+          } else if (targetX < -MAX_SWIPE) {
+            const overflow = Math.abs(targetX) - MAX_SWIPE;
+            targetX = -MAX_SWIPE - (overflow * 0.25);
+          }
+
+          currentX = targetX;
+          card.style.transform = `translate3d(${targetX}px, 0, 0)`;
+
+          // Revelar botón de eliminar proporcionalmente sin fugas
+          const progress = Math.min(Math.max(Math.abs(targetX) / MAX_SWIPE, 0), 1);
+          deleteBtn.style.opacity = progress.toFixed(2);
         }, { passive: true });
 
         card.addEventListener('touchend', () => {
-          isSwiping = false;
+          if (!isHorizontalSwipe) return;
+
+          card.classList.add('animating');
+
+          // Umbral de apertura (40% de recorrido)
+          if (currentX < -35) {
+            card.style.transform = `translate3d(-${MAX_SWIPE}px, 0, 0)`;
+            deleteBtn.style.opacity = '1';
+            isOpen = true;
+          } else {
+            card.style.transform = 'translate3d(0px, 0, 0)';
+            deleteBtn.style.opacity = '0';
+            isOpen = false;
+          }
         });
 
-        // Click para abrir si no está abierto el modo eliminar
+        // Click en la tarjeta: abrir proyecto o cancelar el swipe
         card.addEventListener('click', (e) => {
-          if (card.classList.contains('swiped')) {
-            card.classList.remove('swiped');
+          if (isOpen) {
+            card.classList.add('animating');
+            card.style.transform = 'translate3d(0px, 0, 0)';
+            deleteBtn.style.opacity = '0';
+            isOpen = false;
             e.stopPropagation();
             return;
           }
@@ -1399,7 +1461,6 @@
       });
     }
 
-    // Delegación para eliminar desde el botón de papelera al deslizar
     projectsList.addEventListener('click', async (e) => {
       const btn = e.target.closest('[data-action="delete-project"]');
       if (!btn) return;
