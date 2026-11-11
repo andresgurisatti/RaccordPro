@@ -1,4 +1,4 @@
-const CACHE_NAME = 'raccordpro-v3';
+const CACHE_NAME = 'raccordpro-v4';
 const LOCAL_ASSETS = [
   './',
   './index.html',
@@ -29,7 +29,6 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
-  // Solo interceptar archivos propios para nunca bloquear recursos en Android
   if (url.origin !== self.location.origin) return;
 
   event.respondWith(

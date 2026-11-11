@@ -6,7 +6,7 @@
   <title>RaccordPro — Sistema de Continuidad en Set</title>
   
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0d0f12">
+  <meta name="theme-color" content="#13171d">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,7 +14,7 @@
 
   <style>
     /* ==========================================================================
-       SISTEMA DE DISEÑO NATIVO INTEGRADO (100% compatible con Android e iOS)
+       SISTEMA DE DISEÑO NATIVO INTEGRADO (Con Safe Area para iPhone y Android)
        ========================================================================== */
     :root {
       --bg-900: #0d0f12;
@@ -41,7 +41,8 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      height: 100dvh;
+      position: fixed;
+      inset: 0;
       background-color: var(--bg-900);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -66,20 +67,23 @@
       display: none !important;
     }
 
-    /* Estructura de Vistas */
+    /* Estructura de Vistas anclada al viewport exacto */
     .app-view {
       display: flex;
       flex-direction: column;
       width: 100%;
       height: 100%;
-      height: 100dvh;
       overflow: hidden;
     }
 
+    /* Header con protección para Notch / Dynamic Island en iPhone */
     .app-header {
       background-color: var(--bg-850);
       border-bottom: 1px solid var(--border-700);
-      padding: 12px 16px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-bottom: 12px;
+      padding-top: calc(12px + env(safe-area-inset-top, 0px));
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -127,8 +131,9 @@
     .scroll-area {
       flex: 1;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       padding: 16px;
-      padding-bottom: 90px;
+      padding-bottom: calc(95px + env(safe-area-inset-bottom, 0px));
     }
 
     .container-narrow {
@@ -467,10 +472,10 @@
       color: #f87171;
     }
 
-    /* Botón Flotante (FAB) */
+    /* Botón Flotante (FAB) con respeto a la barra inferior de iPhone */
     .fab-container {
       position: fixed;
-      bottom: 22px;
+      bottom: calc(22px + env(safe-area-inset-bottom, 0px));
       right: 18px;
       z-index: 30;
     }
@@ -513,7 +518,7 @@
       color: var(--text-dim);
     }
 
-    /* Modales */
+    /* Modales con Safe Area */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -522,7 +527,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 14px;
+      padding-left: 14px;
+      padding-right: 14px;
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
     }
 
     .modal-card {
@@ -531,7 +539,7 @@
       border-radius: 16px;
       width: 100%;
       max-width: 480px;
-      max-height: 90dvh;
+      max-height: 100%;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -561,6 +569,7 @@
     .modal-body {
       padding: 16px;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       flex: 1;
     }
 
@@ -611,7 +620,7 @@
       }
     }
 
-    /* Radio Status Buttons (Compatible con todos los Android) */
+    /* Radio Status Buttons */
     .status-option {
       display: block;
       cursor: pointer;
@@ -717,10 +726,10 @@
       border-radius: 8px;
     }
 
-    /* Toast */
+    /* Toast respetando el Notch */
     .toast-bar {
       position: fixed;
-      top: 16px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
       left: 50%;
       transform: translateX(-50%);
       background: var(--bg-800);
@@ -1043,7 +1052,6 @@
     let searchQuery = '';
     let pendingConfirmAction = null;
 
-    /* 1. BASE DE DATOS CON RESPALDO AUTOMÁTICO */
     function initDB() {
       return new Promise((resolve) => {
         if (!window.indexedDB) {
@@ -1182,7 +1190,6 @@
       });
     }
 
-    /* 2. MODAL DE CONFIRMACIÓN PERSONALIZADO */
     const confirmModal = document.getElementById('confirm-modal');
     function askConfirmation(message, onConfirm) {
       document.getElementById('confirm-text').textContent = message;
@@ -1202,7 +1209,6 @@
       if (fn) await fn();
     });
 
-    /* 3. NAVEGACIÓN DE PROYECTOS */
     const viewProjects = document.getElementById('view-projects');
     const viewTakes = document.getElementById('view-takes');
     const projectsList = document.getElementById('projects-list');
@@ -1275,7 +1281,6 @@
       }).join('');
     }
 
-    // Delegación de eventos en lista de proyectos
     projectsList.addEventListener('click', async (e) => {
       const target = e.target.closest('[data-action]');
       if (!target) return;
@@ -1326,7 +1331,6 @@
 
     document.getElementById('btn-back-to-projects').addEventListener('click', showProjectsView);
 
-    /* 4. TOMAS Y RACCORD */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
     const badgeTotalItems = document.getElementById('badge-total-items');
@@ -1400,7 +1404,6 @@
       }).join('');
     }
 
-    // Delegación de eventos en tarjetas de tomas
     recordsGrid.addEventListener('click', async (e) => {
       const btn = e.target.closest('[data-action]');
       if (!btn) return;
@@ -1420,7 +1423,6 @@
       }
     });
 
-    /* 5. FORMULARIO Y CÁMARA */
     const entryModal = document.getElementById('entry-modal');
     const form = document.getElementById('raccord-form');
     const photoInput = document.getElementById('input-photo');
@@ -1557,7 +1559,6 @@
       entryModal.classList.remove('hidden');
     }
 
-    /* 6. VISOR E INFORMES */
     const imageViewerModal = document.getElementById('image-viewer-modal');
     async function openImageViewer(id) {
       const all = await getAllTakesForProject(activeProjectId);
@@ -1622,7 +1623,6 @@
       showToast('Respaldo descargado');
     });
 
-    /* 7. FILTROS Y BÚSQUEDA */
     document.querySelectorAll('.dept-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active'));
@@ -1643,7 +1643,6 @@
       document.querySelectorAll('.dept-chip')[0].click();
     });
 
-    /* 8. TOAST E INICIO */
     let toastTimer = null;
     function showToast(msg) {
       const t = document.getElementById('toast');
