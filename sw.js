@@ -1,4 +1,4 @@
-const CACHE_NAME = 'raccordpro-cache-v1';
+const CACHE_NAME = 'raccordpro-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -7,7 +7,6 @@ const ASSETS_TO_CACHE = [
   'https://unpkg.com/lucide@latest'
 ];
 
-// Instalación: Cachear recursos críticos
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -16,7 +15,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activación: Limpiar cachés viejas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -31,9 +29,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Estrategia Cache First con respaldo de red
 self.addEventListener('fetch', (event) => {
-  // Evitar interceptar llamadas a esquemas especiales (data:, blob:)
   if (!event.request.url.startsWith('http')) return;
 
   event.respondWith(
@@ -42,7 +38,6 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
       return fetch(event.request).then((networkResponse) => {
-        // Cachear dinámicamente recursos GET exitosos
         if (event.request.method === 'GET' && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -51,7 +46,6 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // Si no hay red ni caché de página, devuelve el index principal
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }

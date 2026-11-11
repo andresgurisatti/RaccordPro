@@ -2,20 +2,22 @@
 <html lang="es" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>RaccordPro — Sistema de Continuidad y Script en Set</title>
   
-  <!-- PWA Meta tags e iOS Support -->
+  <!-- PWA Meta tags -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0d0f12">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="RaccordPro">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS Engine -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -39,12 +41,34 @@
       }
     }
   </script>
+
   <style>
-    body {
+    :root {
+      --film-900: #0d0f12;
+      --film-850: #13171d;
+      --film-800: #1a1f26;
+      --film-700: #262d38;
+      --film-600: #343e4c;
+      --accent-amber: #f59e0b;
+    }
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      background-color: #0d0f12 !important;
+      color: #f3f4f6;
+      margin: 0;
+      padding: 0;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
+    .bg-film-900 { background-color: var(--film-900) !important; }
+    .bg-film-850 { background-color: var(--film-850) !important; }
+    .bg-film-800 { background-color: var(--film-800) !important; }
+    .border-film-700 { border-color: var(--film-700) !important; }
+    .border-film-800 { border-color: var(--film-800) !important; }
+    .text-film-900 { color: var(--film-900) !important; }
+
     input, textarea, select {
       user-select: text;
     }
@@ -60,7 +84,7 @@
       border-radius: 4px;
     }
     .safe-bottom {
-      padding-bottom: env(safe-area-inset-bottom, 20px);
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
     }
   </style>
 </head>
@@ -70,7 +94,6 @@
   <!-- VISTA 1: SELECTOR DE PROYECTOS             -->
   <!-- ========================================== -->
   <div id="view-projects" class="h-full flex flex-col">
-    <!-- Header Selector -->
     <header class="bg-film-850 border-b border-film-700 px-4 py-3 flex items-center justify-between z-20 shrink-0">
       <div class="flex items-center space-x-2">
         <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
@@ -89,7 +112,6 @@
       </button>
     </header>
 
-    <!-- Project List Container -->
     <main class="flex-1 overflow-y-auto px-4 py-5 safe-bottom">
       <div class="max-w-xl mx-auto">
         <h2 class="text-xs uppercase font-bold tracking-wider text-gray-400 mb-3 flex items-center gap-1.5">
@@ -97,12 +119,8 @@
           Selecciona una producción
         </h2>
 
-        <!-- Grid de Proyectos -->
-        <div id="projects-list" class="space-y-3">
-          <!-- Renderizado dinámico -->
-        </div>
+        <div id="projects-list" class="space-y-3"></div>
 
-        <!-- Empty state proyectos -->
         <div id="empty-projects" class="hidden text-center py-16 px-4">
           <div class="w-16 h-16 rounded-2xl bg-film-800 border border-film-700 flex items-center justify-center text-gray-500 mx-auto mb-4">
             <i data-lucide="film" class="w-8 h-8"></i>
@@ -118,7 +136,6 @@
   <!-- VISTA 2: SET Y CONTINUIDAD (ACTIVO)        -->
   <!-- ========================================== -->
   <div id="view-takes" class="h-full flex flex-col hidden">
-    <!-- TOP BAR / HEADER -->
     <header class="bg-film-850 border-b border-film-700 px-3 py-2.5 flex items-center justify-between z-20 shrink-0">
       <div class="flex items-center space-x-2">
         <button id="btn-back-to-projects" title="Volver a proyectos" class="p-1.5 rounded-lg bg-film-800 hover:bg-film-700 text-gray-300 border border-film-700 active:scale-95 transition">
@@ -126,7 +143,7 @@
         </button>
         <div>
           <h1 id="active-project-title" class="font-bold text-sm tracking-wide text-white leading-tight truncate max-w-[150px] sm:max-w-xs">
-            Nombre del Proyecto
+            Proyecto
           </h1>
           <p class="text-[9px] text-gray-400 leading-none">Continuidad en Set</p>
         </div>
@@ -146,7 +163,6 @@
       </div>
     </header>
 
-    <!-- SEARCH & FILTER TOOLBAR -->
     <section class="bg-film-850/90 border-b border-film-800 px-3 py-2.5 shrink-0 z-10 backdrop-blur-sm">
       <div class="flex gap-2 mb-2">
         <div class="relative flex-1">
@@ -190,7 +206,6 @@
       </div>
     </section>
 
-    <!-- MAIN SCROLLABLE CARDS CONTAINER -->
     <main class="flex-1 overflow-y-auto px-3.5 py-4 safe-bottom" id="cards-container">
       <div id="records-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5"></div>
 
@@ -203,7 +218,6 @@
       </div>
     </main>
 
-    <!-- FLOATING ACTION BUTTON -->
     <div class="fixed bottom-6 right-5 z-30">
       <button id="btn-add-entry" class="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-film-900 font-bold px-4 py-3.5 rounded-full shadow-2xl shadow-amber-500/20 active:scale-95 transition-all">
         <i data-lucide="camera" class="w-5 h-5"></i>
@@ -401,10 +415,10 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: LOGIC -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
     const DB_NAME = 'RaccordProDB';
-    const DB_VERSION = 2; // Version incrementada para store de proyectos
+    const DB_VERSION = 2;
     const STORE_PROJECTS = 'projects';
     const STORE_TAKES = 'takes';
 
@@ -415,19 +429,20 @@
     let activeFilterDept = 'ALL';
     let searchQuery = '';
 
-    /* ==========================================================================
-       1. INICIALIZACIÓN INDEXEDDB (Proyectos y Tomas)
-       ========================================================================== */
+    function safeRenderIcons() {
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
+        lucide.createIcons();
+      }
+    }
+
     function initDB() {
       return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = (e) => {
           const db = e.target.result;
-          // Store de proyectos
           if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
             db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
           }
-          // Store de tomas
           if (!db.objectStoreNames.contains(STORE_TAKES)) {
             const store = db.createObjectStore(STORE_TAKES, { keyPath: 'id' });
             store.createIndex('projectId', 'projectId', { unique: false });
@@ -435,7 +450,6 @@
             store.createIndex('dept', 'dept', { unique: false });
             store.createIndex('timestamp', 'timestamp', { unique: false });
           } else {
-            // Si venía de la v1, asegurarse del índice projectId
             const store = request.transaction.objectStore(STORE_TAKES);
             if (!store.indexNames.contains('projectId')) {
               store.createIndex('projectId', 'projectId', { unique: false });
@@ -450,7 +464,6 @@
       });
     }
 
-    // CRUD PROYECTOS
     function saveProjectToDB(proj) {
       return new Promise((resolve, reject) => {
         const tx = dbInstance.transaction([STORE_PROJECTS], 'readwrite');
@@ -470,12 +483,11 @@
     }
 
     function deleteProjectFromDB(projId) {
-      return new Promise(async (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
           const tx = dbInstance.transaction([STORE_PROJECTS, STORE_TAKES], 'readwrite');
           tx.objectStore(STORE_PROJECTS).delete(projId);
 
-          // Borrar todas las tomas asociadas a este proyecto
           const takeStore = tx.objectStore(STORE_TAKES);
           const req = takeStore.getAll();
           req.onsuccess = () => {
@@ -491,7 +503,6 @@
       });
     }
 
-    // CRUD TOMAS
     function saveTakeToDB(take) {
       return new Promise((resolve, reject) => {
         const tx = dbInstance.transaction([STORE_TAKES], 'readwrite');
@@ -522,9 +533,6 @@
       });
     }
 
-    /* ==========================================================================
-       2. GESTIÓN DE VISTAS (Proyectos vs Set)
-       ========================================================================== */
     const viewProjects = document.getElementById('view-projects');
     const viewTakes = document.getElementById('view-takes');
     const projectsList = document.getElementById('projects-list');
@@ -549,7 +557,6 @@
       viewProjects.classList.add('hidden');
       viewTakes.classList.remove('hidden');
 
-      // Limpiar filtros y renderizar tomas
       activeFilterDept = 'ALL';
       searchQuery = '';
       document.getElementById('search-input').value = '';
@@ -570,12 +577,12 @@
       if (projects.length === 0) {
         projectsList.innerHTML = '';
         emptyProjects.classList.remove('hidden');
+        safeRenderIcons();
         return;
       }
 
       emptyProjects.classList.add('hidden');
 
-      // Cargar conteo de tomas por proyecto
       const allTakes = await new Promise(r => {
         const tx = dbInstance.transaction([STORE_TAKES], 'readonly');
         const req = tx.objectStore(STORE_TAKES).getAll();
@@ -607,10 +614,9 @@
         `;
       }).join('');
 
-      lucide.createIcons();
+      safeRenderIcons();
     }
 
-    // Modal Crear Proyecto
     const projectModal = document.getElementById('project-modal');
     document.getElementById('btn-new-project').addEventListener('click', () => {
       document.getElementById('proj-name').value = '';
@@ -648,9 +654,6 @@
 
     document.getElementById('btn-back-to-projects').addEventListener('click', showProjectsView);
 
-    /* ==========================================================================
-       3. COMPRESIÓN DE IMÁGENES
-       ========================================================================== */
     function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.75) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -687,9 +690,6 @@
       });
     }
 
-    /* ==========================================================================
-       4. INTERFAZ Y RENDERIZADO DE TOMAS
-       ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
     const badgeTotalItems = document.getElementById('badge-total-items');
@@ -742,6 +742,7 @@
       if (filtered.length === 0) {
         recordsGrid.innerHTML = '';
         emptyState.classList.remove('hidden');
+        safeRenderIcons();
         return;
       }
 
@@ -801,12 +802,9 @@
         </article>
       `).join('');
 
-      lucide.createIcons();
+      safeRenderIcons();
     }
 
-    /* ==========================================================================
-       5. MODAL Y CONTROLADOR DE FORMULARIO
-       ========================================================================== */
     const form = document.getElementById('raccord-form');
     const photoInput = document.getElementById('input-photo');
     const photoPreviewWrapper = document.getElementById('photo-preview-wrapper');
@@ -854,6 +852,7 @@
         photoPreviewWrapper.classList.add('hidden');
         photoPlaceholder.classList.remove('hidden');
       }
+      safeRenderIcons();
     }
 
     function closeModal() {
@@ -936,9 +935,6 @@
       }
     };
 
-    /* ==========================================================================
-       6. VISOR FULLSCREEN
-       ========================================================================== */
     const imageViewerModal = document.getElementById('image-viewer-modal');
     window.openImageViewer = async function(id) {
       const all = await getAllTakesForProject(activeProjectId);
@@ -950,15 +946,13 @@
       document.getElementById('viewer-subtitle').textContent = item.character ? `Personaje: ${item.character}` : 'Sin personaje asignado';
       document.getElementById('viewer-notes').textContent = item.notes;
       imageViewerModal.classList.remove('hidden');
+      safeRenderIcons();
     };
 
     document.getElementById('btn-close-viewer').addEventListener('click', () => {
       imageViewerModal.classList.add('hidden');
     });
 
-    /* ==========================================================================
-       7. REPORTES Y EXPORTACIÓN
-       ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     const reportContent = document.getElementById('report-content');
 
@@ -993,6 +987,7 @@
         </div>
       `;
       reportModal.classList.remove('hidden');
+      safeRenderIcons();
     });
 
     document.getElementById('btn-close-report').addEventListener('click', () => {
@@ -1018,9 +1013,6 @@
       showToast('Copia de seguridad descargada', 'check');
     });
 
-    /* ==========================================================================
-       8. FILTROS Y BÚSQUEDA
-       ========================================================================== */
     const chips = document.querySelectorAll('.dept-chip');
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
@@ -1059,9 +1051,6 @@
       chips[0].click();
     });
 
-    /* ==========================================================================
-       9. TOASTS & INICIALIZACIÓN
-       ========================================================================== */
     const toast = document.getElementById('toast');
     const toastMsg = document.getElementById('toast-msg');
     let toastTimeout = null;
@@ -1081,16 +1070,15 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('Service Worker activo'))
+          .then(() => console.log('SW activo'))
           .catch(err => console.warn('SW err:', err));
       });
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-      lucide.createIcons();
+      safeRenderIcons();
       try {
         await initDB();
-        // Cargar vista inicial de proyectos
         await showProjectsView();
       } catch (err) {
         console.error('Error al inicializar:', err);
