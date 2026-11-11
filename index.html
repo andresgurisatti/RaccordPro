@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaccordPro - Continuidad</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --accent: #e50914;
+      --text: #ffffff;
+      --text-dim: #aaaaaa;
+      --border: #333333;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 40px;
+    }
+    header {
+      background: #000;
+      padding: 15px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+    .container { padding: 15px; max-width: 500px; margin: auto; }
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+    }
+    label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; }
+    input, select, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      background: #2a2a2a;
+      border: 1px solid var(--border);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    textarea { resize: vertical; height: 70px; }
+    .btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-photo {
+      background: #333;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .preview-img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      display: none;
+      object-fit: cover;
+      max-height: 250px;
+    }
+    .log-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    .tag {
+      background: var(--accent);
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .log-img {
+      width: 100%;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎬 RaccordPro Móvil</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <label>Departamento</label>
+      <select id="dept">
+        <option value="Vestuario">Vestuario</option>
+        <option value="Props / Utilería">Props / Utilería</option>
+        <option value="Maquillaje / Pelo">Maquillaje / Pelo</option>
+        <option value="Dirección de Arte">Dirección de Arte</option>
+      </select>
+
+      <div style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+          <label>Escena</label>
+          <input type="text" id="scene" placeholder="Ej: 14A">
+        </div>
+        <div style="flex: 1;">
+          <label>Toma</label>
+          <input type="text" id="take" placeholder="Ej: 02">
+        </div>
+      </div>
+
+      <label>Personaje / Elemento</label>
+      <input type="text" id="subject" placeholder="Ej: Protagonista / Reloj roto">
+
+      <label>Notas de Continuidad</label>
+      <textarea id="notes" placeholder="Ej: Corbata desatada al lado izquierdo, mancha de café en puño..."></textarea>
+
+      <label>Foto de Referencia</label>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+      <button type="button" class="btn btn-photo" onclick="document.getElementById('cameraInput').click()">
+        📷 Abrir Cámara / Galería
+      </button>
+      <img id="imgPreview" class="preview-img" alt="Vista previa">
+
+      <button type="button" class="btn" onclick="saveRecord()">Guardar Registro</button>
+    </div>
+
+    <h3>Continuidades Guardadas</h3>
+    <div id="recordsList"></div>
+  </div>
+
+  <script>
+    let currentPhotoBase64 = "";
+
+    // Manejar captura de imagen y compresión básica
+    document.getElementById('cameraInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 800; // Reducir tamaño para memoria de celular
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height && width > maxDim) {
+            height = (height * maxDim) / width;
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = (width * maxDim) / height;
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          const preview = document.getElementById('imgPreview');
+          preview.src = currentPhotoBase64;
+          preview.style.display = 'block';
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function saveRecord() {
+      const dept = document.getElementById('dept').value;
+      const scene = document.getElementById('scene').value || "-";
+      const take = document.getElementById('take').value || "-";
+      const subject = document.getElementById('subject').value || "General";
+      const notes = document.getElementById('notes').value;
+
+      if (!notes && !currentPhotoBase64) {
+        alert("Escribe una nota o toma una foto antes de guardar.");
+        return;
+      }
+
+      const record = {
+        id: Date.now(),
+        dept,
+        scene,
+        take,
+        subject,
+        notes,
+        photo: currentPhotoBase64,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      const existing = JSON.parse(localStorage.getItem('raccord_data') || '[]');
+      existing.unshift(record);
+      localStorage.setItem('raccord_data', JSON.stringify(existing));
+
+      // Limpiar formulario
+      document.getElementById('subject').value = '';
+      document.getElementById('notes').value = '';
+      document.getElementById('imgPreview').style.display = 'none';
+      currentPhotoBase64 = "";
+      document.getElementById('cameraInput').value = "";
+
+      loadRecords();
+    }
+
+    function loadRecords() {
+      const container = document.getElementById('recordsList');
+      const data = JSON.parse(localStorage.getItem('raccord_data') || '[]');
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = '<p style="color: #666; font-size: 0.9rem;">No hay registros cargados aún.</p>';
+        return;
+      }
+
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'log-item';
+        div.innerHTML = `
+          <div class="log-header">
+            <span>Esc: ${item.scene} | T: ${item.take} (${item.subject})</span>
+            <span class="tag">${item.dept}</span>
+          </div>
+          <p style="margin: 6px 0; font-size: 0.9rem;">${item.notes}</p>
+          ${item.photo ? `<img src="${item.photo}" class="log-img">` : ''}
+          <div style="font-size: 0.75rem; color: #777; margin-top: 5px;">Hora: ${item.date}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Cargar al iniciar
+    loadRecords();
+  </script>
+</body>
+</html>
