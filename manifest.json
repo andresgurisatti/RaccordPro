@@ -1,0 +1,18 @@
+{
+  "name": "RaccordPro — Script & Continuidad",
+  "short_name": "RaccordPro",
+  "description": "Sistema de continuidad y raccord cinematográfico en set",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0f12",
+  "theme_color": "#0d0f12",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%2313171d'/><circle cx='256' cy='256' r='180' fill='%230d0f12' stroke='%23f59e0b' stroke-width='16'/><path d='M180 180h152v40H180zm0 60h152v40H180zm0 60h100v40H180z' fill='%23f59e0b'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
