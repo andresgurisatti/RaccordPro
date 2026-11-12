@@ -1,18 +1,19 @@
-const CACHE_NAME = 'raccordpro-v14';
+const CACHE_NAME = 'raccordpro-v15';
 const LOCAL_ASSETS = [
   './',
   './index.html',
   './manifest.json'
 ];
 
+// 1. Instalar y forzar activación inmediata sin esperar a que se cierren las pestañas
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(LOCAL_ASSETS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(LOCAL_ASSETS))
   );
 });
 
+// 2. Limpiar versiones viejas de caché y tomar control activo de todos los clientes
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -27,6 +28,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// 3. Estrategia de red con respaldo en caché para modo offline
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
