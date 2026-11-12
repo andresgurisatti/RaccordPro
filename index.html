@@ -511,9 +511,9 @@
       white-space: nowrap;
     }
 
-    .slate-location {
+    .slate-desc {
       color: #e5e7eb;
-      font-size: 13px;
+      font-size: 12px;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       font-weight: 700;
       white-space: nowrap;
@@ -748,23 +748,39 @@
       background: rgba(13, 15, 18, 0.6);
     }
 
-    .camera-trigger-label {
-      display: block;
-      padding: 16px;
-      cursor: pointer;
+    .photo-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
-    .camera-circle {
-      width: 54px;
-      height: 54px;
-      border-radius: var(--btn-radius);
+    .btn-photo-source {
       background: var(--bg-800);
       border: 1px solid var(--border-700);
-      color: var(--amber);
+      border-radius: var(--btn-radius);
+      padding: 16px 12px;
+      min-height: 82px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 10px auto;
+      gap: 8px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s, border-color 0.15s;
+    }
+
+    .btn-photo-source:active {
+      transform: scale(0.96);
+      border-color: var(--amber);
+    }
+
+    .btn-photo-source.camera {
+      border-color: rgba(245, 158, 11, 0.45);
+      background: rgba(245, 158, 11, 0.08);
+      color: var(--amber);
     }
 
     .preview-img {
@@ -938,6 +954,7 @@
 
       <input type="file" id="input-script-pdf" accept=".pdf,application/pdf" class="hidden">
 
+      <!-- MENÚ DESPLEGABLE LIMPIO (SIN SETS SEPARADOS) -->
       <div id="project-dropdown-menu" class="dropdown-menu hidden">
         <button type="button" class="dropdown-item highlight" id="menu-opt-script-pdf">
           <span style="font-size:20px;">📖</span> <span>Importar Guion (PDF)</span>
@@ -947,9 +964,6 @@
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-characters">
           <span style="font-size:20px;">👤</span> <span>Personajes</span>
-        </button>
-        <button type="button" class="dropdown-item" id="menu-opt-locations">
-          <span style="font-size:20px;">🏛️</span> <span>Sets / Locaciones</span>
         </button>
         <div class="dropdown-divider"></div>
         <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
@@ -965,7 +979,7 @@
       <div class="toolbar-clean-row">
         <div class="search-box">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="search-input" class="search-input" placeholder="Buscar escena, set, personaje o nota...">
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar escena, personaje o nota...">
         </div>
         <span id="badge-total-items" class="raccords-count-tag">0 raccords</span>
         <button type="button" id="btn-reset-filters" class="btn-icon" title="Limpiar búsqueda">
@@ -1010,7 +1024,7 @@
         <div style="background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.35); padding:14px; border-radius:12px; margin-bottom:18px;">
           <strong style="color:var(--amber); font-size:14px; display:block; margin-bottom:6px;">⚠️ RECOMENDACIÓN DE SET:</strong>
           <p style="margin:0; font-size:14px; color:#d1d5db; line-height:1.45;">
-            Por favor <strong>revisa los datos extraídos</strong> en los apartados de <em>Escenas</em>, <em>Sets</em> y <em>Personajes</em>. Debido a las variaciones de formato o maquetación del guion, pudieron cometerse omisiones o pequeñas diferencias en los nombres.
+            Por favor <strong>revisa los datos extraídos</strong> en los apartados de <em>Escenas</em> y <em>Personajes</em>. Debido a las variaciones de formato o maquetación del guion, pudieron cometerse omisiones o pequeñas diferencias en los nombres.
           </p>
         </div>
         <button type="button" id="btn-ok-review-modal" class="btn-primary" style="width:100%;">Entendido, revisar datos</button>
@@ -1072,7 +1086,7 @@
           <input type="hidden" id="edit-scene-id" value="">
           <div style="display:flex; gap:10px;">
             <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
-            <input type="text" id="new-scene-desc" placeholder="Encabezado (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
+            <input type="text" id="new-scene-desc" placeholder="Encabezado / Set (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
           </div>
           <div style="display:flex; gap:8px;">
             <button type="submit" id="btn-save-scene" class="btn-primary" style="flex:1;">+ Añadir Escena</button>
@@ -1113,32 +1127,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GESTIÓN Y EDICIÓN DE SETS           -->
-  <!-- ========================================== -->
-  <div id="locations-modal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2 id="locations-modal-title" class="modal-title">SETS / LOCACIONES</h2>
-        <button type="button" id="btn-close-locations-modal" class="btn-close-touch" title="Cerrar">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="locations-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
-          <input type="hidden" id="edit-location-id" value="">
-          <input type="text" id="new-location-name" placeholder="Ej: COCINA DE VALERIA" required class="form-control">
-          <div style="display:flex; gap:8px;">
-            <button type="submit" id="btn-save-location" class="btn-primary" style="flex:1;">+ Añadir Set / Locación</button>
-            <button type="button" id="btn-cancel-edit-location" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
-          </div>
-        </form>
-        <div id="locations-list" style="max-height:300px; overflow-y:auto;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- MODAL: REGISTRO DE RACCORD POR SELECCIÓN   -->
+  <!-- MODAL: REGISTRO DE RACCORD                 -->
   <!-- ========================================== -->
   <div id="entry-modal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1152,32 +1141,30 @@
       <form id="raccord-form" class="modal-body">
         <input type="hidden" id="entry-id" value="">
 
-        <div class="form-group grid-2">
-          <div>
-            <label class="form-label">Escena *</label>
-            <select id="select-scene" required class="form-control" style="font-weight:800; color:var(--amber);">
-              <option value="">Selecciona una escena...</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Set / Locación</label>
-            <select id="select-location" class="form-control">
-              <option value="">Selecciona un set...</option>
-            </select>
-          </div>
+        <!-- Selección obligatoria de Escena (con su encabezado/set anclado) -->
+        <div class="form-group">
+          <label class="form-label">Escena *</label>
+          <select id="select-scene" required class="form-control" style="font-weight:800; color:var(--amber);">
+            <option value="">Selecciona una escena...</option>
+          </select>
         </div>
 
+        <!-- Selección obligatoria de Personaje -->
         <div class="form-group">
-          <label class="form-label">Personaje</label>
-          <select id="select-character" class="form-control">
+          <label class="form-label">Personaje *</label>
+          <select id="select-character" required class="form-control">
             <option value="">Selecciona un personaje...</option>
           </select>
         </div>
 
+        <!-- FOTOGRAFÍA CON BOTÓN DIRECTO PARA CÁMARA Y BOTÓN PARA FOTOTECA/ARCHIVOS -->
         <div class="form-group">
           <label class="form-label">Fotografía de Referencia</label>
           <div class="camera-dropzone">
-            <input type="file" id="input-photo" accept="image/*" class="hidden">
+            <!-- Input dedicado a abrir cámara nativa directamente en Android e iOS -->
+            <input type="file" id="input-camera-direct" accept="image/*" capture="environment" class="hidden">
+            <!-- Input dedicado a galería / fototeca / archivos -->
+            <input type="file" id="input-gallery-file" accept="image/*" class="hidden">
             
             <div id="photo-preview-wrapper" class="hidden">
               <img id="photo-preview" src="" alt="Previsualización" class="preview-img">
@@ -1186,18 +1173,21 @@
               </button>
             </div>
 
-            <label for="input-photo" id="photo-placeholder" class="camera-trigger-label">
-              <div class="camera-circle">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-              </div>
-              <div style="font-size:16px; font-weight:800; color:#e5e7eb;">Tocar para abrir Cámara o Galería</div>
-              <div style="font-size:13px; color:#9ca3af; margin-top:4px;">Compresión automática en el dispositivo</div>
-            </label>
+            <div id="photo-buttons-container" class="photo-buttons-grid">
+              <button type="button" id="btn-trigger-camera" class="btn-photo-source camera">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                <span>Tomar Foto</span>
+              </button>
+              <button type="button" id="btn-trigger-gallery" class="btn-photo-source">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <span>Galería / Archivo</span>
+              </button>
+            </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Notas de Continuidad / Raccord (Opcional)</label>
+          <label class="form-label">Notas de Continuidad / Raccord</label>
           <textarea id="input-notes" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, posiciones..." class="form-control" style="font-size:16px; line-height:1.4; min-height:90px;"></textarea>
         </div>
 
@@ -1273,7 +1263,7 @@
   <div id="toast" class="toast-bar hidden"></div>
 
   <!-- ========================================== -->
-  <!-- LÓGICA JAVASCRIPT CON BLINDAJE DE PERSISTENCIA -->
+  <!-- LÓGICA JAVASCRIPT                          -->
   <!-- ========================================== -->
   <script>
     if (window.pdfjsLib) {
@@ -1281,14 +1271,13 @@
     }
 
     const DB_NAME = 'RaccordProDB';
-    const DB_VERSION = 4; // Versión incrementada para garantizar actualización
+    const DB_VERSION = 4;
     const STORE_PROJECTS = 'projects';
     const STORE_TAKES = 'takes';
     const STORE_SCENES = 'scenes';
     const STORE_CHARACTERS = 'characters';
-    const STORE_LOCATIONS = 'locations';
 
-    const REQUIRED_STORES = [STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS];
+    const REQUIRED_STORES = [STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS];
 
     let dbInstance = null;
     let useFallbackStorage = false;
@@ -1320,24 +1309,14 @@
             const c = db.createObjectStore(STORE_CHARACTERS, { keyPath: 'id' });
             c.createIndex('projectId', 'projectId', { unique: false });
           }
-          if (!db.objectStoreNames.contains(STORE_LOCATIONS)) {
-            const l = db.createObjectStore(STORE_LOCATIONS, { keyPath: 'id' });
-            l.createIndex('projectId', 'projectId', { unique: false });
-          }
         };
 
         request.onblocked = () => {
-          console.warn('Actualización de BD bloqueada por otra instancia abierta');
           reject(new Error('DB_BLOCKED'));
         };
 
-        request.onsuccess = (e) => {
-          resolve(e.target.result);
-        };
-
-        request.onerror = (e) => {
-          reject(e.target.error);
-        };
+        request.onsuccess = (e) => resolve(e.target.result);
+        request.onerror = (e) => reject(e.target.error);
       });
     }
 
@@ -1349,8 +1328,6 @@
 
       try {
         let db = await openDBConnection(DB_VERSION);
-
-        // Verificar que TODOS los almacenes existan realmente
         const missingStore = REQUIRED_STORES.some(name => !db.objectStoreNames.contains(name));
 
         if (missingStore) {
@@ -1361,12 +1338,10 @@
 
         dbInstance = db;
 
-        // Si después de intentar reparar sigue faltando algún store, activar respaldo seguro
         if (REQUIRED_STORES.some(name => !dbInstance.objectStoreNames.contains(name))) {
           useFallbackStorage = true;
         }
       } catch (err) {
-        console.warn('Cambiando a almacenamiento local de respaldo:', err);
         useFallbackStorage = true;
       }
     }
@@ -1385,7 +1360,6 @@
       } catch (e) {}
     }
 
-    // Doble escritura segura: IndexedDB + espejo en localStorage para entidades de catálogo
     function saveEntityToDB(storeName, item) {
       const mirrorToFallback = () => {
         const list = getFallbackList('rp_' + storeName).filter(x => x.id !== item.id);
@@ -1431,7 +1405,6 @@
           const req = tx.objectStore(storeName).getAll();
           req.onsuccess = () => {
             const dbItems = (req.result || []).filter(x => x.projectId === projId);
-            // Fusionar con fallback en caso de que algún registro previo quedara ahí
             const map = new Map();
             fallbackItems.forEach(item => map.set(item.id, item));
             dbItems.forEach(item => map.set(item.id, item));
@@ -1495,7 +1468,6 @@
       setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
       setFallbackList('rp_scenes', getFallbackList('rp_scenes').filter(s => s.projectId !== projId));
       setFallbackList('rp_characters', getFallbackList('rp_characters').filter(c => c.projectId !== projId));
-      setFallbackList('rp_locations', getFallbackList('rp_locations').filter(l => l.projectId !== projId));
 
       if (useFallbackStorage || !dbInstance) {
         return Promise.resolve();
@@ -1509,7 +1481,7 @@
             tx.objectStore(STORE_PROJECTS).delete(projId);
           }
 
-          [STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS].forEach(sName => {
+          [STORE_TAKES, STORE_SCENES, STORE_CHARACTERS].forEach(sName => {
             if (dbInstance.objectStoreNames.contains(sName)) {
               const store = tx.objectStore(sName);
               const req = store.getAll();
@@ -1749,9 +1721,6 @@
           if (Array.isArray(data.characters)) {
             for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
           }
-          if (Array.isArray(data.locations)) {
-            for (const l of data.locations) await saveEntityToDB(STORE_LOCATIONS, l);
-          }
           await renderProjects();
           showToast(`Proyecto "${data.project.name}" restaurado`);
         } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
@@ -1795,7 +1764,7 @@
     });
 
     /* ==========================================================================
-       IMPORTADOR AVANZADO DE GUIONES (MULTI-FORMATO + DIÁLOGOS + AVISO)
+       IMPORTADOR AVANZADO DE GUIONES (ESCENAS + PERSONAJES + AVISO)
        ========================================================================== */
     const inputScriptPdf = document.getElementById('input-script-pdf');
     const scriptReviewModal = document.getElementById('script-review-modal');
@@ -1825,16 +1794,13 @@
         const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
         const existingScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-        const existingLocations = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
         const existingCharacters = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
 
         const knownSceneNums = new Set(existingScenes.map(s => String(s.sceneNum).toUpperCase()));
-        const knownLocNames = new Set(existingLocations.map(l => String(l.name).toUpperCase()));
         const knownCharNames = new Set(existingCharacters.map(c => String(c.name).toUpperCase()));
 
         let autoSceneCounter = existingScenes.length + 1;
         let addedScenesCount = 0;
-        let addedLocationsCount = 0;
         let addedCharactersCount = 0;
 
         const timeRegex = /\b(?:EXT\/DAY|INT\/DAY|EXT\/NIGHT|INT\/NIGHT|SUNRISE\/DAY|SUNRISE\/NIGHT|EXT\/DAWN|INT\/DAWN|EXT\/DUSK|INT\/DUSK|INT\/EXT|EXT\/INT|I\/E|INT\.|EXT\.|INT|EXT)\b/i;
@@ -1898,35 +1864,15 @@
                 sceneNum = String(autoSceneCounter++);
               }
 
-              let setName = workingLine
-                .replace(/\b(?:EXT\/DAY|INT\/DAY|EXT\/NIGHT|INT\/NIGHT|SUNRISE\/DAY|SUNRISE\/NIGHT|EXT\/DAWN|INT\/DAWN|EXT\/DUSK|INT\/DUSK|INT\/EXT|EXT\/INT|I\/E|INT\.|EXT\.|INT|EXT)\b/gi, '')
-                .replace(/\b(?:DAY|NIGHT|DÍA|NOCHE|DAWN|DUSK|SUNRISE|SUNSET|CONTINUOUS|CONTINUO|EVENING|AFTERNOON)\b/gi, '')
-                .replace(/[-–—/.]+$/, '')
-                .replace(/^[-–—/.]+/, '')
-                .trim();
-
-              if (!setName) setName = workingLine;
-
               if (!knownSceneNums.has(sceneNum.toUpperCase())) {
                 knownSceneNums.add(sceneNum.toUpperCase());
                 await saveEntityToDB(STORE_SCENES, {
                   id: 'sc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
                   projectId: activeProjectId,
                   sceneNum: sceneNum,
-                  desc: line,
-                  location: setName
+                  desc: workingLine
                 });
                 addedScenesCount++;
-              }
-
-              if (setName && setName.length >= 2 && !knownLocNames.has(setName.toUpperCase())) {
-                knownLocNames.add(setName.toUpperCase());
-                await saveEntityToDB(STORE_LOCATIONS, {
-                  id: 'loc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-                  projectId: activeProjectId,
-                  name: setName
-                });
-                addedLocationsCount++;
               }
               continue;
             }
@@ -1972,7 +1918,7 @@
         await updateSelectDropdowns();
 
         document.getElementById('script-review-summary').textContent = 
-          `Se incorporaron con éxito: +${addedScenesCount} Escenas, +${addedLocationsCount} Sets y +${addedCharactersCount} Personajes.`;
+          `Se incorporaron con éxito: +${addedScenesCount} Escenas y +${addedCharactersCount} Personajes.`;
         scriptReviewModal.classList.remove('hidden');
 
       } catch (err) {
@@ -2042,15 +1988,12 @@
       if (!num) return;
 
       const existingId = editSceneId.value;
-      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-      const original = existingId ? scenes.find(s => s.id === existingId) : null;
 
       await saveEntityToDB(STORE_SCENES, {
         id: existingId || ('sc_' + Date.now()),
         projectId: activeProjectId,
         sceneNum: num,
-        desc: desc,
-        location: original ? (original.location || '') : ''
+        desc: desc
       });
 
       resetSceneForm();
@@ -2175,96 +2118,6 @@
     };
 
     /* ==========================================================================
-       GESTIÓN Y EDICIÓN DE SETS / LOCACIONES
-       ========================================================================== */
-    const locationsModal = document.getElementById('locations-modal');
-    const locationsForm = document.getElementById('locations-form');
-    const editLocationId = document.getElementById('edit-location-id');
-    const btnSaveLocation = document.getElementById('btn-save-location');
-    const btnCancelEditLocation = document.getElementById('btn-cancel-edit-location');
-
-    document.getElementById('menu-opt-locations').addEventListener('click', () => {
-      closeProjectMenu();
-      resetLocationForm();
-      openLocationsManager();
-    });
-    document.getElementById('btn-close-locations-modal').addEventListener('click', () => locationsModal.classList.add('hidden'));
-
-    function resetLocationForm() {
-      editLocationId.value = '';
-      document.getElementById('new-location-name').value = '';
-      btnSaveLocation.textContent = '+ Añadir Set / Locación';
-      btnCancelEditLocation.classList.add('hidden');
-    }
-
-    btnCancelEditLocation.addEventListener('click', resetLocationForm);
-
-    async function openLocationsManager() {
-      locationsModal.classList.remove('hidden');
-      await renderLocationsList();
-    }
-
-    async function renderLocationsList() {
-      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
-      locs.sort((a, b) => a.name.localeCompare(b.name));
-
-      const container = document.getElementById('locations-list');
-      if (locs.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay sets o locaciones registradas.</p>';
-        return;
-      }
-      container.innerHTML = locs.map(l => `
-        <div class="manager-item">
-          <div style="min-width:0; flex:1;">
-            <strong style="color:var(--amber); font-size:15px;">🏛️ ${escapeHtml(l.name)}</strong>
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button type="button" class="btn-action-small edit" onclick="startEditLocation('${l.id}')" title="Editar">✏️</button>
-            <button type="button" class="btn-action-small delete" onclick="deleteLocationItem('${l.id}')" title="Eliminar">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    locationsForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('new-location-name').value.trim();
-      if (!name) return;
-
-      const existingId = editLocationId.value;
-
-      await saveEntityToDB(STORE_LOCATIONS, {
-        id: existingId || ('loc_' + Date.now()),
-        projectId: activeProjectId,
-        name
-      });
-
-      resetLocationForm();
-      await renderLocationsList();
-      await updateSelectDropdowns();
-      showToast(existingId ? `Set "${name}" actualizado` : `Set "${name}" añadido`);
-    });
-
-    window.startEditLocation = async function(id) {
-      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
-      const target = locs.find(l => l.id === id);
-      if (!target) return;
-
-      editLocationId.value = target.id;
-      document.getElementById('new-location-name').value = target.name;
-      btnSaveLocation.textContent = 'Guardar Cambios';
-      btnCancelEditLocation.classList.remove('hidden');
-      document.getElementById('new-location-name').focus();
-    };
-
-    window.deleteLocationItem = async function(id) {
-      await deleteEntityFromDB(STORE_LOCATIONS, id);
-      await renderLocationsList();
-      await updateSelectDropdowns();
-      showToast('Set eliminado');
-    };
-
-    /* ==========================================================================
        ACTUALIZACIÓN DE MENÚS DESPLEGABLES DEL FORMULARIO DE RACCORD
        ========================================================================== */
     async function updateSelectDropdowns() {
@@ -2274,37 +2127,14 @@
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       chars.sort((a, b) => a.name.localeCompare(b.name));
 
-      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
-      locs.sort((a, b) => a.name.localeCompare(b.name));
-
       const selectScene = document.getElementById('select-scene');
       selectScene.innerHTML = '<option value="">Selecciona una escena...</option>' + 
-        cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}" data-loc="${escapeHtml(s.location || '')}">ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}</option>`).join('');
-
-      const selectLocation = document.getElementById('select-location');
-      selectLocation.innerHTML = '<option value="">Selecciona un set (Opcional)...</option>' + 
-        locs.map(l => `<option value="${escapeHtml(l.name)}">${escapeHtml(l.name)}</option>`).join('');
+        cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}">ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}</option>`).join('');
 
       const selectCharacter = document.getElementById('select-character');
-      selectCharacter.innerHTML = '<option value="">Selecciona un personaje (Opcional)...</option>' + 
+      selectCharacter.innerHTML = '<option value="">Selecciona un personaje...</option>' + 
         chars.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`).join('');
     }
-
-    document.getElementById('select-scene').addEventListener('change', (e) => {
-      const selectedOption = e.target.options[e.target.selectedIndex];
-      if (!selectedOption) return;
-      const associatedLoc = selectedOption.getAttribute('data-loc');
-      const selectLoc = document.getElementById('select-location');
-
-      if (associatedLoc) {
-        for (let i = 0; i < selectLoc.options.length; i++) {
-          if (selectLoc.options[i].value.toUpperCase() === associatedLoc.toUpperCase()) {
-            selectLoc.selectedIndex = i;
-            break;
-          }
-        }
-      }
-    });
 
     /* ==========================================================================
        EXPORTAR REPORTE PDF / IMPRIMIR
@@ -2328,7 +2158,7 @@
           <div style="display:flex; gap:12px; background:#0d0f12; border:1px solid #262d38; padding:12px; border-radius:10px; margin-bottom:10px; page-break-inside:avoid;">
             ${t.photo ? `<img src="${t.photo}" style="width:84px; height:84px; object-fit:cover; border-radius:8px;">` : ''}
             <div style="flex:1; font-size:14px;">
-              <strong style="color:#f59e0b; font-size:15px;">ESCENA ${escapeHtml(t.scene)} ${t.location ? '— ' + escapeHtml(t.location) : ''}</strong>
+              <strong style="color:#f59e0b; font-size:15px;">ESCENA ${escapeHtml(t.scene)} ${t.sceneDesc ? '— ' + escapeHtml(t.sceneDesc) : ''}</strong>
               ${t.character ? `<div style="margin-top:3px; font-weight:700;">🎭 ${escapeHtml(t.character)}</div>` : ''}
               ${t.notes ? `<p style="margin:6px 0 0 0; color:#d1d5db; line-height:1.4;">${escapeHtml(t.notes)}</p>` : ''}
             </div>
@@ -2349,14 +2179,12 @@
       const allTakes = await getAllTakesForProject(activeProjectId);
       const allScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
       const allChars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-      const allLocs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
 
       const backupBundle = {
         project: activeProjectData,
         takes: allTakes,
         scenes: allScenes,
-        characters: allChars,
-        locations: allLocs
+        characters: allChars
       };
 
       const blob = new Blob([JSON.stringify(backupBundle, null, 2)], { type: 'application/json' });
@@ -2394,7 +2222,7 @@
         const q = searchQuery.toLowerCase().trim();
         return !q || 
           String(item.scene || '').toLowerCase().includes(q) ||
-          (item.location && item.location.toLowerCase().includes(q)) ||
+          (item.sceneDesc && item.sceneDesc.toLowerCase().includes(q)) ||
           (item.character && item.character.toLowerCase().includes(q)) ||
           String(item.notes || '').toLowerCase().includes(q);
       });
@@ -2418,7 +2246,7 @@
               }
               <div class="slate-pill">
                 <span class="slate-scene">ESC ${escapeHtml(take.scene)}</span>
-                ${take.location ? `<span class="slate-location">• ${escapeHtml(take.location)}</span>` : ''}
+                ${take.sceneDesc ? `<span class="slate-desc">• ${escapeHtml(take.sceneDesc)}</span>` : ''}
               </div>
             </div>
 
@@ -2461,14 +2289,15 @@
     });
 
     /* ==========================================================================
-       FORMULARIO DE RACCORD POR SELECCIÓN
+       MANEJO DE FOTOGRAFÍA (CÁMARA DIRECTA VS. GALERÍA / ARCHIVOS)
        ========================================================================== */
     const entryModal = document.getElementById('entry-modal');
     const form = document.getElementById('raccord-form');
-    const photoInput = document.getElementById('input-photo');
+    const cameraInput = document.getElementById('input-camera-direct');
+    const galleryInput = document.getElementById('input-gallery-file');
     const photoPreviewWrapper = document.getElementById('photo-preview-wrapper');
     const photoPreview = document.getElementById('photo-preview');
-    const photoPlaceholder = document.getElementById('photo-placeholder');
+    const photoButtonsContainer = document.getElementById('photo-buttons-container');
 
     function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.75) {
       return new Promise((resolve, reject) => {
@@ -2502,26 +2331,39 @@
       });
     }
 
-    photoInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
+    async function handleSelectedImage(file) {
       if (!file) return;
       showToast('Procesando foto...');
       try {
         currentPhotoBase64 = await compressImageFile(file);
         photoPreview.src = currentPhotoBase64;
         photoPreviewWrapper.classList.remove('hidden');
-        photoPlaceholder.classList.add('hidden');
+        photoButtonsContainer.classList.add('hidden');
       } catch (err) {
         showToast('Error al cargar foto');
       }
+    }
+
+    document.getElementById('btn-trigger-camera').addEventListener('click', () => {
+      cameraInput.value = '';
+      cameraInput.click();
     });
+
+    document.getElementById('btn-trigger-gallery').addEventListener('click', () => {
+      galleryInput.value = '';
+      galleryInput.click();
+    });
+
+    cameraInput.addEventListener('change', (e) => handleSelectedImage(e.target.files[0]));
+    galleryInput.addEventListener('change', (e) => handleSelectedImage(e.target.files[0]));
 
     document.getElementById('btn-remove-photo').addEventListener('click', () => {
       currentPhotoBase64 = null;
-      photoInput.value = '';
+      cameraInput.value = '';
+      galleryInput.value = '';
       photoPreview.src = '';
       photoPreviewWrapper.classList.add('hidden');
-      photoPlaceholder.classList.remove('hidden');
+      photoButtonsContainer.classList.remove('hidden');
     });
 
     document.getElementById('btn-add-entry').addEventListener('click', async () => {
@@ -2533,7 +2375,7 @@
       document.getElementById('entry-id').value = '';
       currentPhotoBase64 = null;
       photoPreviewWrapper.classList.add('hidden');
-      photoPlaceholder.classList.remove('hidden');
+      photoButtonsContainer.classList.remove('hidden');
       await updateSelectDropdowns();
       entryModal.classList.remove('hidden');
     });
@@ -2544,8 +2386,10 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('entry-id').value || 'take_' + Date.now();
-      const scene = document.getElementById('select-scene').value;
-      const location = document.getElementById('select-location').value;
+      const selectSceneEl = document.getElementById('select-scene');
+      const scene = selectSceneEl.value;
+      const selectedOption = selectSceneEl.options[selectSceneEl.selectedIndex];
+      const sceneDesc = selectedOption ? (selectedOption.getAttribute('data-desc') || '') : '';
       const character = document.getElementById('select-character').value;
       const notes = document.getElementById('input-notes').value.trim();
 
@@ -2554,11 +2398,16 @@
         return;
       }
 
+      if (!character) {
+        showToast('Por favor selecciona un personaje');
+        return;
+      }
+
       await saveTakeToDB({
         id,
         projectId: activeProjectId,
         scene,
-        location,
+        sceneDesc,
         character,
         notes,
         photo: currentPhotoBase64,
@@ -2580,7 +2429,6 @@
       document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
       document.getElementById('entry-id').value = target.id;
       document.getElementById('select-scene').value = target.scene;
-      document.getElementById('select-location').value = target.location || '';
       document.getElementById('select-character').value = target.character || '';
       document.getElementById('input-notes').value = target.notes || '';
 
@@ -2588,11 +2436,11 @@
         currentPhotoBase64 = target.photo;
         photoPreview.src = target.photo;
         photoPreviewWrapper.classList.remove('hidden');
-        photoPlaceholder.classList.add('hidden');
+        photoButtonsContainer.classList.add('hidden');
       } else {
         currentPhotoBase64 = null;
         photoPreviewWrapper.classList.add('hidden');
-        photoPlaceholder.classList.remove('hidden');
+        photoButtonsContainer.classList.remove('hidden');
       }
 
       entryModal.classList.remove('hidden');
@@ -2605,7 +2453,7 @@
       if (!item || !item.photo) return;
 
       document.getElementById('viewer-img').src = item.photo;
-      document.getElementById('viewer-title').textContent = `ESCENA ${item.scene} ${item.location ? '• ' + item.location : ''}`;
+      document.getElementById('viewer-title').textContent = `ESCENA ${item.scene} ${item.sceneDesc ? '• ' + item.sceneDesc : ''}`;
       document.getElementById('viewer-subtitle').textContent = item.character ? `Personaje: ${item.character}` : '';
       document.getElementById('viewer-notes').textContent = item.notes || 'Sin notas adicionales';
       imageViewerModal.classList.remove('hidden');
