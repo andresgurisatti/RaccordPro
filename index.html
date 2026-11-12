@@ -152,7 +152,7 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 16px 20px;
-      padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); /* Aumentado por los botones dobles inferiores */
+      padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px));
     }
 
     .container-narrow {
@@ -2076,8 +2076,13 @@
       viewTakes.classList.add('hidden');
       viewProjects.classList.remove('hidden');
       searchProjectsQuery = '';
-      document.getElementById('search-projects-input').value = '';
-      document.getElementById('projects-search-bar').classList.add('hidden');
+      
+      const searchInputProjects = document.getElementById('search-projects-input');
+      if (searchInputProjects) searchInputProjects.value = '';
+      
+      const searchBarProjects = document.getElementById('projects-search-bar');
+      if (searchBarProjects) searchBarProjects.classList.add('hidden');
+      
       await renderProjects();
     }
 
@@ -2110,29 +2115,41 @@
       renderTakes();
     }
 
-    // Buscador de proyectos
-    document.getElementById('btn-toggle-project-search').addEventListener('click', () => {
-      const bar = document.getElementById('projects-search-bar');
-      bar.classList.toggle('hidden');
-      if (!bar.classList.contains('hidden')) {
-        document.getElementById('search-projects-input').focus();
-      } else {
-        searchProjectsQuery = '';
-        document.getElementById('search-projects-input').value = '';
+    // Buscador de proyectos (Seguro)
+    const btnToggleProjectSearch = document.getElementById('btn-toggle-project-search');
+    if (btnToggleProjectSearch) {
+      btnToggleProjectSearch.addEventListener('click', () => {
+        const bar = document.getElementById('projects-search-bar');
+        const searchInput = document.getElementById('search-projects-input');
+        if (bar && searchInput) {
+          bar.classList.toggle('hidden');
+          if (!bar.classList.contains('hidden')) {
+            searchInput.focus();
+          } else {
+            searchProjectsQuery = '';
+            searchInput.value = '';
+            renderProjects();
+          }
+        }
+      });
+    }
+
+    const searchProjectsInput = document.getElementById('search-projects-input');
+    if (searchProjectsInput) {
+      searchProjectsInput.addEventListener('input', (e) => {
+        searchProjectsQuery = e.target.value;
         renderProjects();
-      }
-    });
+      });
+    }
 
-    document.getElementById('search-projects-input').addEventListener('input', (e) => {
-      searchProjectsQuery = e.target.value;
-      renderProjects();
-    });
-
-    document.getElementById('btn-reset-project-search').addEventListener('click', () => {
-      searchProjectsQuery = '';
-      document.getElementById('search-projects-input').value = '';
-      renderProjects();
-    });
+    const btnResetProjectSearch = document.getElementById('btn-reset-project-search');
+    if (btnResetProjectSearch) {
+      btnResetProjectSearch.addEventListener('click', () => {
+        searchProjectsQuery = '';
+        if (searchProjectsInput) searchProjectsInput.value = '';
+        renderProjects();
+      });
+    }
 
     async function renderProjects() {
       const projects = await getAllProjectsFromDB();
@@ -2275,46 +2292,48 @@
     const inputImportJson = document.getElementById('input-import-json');
     const btnImportJsonBottom = document.getElementById('btn-import-project-bottom');
 
-    btnImportJsonBottom.addEventListener('click', () => {
-      inputImportJson.value = '';
-      inputImportJson.click();
-    });
+    if (btnImportJsonBottom && inputImportJson) {
+      btnImportJsonBottom.addEventListener('click', () => {
+        inputImportJson.value = '';
+        inputImportJson.click();
+      });
 
-    inputImportJson.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+      inputImportJson.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-      showToast('Abriendo archivo de respaldo...');
+        showToast('Abriendo archivo de respaldo...');
 
-      try {
-        const text = await file.text();
-        const data = JSON.parse(text);
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
 
-        if (data.project && data.project.id) {
-          await saveProjectToDB(data.project);
-          if (Array.isArray(data.takes)) {
-            for (const take of data.takes) await saveTakeToDB(take);
+          if (data.project && data.project.id) {
+            await saveProjectToDB(data.project);
+            if (Array.isArray(data.takes)) {
+              for (const take of data.takes) await saveTakeToDB(take);
+            }
+            if (Array.isArray(data.scenes)) {
+              for (const s of data.scenes) await saveEntityToDB(STORE_SCENES, s);
+            }
+            if (Array.isArray(data.characters)) {
+              for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
+            }
+            await renderProjects();
+            showToast(`Proyecto "${data.project.name}" restaurado`);
+          } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
+            for (const take of data) await saveTakeToDB(take);
+            await renderProjects();
+            showToast('Registros restaurados con éxito');
+          } else {
+            showToast('Formato JSON no compatible');
           }
-          if (Array.isArray(data.scenes)) {
-            for (const s of data.scenes) await saveEntityToDB(STORE_SCENES, s);
-          }
-          if (Array.isArray(data.characters)) {
-            for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
-          }
-          await renderProjects();
-          showToast(`Proyecto "${data.project.name}" restaurado`);
-        } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
-          for (const take of data) await saveTakeToDB(take);
-          await renderProjects();
-          showToast('Registros restaurados con éxito');
-        } else {
-          showToast('Formato JSON no compatible');
+        } catch (err) {
+          console.error('Error importando JSON:', err);
+          showToast('Error al leer el archivo');
         }
-      } catch (err) {
-        console.error('Error importando JSON:', err);
-        showToast('Error al leer el archivo');
-      }
-    });
+      });
+    }
 
     document.getElementById('btn-back-to-projects').addEventListener('click', showProjectsView);
 
@@ -3328,18 +3347,6 @@
       raccordViewerModal.classList.add('hidden');
       openEditTake(targetId);
     });
-
-    window.removeFormPhotoItem = function(photoId) {
-      const target = currentPhotoItems.find(p => p.id === photoId);
-      if (!target) return;
-      
-      const charLabel = target.character || 'Sin personaje';
-      askConfirmation(`¿Eliminar definitivamente la entrada de "${charLabel}"?`, () => {
-        currentPhotoItems = currentPhotoItems.filter(p => p.id !== photoId);
-        renderFormPhotoItems();
-        showToast('Entrada eliminada');
-      });
-    };
 
     let toastTimer = null;
     function showToast(msg) {
