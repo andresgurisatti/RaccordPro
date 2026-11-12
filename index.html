@@ -97,7 +97,7 @@
       justify-content: space-between;
       gap: 12px;
       flex-shrink: 0;
-      z-index: 30;
+      z-index: 45;
       position: relative;
     }
 
@@ -415,6 +415,83 @@
       width: 100%;
     }
 
+    .menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 10, 0.76);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 40;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.32s;
+    }
+
+    .menu-backdrop.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    #btn-project-menu-toggle {
+      position: relative;
+      z-index: 51;
+      overflow: hidden;
+      transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.15s ease;
+    }
+
+    #btn-project-menu-toggle.is-open {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--amber);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.38), inset 0 0 10px rgba(245, 158, 11, 0.16);
+    }
+
+    .menu-icon-stage {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-icon-stage svg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                  filter 0.32s ease;
+      will-change: transform, opacity, filter;
+    }
+
+    .menu-icon-stage .icon-wrench {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+      filter: blur(0px);
+    }
+
+    .menu-icon-stage .icon-close-x {
+      opacity: 0;
+      transform: rotate(-135deg) scale(0.3);
+      filter: blur(3px);
+    }
+
+    #btn-project-menu-toggle.is-open .menu-icon-stage .icon-wrench {
+      opacity: 0;
+      transform: rotate(135deg) scale(0.3);
+      filter: blur(3px);
+    }
+
+    #btn-project-menu-toggle.is-open .menu-icon-stage .icon-close-x {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+      filter: blur(0px);
+    }
+
     .dropdown-menu {
       position: absolute;
       top: calc(100% + 8px);
@@ -429,6 +506,21 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform-origin: top right;
+      transform: translateY(-10px) scale(0.94);
+      transition: opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  visibility 0.26s;
+    }
+
+    .dropdown-menu.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
     }
 
     .dropdown-item {
@@ -1182,17 +1274,25 @@
         </div>
       </div>
 
+      <div id="project-menu-backdrop" class="menu-backdrop"></div>
+
       <div style="display:flex; align-items:center;">
         <button type="button" id="btn-project-menu-toggle" class="btn-icon" title="Herramientas del Proyecto">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-          </svg>
+          <span class="menu-icon-stage">
+            <svg class="icon-wrench" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+            <svg class="icon-close-x" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </span>
         </button>
       </div>
 
       <input type="file" id="input-script-pdf" accept=".pdf,application/pdf" class="hidden">
 
-      <div id="project-dropdown-menu" class="dropdown-menu hidden">
+      <div id="project-dropdown-menu" class="dropdown-menu">
         <button type="button" class="dropdown-item highlight" id="menu-opt-script-pdf">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span>Importar Guion (PDF)</span>
@@ -1341,7 +1441,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="scenes-modal-title" class="modal-title">
-          <span>ESCENAS DEL PROYECTO</span>
+          <span>ESCENAS</span>
           <span id="modal-count-scenes" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
         </h2>
         <button type="button" id="btn-close-scenes-modal" class="btn-close-touch" title="Cerrar">
@@ -1349,18 +1449,21 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="scenes-list" style="max-height:280px; overflow-y:auto; margin-bottom:16px;"></div>
-        <form id="scenes-form" style="display:flex; flex-direction:column; gap:10px; padding-top:16px; border-top:1px solid var(--border-700);">
-          <input type="hidden" id="edit-scene-id" value="">
-          <div style="display:flex; gap:10px;">
-            <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
-            <input type="text" id="new-scene-desc" placeholder="Encabezado / Set (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button type="submit" id="btn-save-scene" class="btn-primary" style="flex:1;">+ Añadir Escena</button>
-            <button type="button" id="btn-cancel-edit-scene" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
-          </div>
-        </form>
+        <div id="scenes-list" style="max-height:340px; overflow-y:auto; margin-bottom:14px;"></div>
+        <div style="padding-top:14px; border-top:1px solid var(--border-700);">
+          <button type="button" id="btn-show-add-scene" class="btn-primary" style="width:100%;">+ Añadir Escena</button>
+          <form id="scenes-form" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
+            <input type="hidden" id="edit-scene-id" value="">
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
+              <input type="text" id="new-scene-desc" placeholder="Encabezado / Set (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" id="btn-cancel-edit-scene" class="btn-secondary" style="flex:1;">Cancelar</button>
+              <button type="submit" id="btn-save-scene" class="btn-primary" style="flex:1;">Guardar</button>
+            </div>
+          </form>
+        </div>
         <div id="delete-all-scenes-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-scenes" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1378,7 +1481,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="characters-modal-title" class="modal-title">
-          <span>PERSONAJES DEL PROYECTO</span>
+          <span>PERSONAJES</span>
           <span id="modal-count-characters" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
         </h2>
         <button type="button" id="btn-close-characters-modal" class="btn-close-touch" title="Cerrar">
@@ -1386,36 +1489,39 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="characters-list" style="max-height:260px; overflow-y:auto; margin-bottom:16px;"></div>
-        <form id="characters-form" style="display:flex; flex-direction:column; gap:10px; padding-top:16px; border-top:1px solid var(--border-700);">
-          <input type="hidden" id="edit-character-id" value="">
-          <input type="file" id="input-actor-photo" accept="image/*" class="hidden">
+        <div id="characters-list" style="max-height:320px; overflow-y:auto; margin-bottom:14px;"></div>
+        <div style="padding-top:14px; border-top:1px solid var(--border-700);">
+          <button type="button" id="btn-show-add-character" class="btn-primary" style="width:100%;">+ Añadir Personaje</button>
+          <form id="characters-form" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
+            <input type="hidden" id="edit-character-id" value="">
+            <input type="file" id="input-actor-photo" accept="image/*" class="hidden">
 
-          <div style="display:flex; gap:10px;">
-            <input type="text" id="new-character-name" placeholder="Personaje (Ej: Valeria)" required class="form-control" style="flex:1;">
-            <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
-          </div>
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="new-character-name" placeholder="Personaje (Ej: Valeria)" required class="form-control" style="flex:1;">
+              <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
+            </div>
 
-          <div style="display:flex; align-items:center; gap:10px;">
-            <div id="actor-photo-preview-box" class="hidden" style="display:flex; align-items:center; gap:10px; background:var(--bg-800); border:1px solid var(--border-700); padding:6px 10px; border-radius:var(--btn-radius); flex:1;">
-              <img id="actor-photo-preview-img" src="" alt="Actor" style="width:42px; height:42px; border-radius:8px; object-fit:cover;">
-              <span style="font-size:13px; font-weight:700; color:#e5e7eb; flex:1;">Foto del actor cargada</span>
-              <button type="button" id="btn-remove-actor-photo" class="btn-action-small delete" title="Quitar foto" style="min-width:36px; min-height:36px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div id="actor-photo-preview-box" class="hidden" style="display:flex; align-items:center; gap:10px; background:var(--bg-800); border:1px solid var(--border-700); padding:6px 10px; border-radius:var(--btn-radius); flex:1;">
+                <img id="actor-photo-preview-img" src="" alt="Actor" style="width:42px; height:42px; border-radius:8px; object-fit:cover;">
+                <span style="font-size:13px; font-weight:700; color:#e5e7eb; flex:1;">Foto del actor cargada</span>
+                <button type="button" id="btn-remove-actor-photo" class="btn-action-small delete" title="Quitar foto" style="min-width:36px; min-height:36px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+
+              <button type="button" id="btn-trigger-actor-photo" class="btn-actor-photo-pick">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <span>Foto del Actor (Opcional)</span>
               </button>
             </div>
 
-            <button type="button" id="btn-trigger-actor-photo" class="btn-actor-photo-pick">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-              <span>Foto del Actor (Opcional)</span>
-            </button>
-          </div>
-
-          <div style="display:flex; gap:8px;">
-            <button type="submit" id="btn-save-character" class="btn-primary" style="flex:1;">+ Añadir Personaje</button>
-            <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
-          </div>
-        </form>
+            <div style="display:flex; gap:8px;">
+              <button type="button" id="btn-cancel-edit-character" class="btn-secondary" style="flex:1;">Cancelar</button>
+              <button type="submit" id="btn-save-character" class="btn-primary" style="flex:1;">Guardar</button>
+            </div>
+          </form>
+        </div>
         <div id="delete-all-characters-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-characters" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -2333,13 +2439,19 @@
        ========================================================================== */
     const dropdownMenu = document.getElementById('project-dropdown-menu');
     const btnMenuToggle = document.getElementById('btn-project-menu-toggle');
+    const projectMenuBackdrop = document.getElementById('project-menu-backdrop');
 
     function toggleProjectMenu() {
-      dropdownMenu.classList.toggle('hidden');
+      const willOpen = !dropdownMenu.classList.contains('is-open');
+      dropdownMenu.classList.toggle('is-open', willOpen);
+      btnMenuToggle.classList.toggle('is-open', willOpen);
+      projectMenuBackdrop.classList.toggle('is-open', willOpen);
     }
 
     function closeProjectMenu() {
-      dropdownMenu.classList.add('hidden');
+      dropdownMenu.classList.remove('is-open');
+      btnMenuToggle.classList.remove('is-open');
+      projectMenuBackdrop.classList.remove('is-open');
     }
 
     btnMenuToggle.addEventListener('click', (e) => {
@@ -2347,10 +2459,9 @@
       toggleProjectMenu();
     });
 
-    document.addEventListener('click', (e) => {
-      if (!dropdownMenu.contains(e.target) && e.target !== btnMenuToggle) {
-        closeProjectMenu();
-      }
+    projectMenuBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
     });
 
     /* ==========================================================================
@@ -2525,6 +2636,7 @@
        ========================================================================== */
     const scenesModal = document.getElementById('scenes-modal');
     const scenesForm = document.getElementById('scenes-form');
+    const btnShowAddScene = document.getElementById('btn-show-add-scene');
     const editSceneId = document.getElementById('edit-scene-id');
     const btnSaveScene = document.getElementById('btn-save-scene');
     const btnCancelEditScene = document.getElementById('btn-cancel-edit-scene');
@@ -2551,16 +2663,28 @@
       openScenesManager();
     });
     btnCloseScenesModal.addEventListener('click', () => {
-      if (editSceneId.value) return;
+      if (!scenesForm.classList.contains('hidden')) return;
       scenesModal.classList.add('hidden');
+    });
+
+    btnShowAddScene.addEventListener('click', () => {
+      editSceneId.value = '';
+      document.getElementById('new-scene-num').value = '';
+      document.getElementById('new-scene-desc').value = '';
+      btnSaveScene.textContent = 'Guardar Escena';
+      btnShowAddScene.classList.add('hidden');
+      scenesForm.classList.remove('hidden');
+      setSceneEditingLock(true, null);
+      document.getElementById('new-scene-num').focus();
     });
 
     function resetSceneForm() {
       editSceneId.value = '';
       document.getElementById('new-scene-num').value = '';
       document.getElementById('new-scene-desc').value = '';
-      btnSaveScene.textContent = '+ Añadir Escena';
-      btnCancelEditScene.classList.add('hidden');
+      btnSaveScene.textContent = 'Guardar';
+      scenesForm.classList.add('hidden');
+      btnShowAddScene.classList.remove('hidden');
       setSceneEditingLock(false);
     }
 
@@ -2633,7 +2757,8 @@
       document.getElementById('new-scene-num').value = target.sceneNum;
       document.getElementById('new-scene-desc').value = target.desc || '';
       btnSaveScene.textContent = 'Guardar Cambios';
-      btnCancelEditScene.classList.remove('hidden');
+      btnShowAddScene.classList.add('hidden');
+      scenesForm.classList.remove('hidden');
       setSceneEditingLock(true, target.id);
       document.getElementById('new-scene-num').focus();
     };
@@ -2668,6 +2793,7 @@
        ========================================================================== */
     const charactersModal = document.getElementById('characters-modal');
     const charactersForm = document.getElementById('characters-form');
+    const btnShowAddCharacter = document.getElementById('btn-show-add-character');
     const editCharacterId = document.getElementById('edit-character-id');
     const btnSaveCharacter = document.getElementById('btn-save-character');
     const btnCancelEditCharacter = document.getElementById('btn-cancel-edit-character');
@@ -2698,8 +2824,21 @@
       openCharactersManager();
     });
     btnCloseCharactersModal.addEventListener('click', () => {
-      if (editCharacterId.value) return;
+      if (!charactersForm.classList.contains('hidden')) return;
       charactersModal.classList.add('hidden');
+    });
+
+    btnShowAddCharacter.addEventListener('click', () => {
+      editCharacterId.value = '';
+      document.getElementById('new-character-name').value = '';
+      document.getElementById('new-actor-name').value = '';
+      inputActorPhoto.value = '';
+      setActorPhotoPreview(null);
+      btnSaveCharacter.textContent = 'Guardar Personaje';
+      btnShowAddCharacter.classList.add('hidden');
+      charactersForm.classList.remove('hidden');
+      setCharacterEditingLock(true, null);
+      document.getElementById('new-character-name').focus();
     });
 
     function setActorPhotoPreview(base64) {
@@ -2721,8 +2860,9 @@
       document.getElementById('new-actor-name').value = '';
       inputActorPhoto.value = '';
       setActorPhotoPreview(null);
-      btnSaveCharacter.textContent = '+ Añadir Personaje';
-      btnCancelEditCharacter.classList.add('hidden');
+      btnSaveCharacter.textContent = 'Guardar';
+      charactersForm.classList.add('hidden');
+      btnShowAddCharacter.classList.remove('hidden');
       setCharacterEditingLock(false);
     }
 
@@ -2825,7 +2965,8 @@
       document.getElementById('new-actor-name').value = target.actor || '';
       setActorPhotoPreview(target.photo || null);
       btnSaveCharacter.textContent = 'Guardar Cambios';
-      btnCancelEditCharacter.classList.remove('hidden');
+      btnShowAddCharacter.classList.add('hidden');
+      charactersForm.classList.remove('hidden');
       setCharacterEditingLock(true, target.id);
       document.getElementById('new-character-name').focus();
     };
