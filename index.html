@@ -726,7 +726,6 @@
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75);
     }
 
-    /* CONTENEDOR FLEXIBLE PARA FORMULARIOS DENTRO DEL MODAL (Crea el footer estático) */
     .modal-form-wrapper {
       display: flex;
       flex-direction: column;
@@ -766,7 +765,6 @@
       flex: 1;
     }
 
-    /* FOOTER ESTÁTICO PARA BOTONES */
     .modal-footer {
       background: var(--bg-800);
       border-top: 1px solid var(--border-700);
@@ -1170,11 +1168,17 @@
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-scenes">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
-          <span>Escenas</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
+            <span>Escenas</span>
+            <span id="menu-count-scenes" class="hidden" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
+          </div>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-characters">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Personajes</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
+            <span>Personajes</span>
+            <span id="menu-count-characters" class="hidden" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
+          </div>
         </button>
         <div class="dropdown-divider"></div>
         <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
@@ -1326,7 +1330,7 @@
             <button type="button" id="btn-cancel-edit-scene" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="scenes-list" style="max-height:300px; overflow-y:auto;"></div>
+        <div id="scenes-list" style="max-height:280px; overflow-y:auto;"></div>
         <div id="delete-all-scenes-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-scenes" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1378,7 +1382,7 @@
             <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="characters-list" style="max-height:300px; overflow-y:auto;"></div>
+        <div id="characters-list" style="max-height:260px; overflow-y:auto;"></div>
         <div id="delete-all-characters-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-characters" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1554,7 +1558,7 @@
   <!-- ========================================== -->
   <!-- MODAL: CONFIRMACIÓN                        -->
   <!-- ========================================== -->
-  <div id="confirm-modal" class="modal-backdrop hidden" style="z-index: 65;">
+  <div id="confirm-modal" class="modal-backdrop hidden" style="z-index: 80;">
     <div class="modal-card" style="max-width:400px;">
       <div class="modal-header">
         <h2 class="modal-title" style="color:#f87171;">CONFIRMAR ELIMINACIÓN</h2>
@@ -2332,7 +2336,7 @@
             let row = rows.find(r => Math.abs(r.y - y) <= 4);
             if (!row) {
               row = { y, items: [] };
-              row.push(row);
+              rows.push(row);
             }
             row.items.push({ x: item.transform[4], str: text });
           }
@@ -2401,9 +2405,12 @@
                 if (nextIsNotHeader && nextIsDialogue && !knownCharNames.has(cleanCandidate.toUpperCase())) {
                   knownCharNames.add(cleanCandidate.toUpperCase());
 
+                  // Solución al Title Case con Tildes / Eñes (ej: DISEÑO -> Diseño)
                   const formattedName = cleanCandidate
                     .toLowerCase()
-                    .replace(/\b\w/g, l => l.toUpperCase());
+                    .split(/\s+/)
+                    .map(word => word.split('-').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('-'))
+                    .join(' ');
 
                   await saveEntityToDB(STORE_CHARACTERS, {
                     id: 'char_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
@@ -2725,6 +2732,23 @@
 
       cachedCharactersForProject = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       cachedCharactersForProject.sort((a, b) => a.name.localeCompare(b.name));
+
+      const countScenes = document.getElementById('menu-count-scenes');
+      const countChars = document.getElementById('menu-count-characters');
+      
+      if(cachedScenesForProject.length > 0) {
+        countScenes.textContent = cachedScenesForProject.length;
+        countScenes.classList.remove('hidden');
+      } else {
+        countScenes.classList.add('hidden');
+      }
+      
+      if(cachedCharactersForProject.length > 0) {
+        countChars.textContent = cachedCharactersForProject.length;
+        countChars.classList.remove('hidden');
+      } else {
+        countChars.classList.add('hidden');
+      }
 
       const existingTakes = await getAllTakesForProject(activeProjectId);
       const usedScenesSet = new Set(
@@ -3127,7 +3151,7 @@
       const allProjectTakes = await getAllTakesForProject(activeProjectId);
       const duplicateTake = allProjectTakes.find(t =>
         String(t.scene || '').trim().toUpperCase() === scene.toUpperCase() &&
-        t.id !== id // Ignorar el mismo raccord que estamos editando
+        t.id !== id
       );
 
       if (duplicateTake) {
@@ -3252,6 +3276,18 @@
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
     }
+
+    window.removeFormPhotoItem = function(photoId) {
+      const target = currentPhotoItems.find(p => p.id === photoId);
+      if (!target) return;
+      
+      const charLabel = target.character || 'Sin personaje';
+      askConfirmation(`¿Eliminar definitivamente la entrada de "${charLabel}"?`, () => {
+        currentPhotoItems = currentPhotoItems.filter(p => p.id !== photoId);
+        renderFormPhotoItems();
+        showToast('Entrada eliminada');
+      });
+    };
 
     /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
     if ('serviceWorker' in navigator) {
