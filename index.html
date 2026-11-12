@@ -959,22 +959,21 @@
     <header class="app-header">
       <div class="brand-box">
         <div class="brand-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
         </div>
         <div>
           <h1 class="brand-title">Raccord<span>PRO</span></h1>
         </div>
       </div>
 
-      <!-- ICONO NUEVO IMPORTAR JSON: Hoja con flecha entrando de derecha a izquierda (#f59e0b) -->
+      <!-- ICONO DE IMPORTAR JSON (Recuadro abierto a la derecha con flecha entrando de derecha a izquierda) -->
       <div style="display:flex; align-items:center;">
         <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
         <button type="button" id="btn-import-json" class="btn-icon" title="Importar Proyecto desde JSON">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="21" y1="14" x2="11" y2="14"/>
-            <polyline points="15 10 11 14 15 18"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4H7a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h9"/>
+            <line x1="21" y1="12" x2="10" y2="12"/>
+            <polyline points="14 8 10 12 14 16"/>
           </svg>
         </button>
       </div>
@@ -1014,7 +1013,7 @@
         </button>
         <div style="flex:1; min-width:0;">
           <h1 id="active-project-title" class="brand-title">Proyecto</h1>
-          <p id="active-project-director" class="brand-subtitle hidden"></p>
+          <p id="active-project-producer" class="brand-subtitle hidden"></p>
         </div>
       </div>
 
@@ -1046,7 +1045,6 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <span>Exportar Reporte PDF</span>
         </button>
-        <!-- ICONO NUEVO DISQUETE (DISKETTE) PARA GUARDAR RESPALDO JSON -->
         <button type="button" class="dropdown-item" id="menu-opt-export-json">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -1119,7 +1117,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: CREAR / EDITAR PROYECTO             -->
+  <!-- MODAL: CREAR / EDITAR PROYECTO (SOLO PRODUCTORA) -->
   <!-- ========================================== -->
   <div id="project-modal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1137,8 +1135,8 @@
           <input type="text" id="proj-name" required placeholder="Ej: 'El Despertar del Diablo'" class="form-control">
         </div>
         <div class="form-group">
-          <label class="form-label">Director / Productora (Opcional)</label>
-          <input type="text" id="proj-director" placeholder="Ej: Carla Mendoza / TIS Producciones" class="form-control">
+          <label class="form-label">Productora (Opcional)</label>
+          <input type="text" id="proj-producer" placeholder="Ej: TIS Producciones" class="form-control">
         </div>
 
         <div class="modal-actions">
@@ -1295,7 +1293,6 @@
         </button>
       </div>
       <div class="modal-body">
-        <!-- SELECTOR DE IDIOMA DEL PDF -->
         <label class="form-label">Idioma del Reporte:</label>
         <div class="lang-selector-grid">
           <label class="lang-option">
@@ -1377,7 +1374,22 @@
     let cachedCharactersForProject = [];
     let activeViewerTakeId = null;
 
-    // Detectar si el dispositivo es táctil móvil (iPhone / Android / iPad) vs Computadora (Mac / Windows)
+    // Función de ordenamiento numérico exacto para escenas (ej: 3 < 53 < 116, 14A < 14B)
+    function compareSceneNumbers(a, b) {
+      const strA = String(a || '').trim();
+      const strB = String(b || '').trim();
+      const matchA = strA.match(/^(\d+)(.*)$/);
+      const matchB = strB.match(/^(\d+)(.*)$/);
+
+      if (matchA && matchB) {
+        const numA = parseInt(matchA[1], 10);
+        const numB = parseInt(matchB[1], 10);
+        if (numA !== numB) return numA - numB;
+        return matchA[2].localeCompare(matchB[2], undefined, { sensitivity: 'base' });
+      }
+      return strA.localeCompare(strB, undefined, { numeric: true, sensitivity: 'base' });
+    }
+
     function isMobileTouchDevice() {
       const ua = navigator.userAgent || '';
       const isTouchMac = /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
@@ -1624,9 +1636,7 @@
       return [];
     }
 
-    // Función unificada de guardado de archivos (Mac Finder, Windows, Android e iOS)
     async function saveFileToUserDirectory(blob, fileName, mimeType, fileDescription, fileExt) {
-      // 1. Selector de carpetas nativo de escritorio / Android Chrome (Finder en Mac, Explorador en Windows)
       if ('showSaveFilePicker' in window) {
         try {
           const handle = await window.showSaveFilePicker({
@@ -1646,8 +1656,6 @@
         }
       }
 
-      // 2. Hoja nativa de compartir / Guardar en Archivos SOLO en dispositivos móviles (iPhone/iPad/Android)
-      // Se desactiva en Mac/Windows para evitar que macOS abra el menú de AirDrop/Notas
       if (isMobileTouchDevice()) {
         const file = new File([blob], fileName, { type: mimeType });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1663,7 +1671,6 @@
         }
       }
 
-      // 3. Descarga directa estándar (Safari en Mac u otros navegadores sin File System Access)
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -1717,13 +1724,14 @@
       activeProjectId = projId;
       document.getElementById('active-project-title').textContent = activeProjectData.name;
 
-      const dirEl = document.getElementById('active-project-director');
-      if (activeProjectData.director && activeProjectData.director.trim()) {
-        dirEl.textContent = activeProjectData.director.trim();
-        dirEl.classList.remove('hidden');
+      const prodEl = document.getElementById('active-project-producer');
+      const prodValue = activeProjectData.producer || activeProjectData.director || '';
+      if (prodValue.trim()) {
+        prodEl.textContent = prodValue.trim();
+        prodEl.classList.remove('hidden');
       } else {
-        dirEl.textContent = '';
-        dirEl.classList.add('hidden');
+        prodEl.textContent = '';
+        prodEl.classList.add('hidden');
       }
 
       viewProjects.classList.add('hidden');
@@ -1751,12 +1759,13 @@
       emptyProjects.classList.add('hidden');
 
       projectsList.innerHTML = projects.map(proj => {
+        const prodValue = proj.producer || proj.director || '';
         return `
           <div class="project-card" data-action="open-project" data-id="${proj.id}">
             <div class="project-card-info">
               <div class="project-card-title">${escapeHtml(proj.name)}</div>
               <p class="project-card-meta">
-                ${proj.director ? escapeHtml(proj.director) + ' • ' : ''}Creado: ${new Date(proj.createdAt).toLocaleDateString()}
+                ${prodValue ? escapeHtml(prodValue) + ' • ' : ''}Creado: ${new Date(proj.createdAt).toLocaleDateString()}
               </p>
             </div>
             <button type="button" class="btn-edit-square" data-action="edit-project" data-id="${proj.id}" title="Editar proyecto">
@@ -1791,7 +1800,7 @@
     document.getElementById('btn-new-project').addEventListener('click', () => {
       document.getElementById('proj-id').value = '';
       document.getElementById('proj-name').value = '';
-      document.getElementById('proj-director').value = '';
+      document.getElementById('proj-producer').value = '';
       projectModalTitle.textContent = 'NUEVO PROYECTO';
       btnSubmitProject.textContent = 'Crear Proyecto';
       deleteProjectContainer.classList.add('hidden');
@@ -1805,7 +1814,7 @@
 
       document.getElementById('proj-id').value = proj.id;
       document.getElementById('proj-name').value = proj.name;
-      document.getElementById('proj-director').value = proj.director || '';
+      document.getElementById('proj-producer').value = proj.producer || proj.director || '';
       projectModalTitle.textContent = 'EDITAR PROYECTO';
       btnSubmitProject.textContent = 'Guardar Cambios';
       deleteProjectContainer.classList.remove('hidden');
@@ -1819,7 +1828,7 @@
       e.preventDefault();
       const existingId = document.getElementById('proj-id').value;
       const name = document.getElementById('proj-name').value.trim();
-      const director = document.getElementById('proj-director').value.trim();
+      const producer = document.getElementById('proj-producer').value.trim();
       if (!name) return;
 
       if (existingId) {
@@ -1828,7 +1837,7 @@
         const updatedProj = {
           id: existingId,
           name,
-          director,
+          producer,
           createdAt: existingProj ? existingProj.createdAt : Date.now()
         };
         await saveProjectToDB(updatedProj);
@@ -1839,7 +1848,7 @@
         const newProj = {
           id: 'proj_' + Date.now(),
           name,
-          director,
+          producer,
           createdAt: Date.now()
         };
         await saveProjectToDB(newProj);
@@ -2134,7 +2143,7 @@
 
     async function renderScenesList() {
       const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-      scenes.sort((a, b) => String(a.sceneNum).localeCompare(String(b.sceneNum), undefined, { numeric: true }));
+      scenes.sort((a, b) => compareSceneNumbers(a.sceneNum, b.sceneNum));
 
       const container = document.getElementById('scenes-list');
       if (scenes.length === 0) {
@@ -2296,7 +2305,7 @@
        ========================================================================== */
     async function updateCatalogCaches() {
       cachedScenesForProject = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-      cachedScenesForProject.sort((a, b) => String(a.sceneNum).localeCompare(String(b.sceneNum), undefined, { numeric: true }));
+      cachedScenesForProject.sort((a, b) => compareSceneNumbers(a.sceneNum, b.sceneNum));
 
       cachedCharactersForProject = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       cachedCharactersForProject.sort((a, b) => a.name.localeCompare(b.name));
@@ -2315,7 +2324,7 @@
     }
 
     /* ==========================================================================
-       EXPORTAR REPORTE PDF PROFESIONAL (BILINGÜE + LOGO + V1/V2/V3 + IMAGEN GRANDE)
+       EXPORTAR REPORTE PDF PROFESIONAL (LOGO EXACTO DE LA APP + PIE DE PÁGINA)
        ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
@@ -2331,7 +2340,8 @@
         return;
       }
 
-      cachedTakesForPdf.sort((a, b) => String(a.scene).localeCompare(String(b.scene), undefined, { numeric: true }));
+      // Ordenar numéricamente las escenas
+      cachedTakesForPdf.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
       pdfScenesChecklist.innerHTML = cachedTakesForPdf.map(t => {
         const photosCount = getNormalizedPhotos(t).length;
@@ -2369,45 +2379,64 @@
       });
     }
 
-    // Dibuja el logo idéntico de RaccordPRO arriba a la derecha en el PDF
-    function drawRaccordProLogo(doc, rightX, topY) {
+    // Convierte el SVG exacto de la claqueta de la app a PNG de alta resolución para incrustarlo en el PDF
+    function getExactAppClapperboardPng() {
+      return new Promise((resolve) => {
+        const svgMarkup = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+            <rect x="2" y="2" width="124" height="124" rx="28" fill="#2e261a" stroke="#f59e0b" stroke-width="4" stroke-opacity="0.65"/>
+            <g transform="translate(24, 24) scale(3.33)" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/>
+              <path d="m6.2 5.3 3.1 3.9"/>
+              <path d="m12.4 3.4 3.1 4"/>
+              <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>
+            </g>
+          </svg>
+        `;
+        const img = new Image();
+        const svgBlob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 128;
+          canvas.height = 128;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, 128, 128);
+          URL.revokeObjectURL(url);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          resolve(null);
+        };
+        img.src = url;
+      });
+    }
+
+    // Dibuja el logo idéntico de RaccordPRO más compacto arriba a la derecha
+    function drawExactRaccordProLogo(doc, clapperPng, rightX, topY) {
       const textRaccord = 'Raccord';
       const textPro = 'PRO';
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(13);
+      doc.setFontSize(10.5);
 
       const wRaccord = doc.getTextWidth(textRaccord);
       const wPro = doc.getTextWidth(textPro);
-      const iconBoxSize = 7.5;
-      const gap = 2.5;
-      const totalWidth = iconBoxSize + gap + wRaccord + wPro;
+      const iconSize = 6.2;
+      const gap = 2.0;
+      const totalWidth = iconSize + gap + wRaccord + wPro;
       const startX = rightX - totalWidth;
 
-      // Recuadro del icono de claqueta
-      doc.setFillColor(38, 32, 22);
-      doc.setDrawColor(245, 158, 11);
-      doc.setLineWidth(0.35);
-      doc.roundedRect(startX, topY, iconBoxSize, iconBoxSize, 1.8, 1.8, 'FD');
+      if (clapperPng) {
+        doc.addImage(clapperPng, 'PNG', startX, topY, iconSize, iconSize);
+      }
 
-      // Dibujo vectorial de la claqueta dentro del recuadro
-      doc.setDrawColor(245, 158, 11);
-      doc.setLineWidth(0.45);
-      // Cuerpo inferior de claqueta
-      doc.rect(startX + 1.6, topY + 3.4, 4.3, 2.7);
-      // Parte superior inclinada
-      doc.line(startX + 1.6, topY + 3.4, startX + 5.7, topY + 2.0);
-      doc.line(startX + 1.4, topY + 2.6, startX + 5.5, topY + 1.3);
-      // Líneas diagonales de claqueta
-      doc.line(startX + 2.4, topY + 2.3, startX + 3.0, topY + 3.0);
-      doc.line(startX + 3.9, topY + 1.8, startX + 4.5, topY + 2.5);
-
-      // Texto "Raccord" en blanco + "PRO" en ámbar
-      const textY = topY + 5.4;
+      const textY = topY + 4.4;
       doc.setTextColor(255, 255, 255);
-      doc.text(textRaccord, startX + iconBoxSize + gap, textY);
+      doc.text(textRaccord, startX + iconSize + gap, textY);
 
       doc.setTextColor(245, 158, 11);
-      doc.text(textPro, startX + iconBoxSize + gap + wRaccord, textY);
+      doc.text(textPro, startX + iconSize + gap + wRaccord, textY);
     }
 
     document.getElementById('btn-generate-real-pdf').addEventListener('click', async () => {
@@ -2437,55 +2466,63 @@
         timeLabel: isEN ? 'Logged' : 'Hora registro',
         generalNotesLabel: isEN ? 'General notes' : 'Notas generales',
         photoLabel: isEN ? 'PHOTO' : 'FOTO',
-        noCharLabel: isEN ? 'Unassigned character' : 'Sin personaje'
+        noCharLabel: isEN ? 'Unassigned character' : 'Sin personaje',
+        pageWord: isEN ? 'Page' : 'Página',
+        ofWord: isEN ? 'of' : 'de'
       };
 
-      const selectedTakes = cachedTakesForPdf.filter(t => selectedIds.has(t.id));
+      const selectedTakes = cachedTakesForPdf
+        .filter(t => selectedIds.has(t.id))
+        .sort((a, b) => compareSceneNumbers(a.scene, b.scene));
+
       reportModal.classList.add('hidden');
       showToast(isEN ? 'Building PDF report...' : 'Construyendo reporte PDF...');
 
       try {
+        const clapperPng = await getExactAppClapperboardPng();
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
         const pageWidth = 210;
         const pageHeight = 297;
         const margin = 14;
+        const bottomSafeY = pageHeight - 18;
         const contentWidth = pageWidth - (margin * 2);
-        let y = 18;
+        let y = 16;
 
-        // Encabezado oscuro profesional
+        // Encabezado compacto
         doc.setFillColor(19, 23, 29);
-        doc.rect(0, 0, pageWidth, 36, 'F');
+        doc.rect(0, 0, pageWidth, 32, 'F');
 
-        // Logo RaccordPRO arriba a la derecha
-        drawRaccordProLogo(doc, pageWidth - margin, 8.5);
+        // Logo idéntico de RaccordPRO más pequeño arriba a la derecha
+        drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 7.5);
 
-        // Título principal: REPORTE DE CONTINUIDAD / CONTINUITY REPORT
+        // Título más pequeño y estilizado
         doc.setTextColor(245, 158, 11);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(17);
-        doc.text(i18n.reportTitle, margin, 14.5);
+        doc.setFontSize(13.5);
+        doc.text(i18n.reportTitle, margin, 12.5);
 
         // Nombre del Proyecto
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(12);
         const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
-        doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 22.5);
+        const prodName = activeProjectData ? (activeProjectData.producer || activeProjectData.director || '') : '';
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10.5);
+        doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 19.5);
 
-        // Director / Productora y fecha
+        // Productora y fecha
         doc.setTextColor(180, 185, 195);
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9.5);
-        const metaLine = `${activeProjectData && activeProjectData.director ? activeProjectData.director + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-        doc.text(metaLine, margin, 29);
+        doc.setFontSize(8.5);
+        const metaLine = `${prodName ? prodName + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        doc.text(metaLine, margin, 25.5);
 
-        y = 44;
+        y = 40;
 
         for (const take of selectedTakes) {
-          if (y > pageHeight - 45) {
+          if (y > bottomSafeY - 30) {
             doc.addPage();
-            y = 18;
+            y = 16;
           }
 
           // Banda de Escena
@@ -2495,13 +2532,13 @@
 
           doc.setTextColor(180, 95, 6);
           doc.setFont('helvetica', 'bold');
-          doc.setFontSize(12);
+          doc.setFontSize(11.5);
           doc.text(`${i18n.sceneLabel} ${take.scene}`, margin + 4, y + 6);
 
           if (take.sceneDesc) {
             doc.setTextColor(35, 40, 48);
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(10);
+            doc.setFontSize(9.5);
             const descTrunc = doc.splitTextToSize(take.sceneDesc, contentWidth - 42)[0];
             doc.text(descTrunc, margin + 36, y + 6);
           }
@@ -2513,21 +2550,19 @@
 
           y += 18;
 
-          // Notas Generales de la Escena (solo si existen)
           if (take.notes && take.notes.trim()) {
             doc.setTextColor(55, 65, 81);
             doc.setFont('helvetica', 'italic');
-            doc.setFontSize(10);
+            doc.setFontSize(9.5);
             const noteLines = doc.splitTextToSize(`${i18n.generalNotesLabel}: ${take.notes.trim()}`, contentWidth - 4);
-            if (y + (noteLines.length * 5) > pageHeight - 16) {
+            if (y + (noteLines.length * 4.8) > bottomSafeY) {
               doc.addPage();
-              y = 18;
+              y = 16;
             }
             doc.text(noteLines, margin + 2, y);
-            y += (noteLines.length * 5) + 4;
+            y += (noteLines.length * 4.8) + 4;
           }
 
-          // Bloques de Fotos + Personaje + Notas específicas (30% más grandes: 88x70 mm)
           const photos = getNormalizedPhotos(take);
 
           for (let i = 0; i < photos.length; i++) {
@@ -2543,17 +2578,16 @@
             const textColW = contentWidth - maxImgW - 8;
 
             doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            // Si no hay notas, dejar completamente en blanco
+            doc.setFontSize(9.5);
             const hasNote = p.note && p.note.trim().length > 0;
             const pNoteLines = hasNote ? doc.splitTextToSize(p.note.trim(), textColW) : [];
 
             const textContentHeight = hasNote ? (pNoteLines.length * 4.8) + 18 : 18;
             const blockHeight = Math.max(drawH + 6, textContentHeight);
 
-            if (y + blockHeight > pageHeight - 16) {
+            if (y + blockHeight > bottomSafeY) {
               doc.addPage();
-              y = 18;
+              y = 16;
             }
 
             doc.setDrawColor(225, 228, 232);
@@ -2573,7 +2607,7 @@
 
             doc.setTextColor(17, 24, 39);
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(12);
+            doc.setFontSize(11.5);
             doc.text(p.character || i18n.noCharLabel, textColX, y + 14);
 
             if (hasNote) {
@@ -2589,7 +2623,26 @@
           y += 6;
         }
 
-        // Consecutivo automático V1, V2, V3... por proyecto y fecha en mayúsculas
+        // PIE DE PÁGINA EN TODAS LAS PÁGINAS: Nombre del proyecto a la izquierda y número de página a la derecha
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let pageIdx = 1; pageIdx <= totalPages; pageIdx++) {
+          doc.setPage(pageIdx);
+          const footerY = pageHeight - 9;
+
+          doc.setDrawColor(220, 224, 230);
+          doc.setLineWidth(0.3);
+          doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8.5);
+          doc.setTextColor(100, 105, 115);
+          doc.text(projTitle, margin, footerY);
+
+          doc.setFont('helvetica', 'normal');
+          const pageLabel = `${i18n.pageWord} ${pageIdx} ${i18n.ofWord} ${totalPages}`;
+          doc.text(pageLabel, pageWidth - margin, footerY, { align: 'right' });
+        }
+
         const rawProjName = (activeProjectData ? activeProjectData.name : 'PROYECTO')
           .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
           .toUpperCase()
@@ -2654,7 +2707,7 @@
     });
 
     /* ==========================================================================
-       RENDERIZADO DE RACCORDS EN PANTALLA PRINCIPAL (BOTONES ARRIBA A LA DERECHA)
+       RENDERIZADO DE RACCORDS ORDENADOS ESTRICTAMENTE POR NÚMERO DE ESCENA
        ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
@@ -2670,7 +2723,9 @@
     async function renderTakes() {
       if (!activeProjectId) return;
       const takes = await getAllTakesForProject(activeProjectId);
-      takes.sort((a, b) => b.timestamp - a.timestamp);
+
+      // Ordenar numéricamente de menor a mayor por número de escena (3, 53, 116...)
+      takes.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
       const filtered = takes.filter(item => {
         const q = searchQuery.toLowerCase().trim();
@@ -2752,7 +2807,6 @@
                   <span class="raccord-scene-badge">ESCENA ${escapeHtml(take.scene)}</span>
                   ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
                 </div>
-                <!-- BOTONES SOLO ICONOS ARRIBA A LA DERECHA -->
                 <div class="raccord-header-actions">
                   <button type="button" class="btn-edit-square" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
                     ${ICON_EDIT_SVG}
