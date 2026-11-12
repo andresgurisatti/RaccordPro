@@ -12,11 +12,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="RaccordPro">
 
-  <!-- Icono de claqueta nativo para iPhone y Android -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
 
-  <!-- Librería PDF.js para lectura local de guiones -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
@@ -193,8 +191,6 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: var(--text-muted);
-      font-size: 18px;
-      font-weight: 800;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -283,8 +279,8 @@
       color: var(--amber);
       background: rgba(245, 158, 11, 0.12);
       border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 6px 12px;
-      border-radius: 8px;
+      padding: 10px 16px;
+      border-radius: var(--btn-radius);
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
@@ -407,6 +403,7 @@
       margin: 4px 0;
     }
 
+    /* BARRA SUPERIOR DE SET LIMPIA (SIN DEPARTAMENTOS) */
     .toolbar {
       background: var(--bg-850);
       border-bottom: 1px solid var(--border-700);
@@ -414,10 +411,10 @@
       flex-shrink: 0;
     }
 
-    .search-row {
+    .toolbar-clean-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 12px;
+      align-items: center;
     }
 
     .search-box {
@@ -436,7 +433,7 @@
 
     .search-input {
       width: 100%;
-      min-height: 48px;
+      min-height: 50px;
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: #fff;
@@ -447,45 +444,6 @@
     }
 
     .search-input:focus {
-      border-color: var(--amber);
-    }
-
-    .filter-bar-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .chips-row {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-      flex: 1;
-    }
-
-    .chips-row::-webkit-scrollbar {
-      display: none;
-    }
-
-    .dept-chip {
-      background: var(--bg-800);
-      border: 1px solid var(--border-700);
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 800;
-      padding: 12px 18px;
-      min-height: 44px;
-      border-radius: var(--btn-radius);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .dept-chip.active {
-      background: var(--amber);
-      color: #000;
       border-color: var(--amber);
     }
 
@@ -507,7 +465,7 @@
 
     .take-img-box {
       position: relative;
-      height: 210px;
+      height: 220px;
       background: var(--bg-900);
       cursor: pointer;
       overflow: hidden;
@@ -538,45 +496,31 @@
       left: 10px;
       background: rgba(0, 0, 0, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 7px 12px;
+      padding: 8px 14px;
       border-radius: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
       font-family: monospace;
-      max-width: 72%;
+      max-width: 85%;
     }
 
     .slate-scene {
       color: var(--amber);
       font-weight: 900;
-      font-size: 15px;
+      font-size: 16px;
       white-space: nowrap;
     }
 
     .slate-location {
       color: #e5e7eb;
-      font-size: 12px;
+      font-size: 13px;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .status-pill {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 6px 10px;
-      border-radius: 8px;
-    }
-
-    .status-OK { background: #064e3b; color: #34d399; border: 1px solid #10b981; }
-    .status-WARNING { background: #78350f; color: #fbbf24; border: 1px solid #f59e0b; }
-    .status-CHANGE { background: #7f1d1d; color: #f87171; border: 1px solid #ef4444; }
 
     .take-body {
       padding: 16px;
@@ -590,17 +534,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .dept-tag {
-      font-size: 13px;
-      font-weight: 800;
-      padding: 5px 10px;
-      border-radius: 8px;
-      background: var(--bg-800);
-      border: 1px solid var(--border-600);
-      color: #e5e7eb;
+      margin-bottom: 8px;
     }
 
     .take-time {
@@ -610,7 +544,7 @@
     }
 
     .take-char {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
       color: #fff;
       margin-bottom: 8px;
@@ -643,7 +577,7 @@
 
     .action-link {
       flex: 1;
-      min-height: 44px;
+      min-height: 46px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -651,7 +585,7 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       padding: 10px 12px;
       border-radius: var(--btn-radius);
@@ -781,7 +715,7 @@
 
     .form-control {
       width: 100%;
-      min-height: 50px;
+      min-height: 52px;
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       border-radius: var(--btn-radius);
@@ -795,12 +729,6 @@
       border-color: var(--amber);
     }
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -811,48 +739,6 @@
       .grid-2 {
         grid-template-columns: 1fr;
       }
-    }
-
-    .status-option {
-      display: block;
-      cursor: pointer;
-    }
-
-    .status-option input {
-      display: none;
-    }
-
-    .status-box {
-      background: var(--bg-800);
-      border: 1px solid var(--border-700);
-      border-radius: var(--btn-radius);
-      padding: 14px 8px;
-      min-height: 48px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .status-option input[value="OK"]:checked + .status-box {
-      border-color: var(--emerald);
-      color: #34d399;
-      background: rgba(16, 185, 129, 0.15);
-    }
-
-    .status-option input[value="WARNING"]:checked + .status-box {
-      border-color: var(--amber);
-      color: var(--amber);
-      background: rgba(245, 158, 11, 0.15);
-    }
-
-    .status-option input[value="CHANGE"]:checked + .status-box {
-      border-color: var(--red);
-      color: #f87171;
-      background: rgba(239, 68, 68, 0.15);
     }
 
     .camera-dropzone {
@@ -934,19 +820,26 @@
       margin-bottom: 10px;
     }
 
-    .btn-delete-small {
-      min-width: 42px;
-      min-height: 42px;
+    .btn-action-small {
+      min-width: 44px;
+      min-height: 44px;
       border-radius: var(--btn-radius);
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
-      font-weight: 900;
-      font-size: 15px;
+      background: var(--bg-850);
+      border: 1px solid var(--border-700);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .btn-action-small.edit {
+      color: var(--amber);
+    }
+
+    .btn-action-small.delete {
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.1);
     }
 
     .toast-bar {
@@ -1044,10 +937,8 @@
         </button>
       </div>
 
-      <!-- Input oculto para leer PDF del Guion -->
       <input type="file" id="input-script-pdf" accept=".pdf,application/pdf" class="hidden">
 
-      <!-- MENÚ DESPLEGABLE CON BOTONES GRANDES -->
       <div id="project-dropdown-menu" class="dropdown-menu hidden">
         <button type="button" class="dropdown-item highlight" id="menu-opt-script-pdf">
           <span style="font-size:20px;">📖</span> <span>Importar Guion (PDF)</span>
@@ -1071,27 +962,17 @@
       </div>
     </header>
 
+    <!-- BARRA SUPERIOR LIMPIA (SIN FRANJA DE DEPARTAMENTOS) -->
     <section class="toolbar">
-      <div class="search-row">
+      <div class="toolbar-clean-row">
         <div class="search-box">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="text" id="search-input" class="search-input" placeholder="Buscar escena, set, personaje o nota...">
         </div>
-        <button type="button" id="btn-reset-filters" class="btn-icon" style="font-size:14px; font-weight:800; padding:0 16px;">
-          Limpiar
-        </button>
-      </div>
-
-      <div class="filter-bar-row">
-        <div class="chips-row">
-          <button type="button" data-dept="ALL" class="dept-chip active">Todos</button>
-          <button type="button" data-dept="Vestuario" class="dept-chip">👗 Vestuario</button>
-          <button type="button" data-dept="Maquillaje/Pelo" class="dept-chip">💄 MakeUp & Pelo</button>
-          <button type="button" data-dept="Props" class="dept-chip">📦 Utilería / Props</button>
-          <button type="button" data-dept="Arte" class="dept-chip">🎨 Escenografía</button>
-          <button type="button" data-dept="Cámara/Luz" class="dept-chip">🎥 Cámara / Luz</button>
-        </div>
         <span id="badge-total-items" class="raccords-count-tag">0 raccords</span>
+        <button type="button" id="btn-reset-filters" class="btn-icon" title="Limpiar búsqueda">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
       </div>
     </section>
 
@@ -1122,7 +1003,9 @@
     <div class="modal-card" style="max-width:440px;">
       <div class="modal-header">
         <h2 class="modal-title" style="color:var(--amber);">📖 GUION PROCESADO</h2>
-        <button type="button" id="btn-close-review-modal" class="btn-close-touch">✕</button>
+        <button type="button" id="btn-close-review-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
       <div class="modal-body">
         <p id="script-review-summary" style="margin:0 0 14px 0; font-size:16px; font-weight:800; color:#fff;"></p>
@@ -1144,7 +1027,9 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="project-modal-title" class="modal-title">NUEVO PROYECTO</h2>
-        <button type="button" id="btn-close-project-modal" class="btn-close-touch" title="Cerrar ventana">✕</button>
+        <button type="button" id="btn-close-project-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
       <form id="project-form" class="modal-body">
         <input type="hidden" id="proj-id" value="">
@@ -1174,21 +1059,27 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GESTIÓN DE ESCENAS                  -->
+  <!-- MODAL: GESTIÓN Y EDICIÓN DE ESCENAS        -->
   <!-- ========================================== -->
   <div id="scenes-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">ESCENAS DEL PROYECTO</h2>
-        <button type="button" id="btn-close-scenes-modal" class="btn-close-touch">✕</button>
+        <h2 id="scenes-modal-title" class="modal-title">ESCENAS DEL PROYECTO</h2>
+        <button type="button" id="btn-close-scenes-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
       <div class="modal-body">
         <form id="scenes-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          <input type="hidden" id="edit-scene-id" value="">
           <div style="display:flex; gap:10px;">
             <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
             <input type="text" id="new-scene-desc" placeholder="Encabezado (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
           </div>
-          <button type="submit" class="btn-primary" style="width:100%;">+ Añadir Escena</button>
+          <div style="display:flex; gap:8px;">
+            <button type="submit" id="btn-save-scene" class="btn-primary" style="flex:1;">+ Añadir Escena</button>
+            <button type="button" id="btn-cancel-edit-scene" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
+          </div>
         </form>
         <div id="scenes-list" style="max-height:300px; overflow-y:auto;"></div>
       </div>
@@ -1196,21 +1087,27 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GESTIÓN DE PERSONAJES               -->
+  <!-- MODAL: GESTIÓN Y EDICIÓN DE PERSONAJES     -->
   <!-- ========================================== -->
   <div id="characters-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">PERSONAJES DEL PROYECTO</h2>
-        <button type="button" id="btn-close-characters-modal" class="btn-close-touch">✕</button>
+        <h2 id="characters-modal-title" class="modal-title">PERSONAJES DEL PROYECTO</h2>
+        <button type="button" id="btn-close-characters-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
       <div class="modal-body">
         <form id="characters-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          <input type="hidden" id="edit-character-id" value="">
           <div style="display:flex; gap:10px;">
             <input type="text" id="new-character-name" placeholder="Personaje (Ej: Valeria)" required class="form-control" style="flex:1;">
             <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
           </div>
-          <button type="submit" class="btn-primary" style="width:100%;">+ Añadir Personaje</button>
+          <div style="display:flex; gap:8px;">
+            <button type="submit" id="btn-save-character" class="btn-primary" style="flex:1;">+ Añadir Personaje</button>
+            <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
+          </div>
         </form>
         <div id="characters-list" style="max-height:300px; overflow-y:auto;"></div>
       </div>
@@ -1218,18 +1115,24 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GESTIÓN DE SETS / LOCACIONES        -->
+  <!-- MODAL: GESTIÓN Y EDICIÓN DE SETS           -->
   <!-- ========================================== -->
   <div id="locations-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">SETS / LOCACIONES</h2>
-        <button type="button" id="btn-close-locations-modal" class="btn-close-touch">✕</button>
+        <h2 id="locations-modal-title" class="modal-title">SETS / LOCACIONES</h2>
+        <button type="button" id="btn-close-locations-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
       <div class="modal-body">
         <form id="locations-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          <input type="hidden" id="edit-location-id" value="">
           <input type="text" id="new-location-name" placeholder="Ej: COCINA DE VALERIA" required class="form-control">
-          <button type="submit" class="btn-primary" style="width:100%;">+ Añadir Set / Locación</button>
+          <div style="display:flex; gap:8px;">
+            <button type="submit" id="btn-save-location" class="btn-primary" style="flex:1;">+ Añadir Set / Locación</button>
+            <button type="button" id="btn-cancel-edit-location" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
+          </div>
         </form>
         <div id="locations-list" style="max-height:300px; overflow-y:auto;"></div>
       </div>
@@ -1237,65 +1140,41 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: AGREGAR / EDITAR RACCORD POR ESCENA -->
+  <!-- MODAL: REGISTRO DE RACCORD POR SELECCIÓN   -->
   <!-- ========================================== -->
   <div id="entry-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="modal-title" class="modal-title">NUEVO RACCORD DE ESCENA</h2>
-        <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar ventana">✕</button>
+        <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
 
       <form id="raccord-form" class="modal-body">
         <input type="hidden" id="entry-id" value="">
 
+        <!-- Seleccionables directos en vez de escribir -->
         <div class="form-group grid-2">
           <div>
             <label class="form-label">Escena *</label>
-            <input type="text" id="input-scene" list="datalist-scenes" required placeholder="Ej: 14" class="form-control" style="font-weight:800; color:#f59e0b;">
-            <datalist id="datalist-scenes"></datalist>
-          </div>
-          <div>
-            <label class="form-label">Set / Locación</label>
-            <input type="text" id="input-location" list="datalist-locations" placeholder="Ej: Cocina de Valeria" class="form-control">
-            <datalist id="datalist-locations"></datalist>
-          </div>
-        </div>
-
-        <div class="form-group grid-2">
-          <div>
-            <label class="form-label">Departamento *</label>
-            <select id="input-dept" required class="form-control">
-              <option value="Vestuario">👗 Vestuario / Costume</option>
-              <option value="Maquillaje/Pelo">💄 Maquillaje y Peinado</option>
-              <option value="Props">📦 Utilería / Props</option>
-              <option value="Arte">🎨 Arte / Decorado</option>
-              <option value="Cámara/Luz">🎥 Cámara y Luces</option>
+            <select id="select-scene" required class="form-control" style="font-weight:800; color:var(--amber);">
+              <option value="">Selecciona una escena...</option>
             </select>
           </div>
           <div>
-            <label class="form-label">Personaje / Actor</label>
-            <input type="text" id="input-character" list="datalist-characters" placeholder="Ej: Valeria" class="form-control">
-            <datalist id="datalist-characters"></datalist>
+            <label class="form-label">Set / Locación</label>
+            <select id="select-location" class="form-control">
+              <option value="">Selecciona un set...</option>
+            </select>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Condición de Raccord</label>
-          <div class="grid-3">
-            <label class="status-option">
-              <input type="radio" name="status" value="OK" checked>
-              <span class="status-box">Raccord OK</span>
-            </label>
-            <label class="status-option">
-              <input type="radio" name="status" value="WARNING">
-              <span class="status-box">Atención</span>
-            </label>
-            <label class="status-option">
-              <input type="radio" name="status" value="CHANGE">
-              <span class="status-box">Cambio</span>
-            </label>
-          </div>
+          <label class="form-label">Personaje</label>
+          <select id="select-character" class="form-control">
+            <option value="">Selecciona un personaje...</option>
+          </select>
         </div>
 
         <div class="form-group">
@@ -1321,8 +1200,8 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Notas de Continuidad / Raccord *</label>
-          <textarea id="input-notes" required rows="3" placeholder="Ej: Reloj en muñeca izquierda, botón superior desabrochado..." class="form-control" style="font-size:16px; line-height:1.4; min-height:90px;"></textarea>
+          <label class="form-label">Notas de Continuidad / Raccord (Opcional)</label>
+          <textarea id="input-notes" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, posiciones..." class="form-control" style="font-size:16px; line-height:1.4; min-height:90px;"></textarea>
         </div>
 
         <div class="modal-actions">
@@ -1342,7 +1221,9 @@
         <h3 id="viewer-title" style="margin:0; font-size:17px; color:#f59e0b; font-weight:800;">Escena</h3>
         <p id="viewer-subtitle" style="margin:3px 0 0 0; font-size:14px; color:#9ca3af;"></p>
       </div>
-      <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar visor">✕</button>
+      <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
 
     <div style="flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; margin:14px 0;">
@@ -1364,7 +1245,9 @@
         <h2 class="modal-title">Hoja de Continuidad por Escenas</h2>
         <div style="display:flex; align-items:center; gap:10px;">
           <button type="button" id="btn-print-report" class="btn-primary" style="padding:10px 16px; min-height:44px; font-size:14px;">Imprimir / PDF</button>
-          <button type="button" id="btn-close-report" class="btn-close-touch">✕</button>
+          <button type="button" id="btn-close-report" class="btn-close-touch" title="Cerrar">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </div>
       </div>
       <div id="report-content" class="modal-body"></div>
@@ -1413,7 +1296,6 @@
     let activeProjectId = null;
     let activeProjectData = null;
     let currentPhotoBase64 = null;
-    let activeFilterDept = 'ALL';
     let searchQuery = '';
     let pendingConfirmAction = null;
     let cachedScenesForProject = [];
@@ -1618,14 +1500,10 @@
       viewProjects.classList.add('hidden');
       viewTakes.classList.remove('hidden');
 
-      activeFilterDept = 'ALL';
       searchQuery = '';
       document.getElementById('search-input').value = '';
-      document.querySelectorAll('.dept-chip').forEach((c, idx) => {
-        c.classList.toggle('active', idx === 0);
-      });
 
-      await updateDatalists();
+      await updateSelectDropdowns();
       renderTakes();
     }
 
@@ -1876,7 +1754,6 @@
         let addedLocationsCount = 0;
         let addedCharactersCount = 0;
 
-        // Regex para detectar modificadores temporales estándar y variantes
         const timeRegex = /\b(?:EXT\/DAY|INT\/DAY|EXT\/NIGHT|INT\/NIGHT|SUNRISE\/DAY|SUNRISE\/NIGHT|EXT\/DAWN|INT\/DAWN|EXT\/DUSK|INT\/DUSK|INT\/EXT|EXT\/INT|I\/E|INT\.|EXT\.|INT|EXT)\b/i;
 
         const nonCharacterKeywords = new Set([
@@ -1897,7 +1774,6 @@
           for (const item of textContent.items) {
             const text = item.str;
             if (!text || !text.trim()) continue;
-            // Ignorar marcas de agua comunes o pie de página
             if (/diego\s+garcia/i.test(text)) continue;
 
             const y = Math.round(item.transform[5]);
@@ -1919,20 +1795,16 @@
 
             if (!line || line.length < 2) continue;
 
-            // 1) DETECCIÓN DE ENCABEZADOS DE ESCENA
-            // Soporta formatos estándar: "14 INT. COCINA - DÍA" y formatos europeos: "HAWAII/O'AHU EXT/DAY 1"
             if (timeRegex.test(line)) {
               let sceneNum = '';
               let workingLine = line;
 
-              // Buscar número de escena al inicio (ej: "14 INT. ...")
               const leadingNum = workingLine.match(/^(\d+[A-Z]?)\s+/);
               if (leadingNum) {
                 sceneNum = leadingNum[1];
                 workingLine = workingLine.replace(/^\d+[A-Z]?\s+/, '').trim();
               }
 
-              // Buscar número de escena al final (ej: "... EXT/DAY 14")
               const trailingNum = workingLine.match(/\s+(\d+[A-Z]?)$/);
               if (trailingNum) {
                 if (!sceneNum) sceneNum = trailingNum[1];
@@ -1943,7 +1815,6 @@
                 sceneNum = String(autoSceneCounter++);
               }
 
-              // Extraer Set / Locación limpiando los tags de INT/EXT y DÍA/NOCHE
               let setName = workingLine
                 .replace(/\b(?:EXT\/DAY|INT\/DAY|EXT\/NIGHT|INT\/NIGHT|SUNRISE\/DAY|SUNRISE\/NIGHT|EXT\/DAWN|INT\/DAWN|EXT\/DUSK|INT\/DUSK|INT\/EXT|EXT\/INT|I\/E|INT\.|EXT\.|INT|EXT)\b/gi, '')
                 .replace(/\b(?:DAY|NIGHT|DÍA|NOCHE|DAWN|DUSK|SUNRISE|SUNSET|CONTINUOUS|CONTINUO|EVENING|AFTERNOON)\b/gi, '')
@@ -1977,7 +1848,6 @@
               continue;
             }
 
-            // 2) DETECCIÓN DE PERSONAJES (Diálogos centrados en mayúsculas)
             const isIndented = firstX > (pageWidth * 0.22) && firstX < (pageWidth * 0.75);
             const hasNextLine = (rIdx + 1) < rows.length;
 
@@ -2016,9 +1886,8 @@
           }
         }
 
-        await updateDatalists();
+        await updateSelectDropdowns();
 
-        // Mostrar resumen y advertencia de revisión
         document.getElementById('script-review-summary').textContent = 
           `Se incorporaron con éxito: +${addedScenesCount} Escenas, +${addedLocationsCount} Sets y +${addedCharactersCount} Personajes.`;
         scriptReviewModal.classList.remove('hidden');
@@ -2029,13 +1898,31 @@
       }
     });
 
-    /* 2. GESTIÓN DE ESCENAS */
+    /* ==========================================================================
+       GESTIÓN Y EDICIÓN DE ESCENAS
+       ========================================================================== */
     const scenesModal = document.getElementById('scenes-modal');
+    const scenesForm = document.getElementById('scenes-form');
+    const editSceneId = document.getElementById('edit-scene-id');
+    const btnSaveScene = document.getElementById('btn-save-scene');
+    const btnCancelEditScene = document.getElementById('btn-cancel-edit-scene');
+
     document.getElementById('menu-opt-scenes').addEventListener('click', () => {
       closeProjectMenu();
+      resetSceneForm();
       openScenesManager();
     });
     document.getElementById('btn-close-scenes-modal').addEventListener('click', () => scenesModal.classList.add('hidden'));
+
+    function resetSceneForm() {
+      editSceneId.value = '';
+      document.getElementById('new-scene-num').value = '';
+      document.getElementById('new-scene-desc').value = '';
+      btnSaveScene.textContent = '+ Añadir Escena';
+      btnCancelEditScene.classList.add('hidden');
+    }
+
+    btnCancelEditScene.addEventListener('click', resetSceneForm);
 
     async function openScenesManager() {
       scenesModal.classList.remove('hidden');
@@ -2044,7 +1931,6 @@
 
     async function renderScenesList() {
       const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-      // Orden numérico inteligente
       scenes.sort((a, b) => String(a.sceneNum).localeCompare(String(b.sceneNum), undefined, { numeric: true }));
 
       const container = document.getElementById('scenes-list');
@@ -2054,49 +1940,87 @@
       }
       container.innerHTML = scenes.map(s => `
         <div class="manager-item">
-          <div style="min-width:0;">
+          <div style="min-width:0; flex:1;">
             <strong style="color:var(--amber); font-size:16px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
             <span style="color:#d1d5db; font-size:14px;">${escapeHtml(s.desc || '')}</span>
           </div>
-          <button type="button" class="btn-delete-small" onclick="deleteSceneItem('${s.id}')">✕</button>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-action-small edit" onclick="startEditScene('${s.id}')" title="Editar">✏️</button>
+            <button type="button" class="btn-action-small delete" onclick="deleteSceneItem('${s.id}')" title="Eliminar">🗑️</button>
+          </div>
         </div>
       `).join('');
     }
 
-    document.getElementById('scenes-form').addEventListener('submit', async (e) => {
+    scenesForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const num = document.getElementById('new-scene-num').value.trim();
       const desc = document.getElementById('new-scene-desc').value.trim();
       if (!num) return;
 
+      const existingId = editSceneId.value;
+      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const original = existingId ? scenes.find(s => s.id === existingId) : null;
+
       await saveEntityToDB(STORE_SCENES, {
-        id: 'sc_' + Date.now(),
+        id: existingId || ('sc_' + Date.now()),
         projectId: activeProjectId,
         sceneNum: num,
-        desc
+        desc: desc,
+        location: original ? (original.location || '') : ''
       });
 
-      document.getElementById('new-scene-num').value = '';
-      document.getElementById('new-scene-desc').value = '';
+      resetSceneForm();
       await renderScenesList();
-      await updateDatalists();
-      showToast(`Escena ${num} guardada`);
+      await updateSelectDropdowns();
+      showToast(existingId ? `Escena ${num} actualizada` : `Escena ${num} guardada`);
     });
+
+    window.startEditScene = async function(id) {
+      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const target = scenes.find(s => s.id === id);
+      if (!target) return;
+
+      editSceneId.value = target.id;
+      document.getElementById('new-scene-num').value = target.sceneNum;
+      document.getElementById('new-scene-desc').value = target.desc || '';
+      btnSaveScene.textContent = 'Guardar Cambios';
+      btnCancelEditScene.classList.remove('hidden');
+      document.getElementById('new-scene-num').focus();
+    };
 
     window.deleteSceneItem = async function(id) {
       await deleteEntityFromDB(STORE_SCENES, id);
       await renderScenesList();
-      await updateDatalists();
+      await updateSelectDropdowns();
       showToast('Escena eliminada');
     };
 
-    /* 3. GESTIÓN DE PERSONAJES */
+    /* ==========================================================================
+       GESTIÓN Y EDICIÓN DE PERSONAJES
+       ========================================================================== */
     const charactersModal = document.getElementById('characters-modal');
+    const charactersForm = document.getElementById('characters-form');
+    const editCharacterId = document.getElementById('edit-character-id');
+    const btnSaveCharacter = document.getElementById('btn-save-character');
+    const btnCancelEditCharacter = document.getElementById('btn-cancel-edit-character');
+
     document.getElementById('menu-opt-characters').addEventListener('click', () => {
       closeProjectMenu();
+      resetCharacterForm();
       openCharactersManager();
     });
     document.getElementById('btn-close-characters-modal').addEventListener('click', () => charactersModal.classList.add('hidden'));
+
+    function resetCharacterForm() {
+      editCharacterId.value = '';
+      document.getElementById('new-character-name').value = '';
+      document.getElementById('new-actor-name').value = '';
+      btnSaveCharacter.textContent = '+ Añadir Personaje';
+      btnCancelEditCharacter.classList.add('hidden');
+    }
+
+    btnCancelEditCharacter.addEventListener('click', resetCharacterForm);
 
     async function openCharactersManager() {
       charactersModal.classList.remove('hidden');
@@ -2114,49 +2038,83 @@
       }
       container.innerHTML = chars.map(c => `
         <div class="manager-item">
-          <div>
+          <div style="min-width:0; flex:1;">
             <strong style="color:#fff; font-size:15px; margin-right:8px;">🎭 ${escapeHtml(c.name)}</strong>
             ${c.actor ? `<span style="color:var(--text-muted); font-size:13px;">(${escapeHtml(c.actor)})</span>` : ''}
           </div>
-          <button type="button" class="btn-delete-small" onclick="deleteCharacterItem('${c.id}')">✕</button>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-action-small edit" onclick="startEditCharacter('${c.id}')" title="Editar">✏️</button>
+            <button type="button" class="btn-action-small delete" onclick="deleteCharacterItem('${c.id}')" title="Eliminar">🗑️</button>
+          </div>
         </div>
       `).join('');
     }
 
-    document.getElementById('characters-form').addEventListener('submit', async (e) => {
+    charactersForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('new-character-name').value.trim();
       const actor = document.getElementById('new-actor-name').value.trim();
       if (!name) return;
 
+      const existingId = editCharacterId.value;
+
       await saveEntityToDB(STORE_CHARACTERS, {
-        id: 'char_' + Date.now(),
+        id: existingId || ('char_' + Date.now()),
         projectId: activeProjectId,
         name,
         actor
       });
 
-      document.getElementById('new-character-name').value = '';
-      document.getElementById('new-actor-name').value = '';
+      resetCharacterForm();
       await renderCharactersList();
-      await updateDatalists();
-      showToast(`Personaje "${name}" añadido`);
+      await updateSelectDropdowns();
+      showToast(existingId ? `Personaje "${name}" actualizado` : `Personaje "${name}" añadido`);
     });
+
+    window.startEditCharacter = async function(id) {
+      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      const target = chars.find(c => c.id === id);
+      if (!target) return;
+
+      editCharacterId.value = target.id;
+      document.getElementById('new-character-name').value = target.name;
+      document.getElementById('new-actor-name').value = target.actor || '';
+      btnSaveCharacter.textContent = 'Guardar Cambios';
+      btnCancelEditCharacter.classList.remove('hidden');
+      document.getElementById('new-character-name').focus();
+    };
 
     window.deleteCharacterItem = async function(id) {
       await deleteEntityFromDB(STORE_CHARACTERS, id);
       await renderCharactersList();
-      await updateDatalists();
+      await updateSelectDropdowns();
       showToast('Personaje eliminado');
     };
 
-    /* 4. GESTIÓN DE SETS / LOCACIONES */
+    /* ==========================================================================
+       GESTIÓN Y EDICIÓN DE SETS / LOCACIONES
+       ========================================================================== */
     const locationsModal = document.getElementById('locations-modal');
+    const locationsForm = document.getElementById('locations-form');
+    const editLocationId = document.getElementById('edit-location-id');
+    const btnSaveLocation = document.getElementById('btn-save-location');
+    const btnCancelEditLocation = document.getElementById('btn-cancel-edit-location');
+
     document.getElementById('menu-opt-locations').addEventListener('click', () => {
       closeProjectMenu();
+      resetLocationForm();
       openLocationsManager();
     });
     document.getElementById('btn-close-locations-modal').addEventListener('click', () => locationsModal.classList.add('hidden'));
+
+    function resetLocationForm() {
+      editLocationId.value = '';
+      document.getElementById('new-location-name').value = '';
+      btnSaveLocation.textContent = '+ Añadir Set / Locación';
+      btnCancelEditLocation.classList.add('hidden');
+    }
+
+    btnCancelEditLocation.addEventListener('click', resetLocationForm);
 
     async function openLocationsManager() {
       locationsModal.classList.remove('hidden');
@@ -2174,57 +2132,104 @@
       }
       container.innerHTML = locs.map(l => `
         <div class="manager-item">
-          <div>
+          <div style="min-width:0; flex:1;">
             <strong style="color:var(--amber); font-size:15px;">🏛️ ${escapeHtml(l.name)}</strong>
           </div>
-          <button type="button" class="btn-delete-small" onclick="deleteLocationItem('${l.id}')">✕</button>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-action-small edit" onclick="startEditLocation('${l.id}')" title="Editar">✏️</button>
+            <button type="button" class="btn-action-small delete" onclick="deleteLocationItem('${l.id}')" title="Eliminar">🗑️</button>
+          </div>
         </div>
       `).join('');
     }
 
-    document.getElementById('locations-form').addEventListener('submit', async (e) => {
+    locationsForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('new-location-name').value.trim();
       if (!name) return;
 
+      const existingId = editLocationId.value;
+
       await saveEntityToDB(STORE_LOCATIONS, {
-        id: 'loc_' + Date.now(),
+        id: existingId || ('loc_' + Date.now()),
         projectId: activeProjectId,
         name
       });
 
-      document.getElementById('new-location-name').value = '';
+      resetLocationForm();
       await renderLocationsList();
-      await updateDatalists();
-      showToast(`Set "${name}" añadido`);
+      await updateSelectDropdowns();
+      showToast(existingId ? `Set "${name}" actualizado` : `Set "${name}" añadido`);
     });
+
+    window.startEditLocation = async function(id) {
+      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+      const target = locs.find(l => l.id === id);
+      if (!target) return;
+
+      editLocationId.value = target.id;
+      document.getElementById('new-location-name').value = target.name;
+      btnSaveLocation.textContent = 'Guardar Cambios';
+      btnCancelEditLocation.classList.remove('hidden');
+      document.getElementById('new-location-name').focus();
+    };
 
     window.deleteLocationItem = async function(id) {
       await deleteEntityFromDB(STORE_LOCATIONS, id);
       await renderLocationsList();
+      await updateSelectDropdowns();
       showToast('Set eliminado');
     };
 
-    async function updateDatalists() {
+    /* ==========================================================================
+       ACTUALIZACIÓN DE MENÚS DESPLEGABLES DEL FORMULARIO DE RACCORD
+       ========================================================================== */
+    async function updateSelectDropdowns() {
       cachedScenesForProject = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+      cachedScenesForProject.sort((a, b) => String(a.sceneNum).localeCompare(String(b.sceneNum), undefined, { numeric: true }));
 
-      document.getElementById('datalist-scenes').innerHTML = cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}">${escapeHtml(s.desc || '')}</option>`).join('');
-      document.getElementById('datalist-characters').innerHTML = chars.map(c => `<option value="${escapeHtml(c.name)}">${c.actor ? escapeHtml(c.actor) : ''}</option>`).join('');
-      document.getElementById('datalist-locations').innerHTML = locs.map(l => `<option value="${escapeHtml(l.name)}"></option>`).join('');
+      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      chars.sort((a, b) => a.name.localeCompare(b.name));
+
+      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+      locs.sort((a, b) => a.name.localeCompare(b.name));
+
+      // 1. Selector de Escenas
+      const selectScene = document.getElementById('select-scene');
+      selectScene.innerHTML = '<option value="">Selecciona una escena...</option>' + 
+        cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}" data-loc="${escapeHtml(s.location || '')}">ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}</option>`).join('');
+
+      // 2. Selector de Locaciones
+      const selectLocation = document.getElementById('select-location');
+      selectLocation.innerHTML = '<option value="">Selecciona un set (Opcional)...</option>' + 
+        locs.map(l => `<option value="${escapeHtml(l.name)}">${escapeHtml(l.name)}</option>`).join('');
+
+      // 3. Selector de Personajes
+      const selectCharacter = document.getElementById('select-character');
+      selectCharacter.innerHTML = '<option value="">Selecciona un personaje (Opcional)...</option>' + 
+        chars.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`).join('');
     }
 
-    document.getElementById('input-scene').addEventListener('input', (e) => {
-      const val = e.target.value.trim().toUpperCase();
-      const matchedScene = cachedScenesForProject.find(s => String(s.sceneNum).toUpperCase() === val);
-      const locInput = document.getElementById('input-location');
-      if (matchedScene && matchedScene.location && !locInput.value.trim()) {
-        locInput.value = matchedScene.location;
+    // Al seleccionar una escena, autocompletar el set/locación si coincide
+    document.getElementById('select-scene').addEventListener('change', (e) => {
+      const selectedOption = e.target.options[e.target.selectedIndex];
+      if (!selectedOption) return;
+      const associatedLoc = selectedOption.getAttribute('data-loc');
+      const selectLoc = document.getElementById('select-location');
+
+      if (associatedLoc) {
+        for (let i = 0; i < selectLoc.options.length; i++) {
+          if (selectLoc.options[i].value.toUpperCase() === associatedLoc.toUpperCase()) {
+            selectLoc.selectedIndex = i;
+            break;
+          }
+        }
       }
     });
 
-    /* 5. EXPORTAR REPORTE PDF / IMPRIMIR */
+    /* ==========================================================================
+       EXPORTAR REPORTE PDF / IMPRIMIR
+       ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
       closeProjectMenu();
@@ -2244,9 +2249,9 @@
           <div style="display:flex; gap:12px; background:#0d0f12; border:1px solid #262d38; padding:12px; border-radius:10px; margin-bottom:10px; page-break-inside:avoid;">
             ${t.photo ? `<img src="${t.photo}" style="width:84px; height:84px; object-fit:cover; border-radius:8px;">` : ''}
             <div style="flex:1; font-size:14px;">
-              <strong style="color:#f59e0b; font-size:15px;">ESCENA ${escapeHtml(t.scene)} ${t.location ? '— ' + escapeHtml(t.location) : ''} (${escapeHtml(t.dept)})</strong>
+              <strong style="color:#f59e0b; font-size:15px;">ESCENA ${escapeHtml(t.scene)} ${t.location ? '— ' + escapeHtml(t.location) : ''}</strong>
               ${t.character ? `<div style="margin-top:3px; font-weight:700;">🎭 ${escapeHtml(t.character)}</div>` : ''}
-              <p style="margin:6px 0 0 0; color:#d1d5db; line-height:1.4;">${escapeHtml(t.notes)}</p>
+              ${t.notes ? `<p style="margin:6px 0 0 0; color:#d1d5db; line-height:1.4;">${escapeHtml(t.notes)}</p>` : ''}
             </div>
           </div>
         `).join('')}
@@ -2257,7 +2262,9 @@
     document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
     document.getElementById('btn-print-report').addEventListener('click', () => window.print());
 
-    /* 6. GUARDAR RESPALDO JSON */
+    /* ==========================================================================
+       GUARDAR RESPALDO JSON
+       ========================================================================== */
     document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
       closeProjectMenu();
       const allTakes = await getAllTakesForProject(activeProjectId);
@@ -2286,7 +2293,7 @@
     });
 
     /* ==========================================================================
-       RENDERIZADO DE RACCORDS POR ESCENA
+       RENDERIZADO DE RACCORDS EN PANTALLA PRINCIPAL
        ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
@@ -2305,14 +2312,12 @@
       takes.sort((a, b) => b.timestamp - a.timestamp);
 
       const filtered = takes.filter(item => {
-        const matchesDept = (activeFilterDept === 'ALL') || (item.dept === activeFilterDept);
         const q = searchQuery.toLowerCase().trim();
-        const matchesSearch = !q || 
+        return !q || 
           String(item.scene || '').toLowerCase().includes(q) ||
           (item.location && item.location.toLowerCase().includes(q)) ||
           (item.character && item.character.toLowerCase().includes(q)) ||
           String(item.notes || '').toLowerCase().includes(q);
-        return matchesDept && matchesSearch;
       });
 
       badgeTotalItems.textContent = `${filtered.length} ${filtered.length === 1 ? 'raccord' : 'raccords'}`;
@@ -2325,7 +2330,6 @@
 
       emptyState.classList.add('hidden');
       recordsGrid.innerHTML = filtered.map(take => {
-        const statusLabel = take.status === 'OK' ? 'RACCORD OK' : (take.status === 'WARNING' ? 'ATENCIÓN' : 'CAMBIO');
         return `
           <article class="take-card">
             <div class="take-img-box" data-action="view-photo" data-id="${take.id}">
@@ -2337,17 +2341,15 @@
                 <span class="slate-scene">ESC ${escapeHtml(take.scene)}</span>
                 ${take.location ? `<span class="slate-location">• ${escapeHtml(take.location)}</span>` : ''}
               </div>
-              <span class="status-pill status-${take.status}">${statusLabel}</span>
             </div>
 
             <div class="take-body">
               <div>
                 <div class="take-meta-row">
-                  <span class="dept-tag">${escapeHtml(take.dept)}</span>
                   <span class="take-time">${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
                 ${take.character ? `<div class="take-char">👤 ${escapeHtml(take.character)}</div>` : ''}
-                <p class="take-notes">${escapeHtml(take.notes)}</p>
+                ${take.notes ? `<p class="take-notes">${escapeHtml(take.notes)}</p>` : ''}
               </div>
 
               <div class="take-footer">
@@ -2379,7 +2381,9 @@
       }
     });
 
-    /* FORMULARIO DE RACCORD POR ESCENA */
+    /* ==========================================================================
+       FORMULARIO DE RACCORD POR SELECCIÓN
+       ========================================================================== */
     const entryModal = document.getElementById('entry-modal');
     const form = document.getElementById('raccord-form');
     const photoInput = document.getElementById('input-photo');
@@ -2441,13 +2445,17 @@
       photoPlaceholder.classList.remove('hidden');
     });
 
-    document.getElementById('btn-add-entry').addEventListener('click', () => {
+    document.getElementById('btn-add-entry').addEventListener('click', async () => {
+      if (cachedScenesForProject.length === 0) {
+        showToast('Primero importa tu guion o crea escenas en el menú (⋮)');
+      }
       document.getElementById('modal-title').textContent = 'NUEVO RACCORD DE ESCENA';
       form.reset();
       document.getElementById('entry-id').value = '';
       currentPhotoBase64 = null;
       photoPreviewWrapper.classList.add('hidden');
       photoPlaceholder.classList.remove('hidden');
+      await updateSelectDropdowns();
       entryModal.classList.remove('hidden');
     });
 
@@ -2457,22 +2465,22 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('entry-id').value || 'take_' + Date.now();
-      const scene = document.getElementById('input-scene').value.trim();
-      const location = document.getElementById('input-location').value.trim();
-      const dept = document.getElementById('input-dept').value;
-      const character = document.getElementById('input-character').value.trim();
-      const statusEl = document.querySelector('input[name="status"]:checked');
-      const status = statusEl ? statusEl.value : 'OK';
+      const scene = document.getElementById('select-scene').value;
+      const location = document.getElementById('select-location').value;
+      const character = document.getElementById('select-character').value;
       const notes = document.getElementById('input-notes').value.trim();
+
+      if (!scene) {
+        showToast('Por favor selecciona una escena');
+        return;
+      }
 
       await saveTakeToDB({
         id,
         projectId: activeProjectId,
         scene,
         location,
-        dept,
         character,
-        status,
         notes,
         photo: currentPhotoBase64,
         timestamp: Date.now()
@@ -2480,7 +2488,7 @@
 
       entryModal.classList.add('hidden');
       await renderTakes();
-      showToast(`Continuidad de Escena ${scene} guardada`);
+      showToast(`Raccord de Escena ${scene} guardado`);
     });
 
     async function openEditTake(id) {
@@ -2488,16 +2496,14 @@
       const target = all.find(item => item.id === id);
       if (!target) return;
 
+      await updateSelectDropdowns();
+
       document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
       document.getElementById('entry-id').value = target.id;
-      document.getElementById('input-scene').value = target.scene;
-      document.getElementById('input-location').value = target.location || '';
-      document.getElementById('input-dept').value = target.dept;
-      document.getElementById('input-character').value = target.character || '';
-      document.getElementById('input-notes').value = target.notes;
-
-      const radio = document.querySelector(`input[name="status"][value="${target.status}"]`);
-      if (radio) radio.checked = true;
+      document.getElementById('select-scene').value = target.scene;
+      document.getElementById('select-location').value = target.location || '';
+      document.getElementById('select-character').value = target.character || '';
+      document.getElementById('input-notes').value = target.notes || '';
 
       if (target.photo) {
         currentPhotoBase64 = target.photo;
@@ -2520,24 +2526,15 @@
       if (!item || !item.photo) return;
 
       document.getElementById('viewer-img').src = item.photo;
-      document.getElementById('viewer-title').textContent = `ESCENA ${item.scene} ${item.location ? '• ' + item.location : ''} — ${item.dept}`;
+      document.getElementById('viewer-title').textContent = `ESCENA ${item.scene} ${item.location ? '• ' + item.location : ''}`;
       document.getElementById('viewer-subtitle').textContent = item.character ? `Personaje: ${item.character}` : '';
-      document.getElementById('viewer-notes').textContent = item.notes;
+      document.getElementById('viewer-notes').textContent = item.notes || 'Sin notas adicionales';
       imageViewerModal.classList.remove('hidden');
     }
 
     document.getElementById('btn-close-viewer').addEventListener('click', () => imageViewerModal.classList.add('hidden'));
 
-    /* FILTROS Y BÚSQUEDA */
-    document.querySelectorAll('.dept-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        activeFilterDept = chip.getAttribute('data-dept');
-        renderTakes();
-      });
-    });
-
+    /* BÚSQUEDA Y FILTRO */
     document.getElementById('search-input').addEventListener('input', (e) => {
       searchQuery = e.target.value;
       renderTakes();
@@ -2546,7 +2543,7 @@
     document.getElementById('btn-reset-filters').addEventListener('click', () => {
       searchQuery = '';
       document.getElementById('search-input').value = '';
-      document.querySelectorAll('.dept-chip')[0].click();
+      renderTakes();
     });
 
     let toastTimer = null;
