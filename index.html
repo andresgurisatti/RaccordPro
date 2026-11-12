@@ -91,6 +91,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       flex-shrink: 0;
       z-index: 20;
       position: relative;
@@ -100,6 +101,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex: 1;
       min-width: 0;
     }
 
@@ -174,6 +176,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
       transition: background 0.15s, transform 0.1s;
     }
 
@@ -273,16 +276,18 @@
       background: rgba(245, 158, 11, 0.15);
     }
 
-    .badge-count {
+    .raccords-count-tag {
       font-size: 13px;
       font-family: monospace;
-      font-weight: bold;
-      background: var(--bg-800);
+      font-weight: 800;
       color: var(--amber);
-      border: 1px solid var(--border-700);
-      padding: 10px 14px;
-      border-radius: var(--btn-radius);
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 12px;
+      border-radius: 8px;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
     }
 
     .delete-project-box {
@@ -445,12 +450,20 @@
       border-color: var(--amber);
     }
 
+    .filter-bar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
     .chips-row {
       display: flex;
       gap: 10px;
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: none;
+      flex: 1;
     }
 
     .chips-row::-webkit-scrollbar {
@@ -1018,13 +1031,12 @@
         <button type="button" id="btn-back-to-projects" class="btn-icon" title="Volver a proyectos">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
         </button>
-        <div style="min-width:0;">
-          <h1 id="active-project-title" class="brand-title" style="font-size:18px;">Proyecto</h1>
+        <div style="flex:1; min-width:0;">
+          <h1 id="active-project-title" class="brand-title" style="font-size:20px;">Proyecto</h1>
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:10px;">
-        <span id="badge-total-items" class="badge-count">0 raccords</span>
+      <div style="display:flex; align-items:center;">
         <button type="button" id="btn-project-menu-toggle" class="btn-icon" title="Menú del Proyecto">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="19" r="1.8"/>
@@ -1070,13 +1082,16 @@
         </button>
       </div>
 
-      <div class="chips-row">
-        <button type="button" data-dept="ALL" class="dept-chip active">Todos</button>
-        <button type="button" data-dept="Vestuario" class="dept-chip">👗 Vestuario</button>
-        <button type="button" data-dept="Maquillaje/Pelo" class="dept-chip">💄 MakeUp & Pelo</button>
-        <button type="button" data-dept="Props" class="dept-chip">📦 Utilería / Props</button>
-        <button type="button" data-dept="Arte" class="dept-chip">🎨 Escenografía</button>
-        <button type="button" data-dept="Cámara/Luz" class="dept-chip">🎥 Cámara / Luz</button>
+      <div class="filter-bar-row">
+        <div class="chips-row">
+          <button type="button" data-dept="ALL" class="dept-chip active">Todos</button>
+          <button type="button" data-dept="Vestuario" class="dept-chip">👗 Vestuario</button>
+          <button type="button" data-dept="Maquillaje/Pelo" class="dept-chip">💄 MakeUp & Pelo</button>
+          <button type="button" data-dept="Props" class="dept-chip">📦 Utilería / Props</button>
+          <button type="button" data-dept="Arte" class="dept-chip">🎨 Escenografía</button>
+          <button type="button" data-dept="Cámara/Luz" class="dept-chip">🎥 Cámara / Luz</button>
+        </div>
+        <span id="badge-total-items" class="raccords-count-tag">0 raccords</span>
       </div>
     </section>
 
@@ -1097,6 +1112,28 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
         <span>NUEVO RACCORD</span>
       </button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: AVISO TRAS IMPORTAR GUION           -->
+  <!-- ========================================== -->
+  <div id="script-review-modal" class="modal-backdrop hidden" style="z-index: 70;">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header">
+        <h2 class="modal-title" style="color:var(--amber);">📖 GUION PROCESADO</h2>
+        <button type="button" id="btn-close-review-modal" class="btn-close-touch">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="script-review-summary" style="margin:0 0 14px 0; font-size:16px; font-weight:800; color:#fff;"></p>
+        <div style="background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.35); padding:14px; border-radius:12px; margin-bottom:18px;">
+          <strong style="color:var(--amber); font-size:14px; display:block; margin-bottom:6px;">⚠️ RECOMENDACIÓN DE SET:</strong>
+          <p style="margin:0; font-size:14px; color:#d1d5db; line-height:1.45;">
+            Por favor <strong>revisa los datos extraídos</strong> en los apartados de <em>Escenas</em>, <em>Sets</em> y <em>Personajes</em>. Debido a las variaciones de formato o maquetación del guion, pudieron cometerse omisiones o pequeñas diferencias en los nombres.
+          </p>
+        </div>
+        <button type="button" id="btn-ok-review-modal" class="btn-primary" style="width:100%;">Entendido, revisar datos</button>
+      </div>
     </div>
   </div>
 
@@ -1797,9 +1834,14 @@
     });
 
     /* ==========================================================================
-       OPCIÓN 1 DEL MENÚ: IMPORTAR GUION EN PDF (ESCENAS + SETS + PERSONAJES)
+       IMPORTADOR AVANZADO DE GUIONES (MULTI-FORMATO + DIÁLOGOS + AVISO)
        ========================================================================== */
     const inputScriptPdf = document.getElementById('input-script-pdf');
+    const scriptReviewModal = document.getElementById('script-review-modal');
+
+    document.getElementById('btn-close-review-modal').addEventListener('click', () => scriptReviewModal.classList.add('hidden'));
+    document.getElementById('btn-ok-review-modal').addEventListener('click', () => scriptReviewModal.classList.add('hidden'));
+
     document.getElementById('menu-opt-script-pdf').addEventListener('click', () => {
       closeProjectMenu();
       inputScriptPdf.value = '';
@@ -1815,7 +1857,7 @@
         return;
       }
 
-      showToast('Analizando guion PDF...');
+      showToast('Analizando guion y diálogos...');
 
       try {
         const arrayBuffer = await file.arrayBuffer();
@@ -1834,15 +1876,15 @@
         let addedLocationsCount = 0;
         let addedCharactersCount = 0;
 
-        // Regex 1: Encabezados de escena (INT. / EXT. / I/E.)
-        const slugRegex = /^(?:(?:ESC(?:ENA)?\.?\s*)?(\d+[A-Z]?)\s*[-.º°]?\s*)?(INT\.?\s*\/\s*EXT\.?|EXT\.?\s*\/\s*INT\.?|I\s*\/\s*E\.?|INT\.|EXT\.|INTERIOR|EXTERIOR)\s+(.+)$/i;
+        // Regex para detectar modificadores temporales estándar y variantes
+        const timeRegex = /\b(?:EXT\/DAY|INT\/DAY|EXT\/NIGHT|INT\/NIGHT|SUNRISE\/DAY|SUNRISE\/NIGHT|EXT\/DAWN|INT\/DAWN|EXT\/DUSK|INT\/DUSK|INT\/EXT|EXT\/INT|I\/E|INT\.|EXT\.|INT|EXT)\b/i;
 
-        // Palabras clave de transición o formato de guion que NO son personajes
         const nonCharacterKeywords = new Set([
-          'CORTE A', 'FADE IN', 'FADE OUT', 'DISSOLVE TO', 'DISOLVENCIA A', 'FUNDIDO A',
+          'CORTE A', 'CUT TO', 'FADE IN', 'FADE OUT', 'DISSOLVE TO', 'DISOLVENCIA A', 'FUNDIDO A',
           'FUNDIDO A NEGRO', 'CONTINÚA', 'CONTINUA', 'CONT', 'FIN', 'THE END', 'FLASHBACK',
-          'FIN DEL FLASHBACK', 'INSERT', 'INSERTO', 'INTERCUT', 'TÍTULO', 'TITULO',
-          'SUPER', 'SOBREIMPRESO', 'VOZ EN OFF', 'MONTAJE', 'FIN DE MONTAJE', 'POV', 'PUNTO DE VISTA'
+          'FIN DEL FLASHBACK', 'INSERT', 'INSERTO', 'INTERCUT', 'TÍTULO', 'TITULO', 'TITLE OVERLAY',
+          'SUPER', 'SOBREIMPRESO', 'VOZ EN OFF', 'MONTAJE', 'FIN DE MONTAJE', 'POV', 'PUNTO DE VISTA',
+          'DIEGO GARCIA', 'GAUMONT', 'GAUMONT GMBH'
         ]);
 
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -1851,11 +1893,13 @@
           const pageWidth = viewport.width;
           const textContent = await page.getTextContent();
 
-          // Agrupar fragmentos por coordenada Y para reconstruir cada línea
           const rows = [];
           for (const item of textContent.items) {
             const text = item.str;
             if (!text || !text.trim()) continue;
+            // Ignorar marcas de agua comunes o pie de página
+            if (/diego\s+garcia/i.test(text)) continue;
+
             const y = Math.round(item.transform[5]);
             let row = rows.find(r => Math.abs(r.y - y) <= 4);
             if (!row) {
@@ -1865,7 +1909,6 @@
             row.items.push({ x: item.transform[4], str: text });
           }
 
-          // Ordenar líneas de arriba hacia abajo
           rows.sort((a, b) => b.y - a.y);
 
           for (let rIdx = 0; rIdx < rows.length; rIdx++) {
@@ -1874,30 +1917,41 @@
             const firstX = row.items[0].x;
             const line = row.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
 
-            if (!line) continue;
+            if (!line || line.length < 2) continue;
 
-            // A) DETECCIÓN DE ESCENAS Y SETS
-            const slugMatch = line.match(slugRegex);
-            if (slugMatch) {
-              let rawSceneNum = slugMatch[1] ? slugMatch[1].trim() : '';
-              const intExt = slugMatch[2].toUpperCase().replace(/\s+/g, '');
-              let restOfLine = slugMatch[3].trim();
+            // 1) DETECCIÓN DE ENCABEZADOS DE ESCENA
+            // Soporta formatos estándar: "14 INT. COCINA - DÍA" y formatos europeos: "HAWAII/O'AHU EXT/DAY 1"
+            if (timeRegex.test(line)) {
+              let sceneNum = '';
+              let workingLine = line;
 
-              const trailingNumMatch = restOfLine.match(/\s+(\d+[A-Z]?)$/);
-              if (trailingNumMatch) {
-                if (!rawSceneNum) rawSceneNum = trailingNumMatch[1];
-                restOfLine = restOfLine.replace(/\s+\d+[A-Z]?$/, '').trim();
+              // Buscar número de escena al inicio (ej: "14 INT. ...")
+              const leadingNum = workingLine.match(/^(\d+[A-Z]?)\s+/);
+              if (leadingNum) {
+                sceneNum = leadingNum[1];
+                workingLine = workingLine.replace(/^\d+[A-Z]?\s+/, '').trim();
               }
 
-              const sceneNum = rawSceneNum || String(autoSceneCounter++);
-
-              let setName = restOfLine;
-              const parts = restOfLine.split(/\s+[-–—]\s+|\s*[-–—]\s*(?:D[IÍ]A|NOCHE|TARDE|MA[ÑN]ANA|AMANECER|ATARDECER|CONTINUO|MOMENTOS DESPU[EÉ]S)/i);
-              if (parts && parts[0]) {
-                setName = parts[0].replace(/[-–—.]+$/, '').trim();
+              // Buscar número de escena al final (ej: "... EXT/DAY 14")
+              const trailingNum = workingLine.match(/\s+(\d+[A-Z]?)$/);
+              if (trailingNum) {
+                if (!sceneNum) sceneNum = trailingNum[1];
+                workingLine = workingLine.replace(/\s+\d+[A-Z]?$/, '').trim();
               }
 
-              const fullDesc = `${intExt} ${restOfLine}`;
+              if (!sceneNum) {
+                sceneNum = String(autoSceneCounter++);
+              }
+
+              // Extraer Set / Locación limpiando los tags de INT/EXT y DÍA/NOCHE
+              let setName = workingLine
+                .replace(/\b(?:EXT\/DAY|INT\/DAY|EXT\/NIGHT|INT\/NIGHT|SUNRISE\/DAY|SUNRISE\/NIGHT|EXT\/DAWN|INT\/DAWN|EXT\/DUSK|INT\/DUSK|INT\/EXT|EXT\/INT|I\/E|INT\.|EXT\.|INT|EXT)\b/gi, '')
+                .replace(/\b(?:DAY|NIGHT|DÍA|NOCHE|DAWN|DUSK|SUNRISE|SUNSET|CONTINUOUS|CONTINUO|EVENING|AFTERNOON)\b/gi, '')
+                .replace(/[-–—/.]+$/, '')
+                .replace(/^[-–—/.]+/, '')
+                .trim();
+
+              if (!setName) setName = workingLine;
 
               if (!knownSceneNums.has(sceneNum.toUpperCase())) {
                 knownSceneNums.add(sceneNum.toUpperCase());
@@ -1905,7 +1959,7 @@
                   id: 'sc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
                   projectId: activeProjectId,
                   sceneNum: sceneNum,
-                  desc: fullDesc,
+                  desc: line,
                   location: setName
                 });
                 addedScenesCount++;
@@ -1923,32 +1977,28 @@
               continue;
             }
 
-            // B) DETECCIÓN DE PERSONAJES (Bloques en MAYÚSCULAS centrados antes de un diálogo)
-            // En guion estándar, el nombre de personaje suele tener sangría > 25% del ancho de página
-            const isIndented = firstX > (pageWidth * 0.26) && firstX < (pageWidth * 0.72);
+            // 2) DETECCIÓN DE PERSONAJES (Diálogos centrados en mayúsculas)
+            const isIndented = firstX > (pageWidth * 0.22) && firstX < (pageWidth * 0.75);
             const hasNextLine = (rIdx + 1) < rows.length;
 
             if (isIndented && hasNextLine) {
-              // Limpiar acotaciones entre paréntesis como (V.O.), (O.S.), (OFF), (CONT'D)
               const cleanCandidate = line
                 .replace(/\s*\([^)]*\)/g, '')
                 .replace(/[:.]+$/, '')
                 .trim();
 
-              // Verificar que esté en MAYÚSCULAS, tenga letras reales, no tenga números de página ni símbolos raros
               const isAllCaps = cleanCandidate === cleanCandidate.toUpperCase() && /[A-ZÁÉÍÓÚÑ]{2,}/.test(cleanCandidate);
-              const validLength = cleanCandidate.length >= 2 && cleanCandidate.length <= 32;
-              const noNumbersOrPunct = !/[0-9!?¿¡;]/.test(cleanCandidate);
+              const validLength = cleanCandidate.length >= 2 && cleanCandidate.length <= 30;
+              const noPunct = !/[0-9!?¿¡;]/.test(cleanCandidate);
 
-              if (isAllCaps && validLength && noNumbersOrPunct && !nonCharacterKeywords.has(cleanCandidate)) {
-                // Comprobar que la línea siguiente no sea otro encabezado de escena ni otra línea en mayúsculas
+              if (isAllCaps && validLength && noPunct && !nonCharacterKeywords.has(cleanCandidate.toUpperCase())) {
                 const nextLineText = rows[rIdx + 1].items.map(i => i.str).join(' ').trim();
-                const nextIsNotSlug = !slugRegex.test(nextLineText);
+                const nextIsNotHeader = !timeRegex.test(nextLineText);
                 const nextIsDialogue = nextLineText.length > 0 && nextLineText !== nextLineText.toUpperCase();
 
-                if (nextIsNotSlug && nextIsDialogue && !knownCharNames.has(cleanCandidate)) {
-                  knownCharNames.add(cleanCandidate);
-                  // Formatear a Tipo Título (ej: "VALERIA" -> "Valeria")
+                if (nextIsNotHeader && nextIsDialogue && !knownCharNames.has(cleanCandidate.toUpperCase())) {
+                  knownCharNames.add(cleanCandidate.toUpperCase());
+
                   const formattedName = cleanCandidate
                     .toLowerCase()
                     .replace(/\b\w/g, l => l.toUpperCase());
@@ -1968,11 +2018,11 @@
 
         await updateDatalists();
 
-        if (addedScenesCount > 0 || addedLocationsCount > 0 || addedCharactersCount > 0) {
-          showToast(`Guion leído: +${addedScenesCount} escenas, +${addedLocationsCount} sets y +${addedCharactersCount} personajes`);
-        } else {
-          showToast('No se detectaron elementos nuevos en el PDF');
-        }
+        // Mostrar resumen y advertencia de revisión
+        document.getElementById('script-review-summary').textContent = 
+          `Se incorporaron con éxito: +${addedScenesCount} Escenas, +${addedLocationsCount} Sets y +${addedCharactersCount} Personajes.`;
+        scriptReviewModal.classList.remove('hidden');
+
       } catch (err) {
         console.error('Error procesando PDF:', err);
         showToast('Error al leer el archivo PDF');
@@ -1994,6 +2044,9 @@
 
     async function renderScenesList() {
       const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      // Orden numérico inteligente
+      scenes.sort((a, b) => String(a.sceneNum).localeCompare(String(b.sceneNum), undefined, { numeric: true }));
+
       const container = document.getElementById('scenes-list');
       if (scenes.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay escenas cargadas aún.</p>';
@@ -2052,6 +2105,8 @@
 
     async function renderCharactersList() {
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      chars.sort((a, b) => a.name.localeCompare(b.name));
+
       const container = document.getElementById('characters-list');
       if (chars.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay personajes cargados aún.</p>';
@@ -2110,6 +2165,8 @@
 
     async function renderLocationsList() {
       const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+      locs.sort((a, b) => a.name.localeCompare(b.name));
+
       const container = document.getElementById('locations-list');
       if (locs.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay sets o locaciones registradas.</p>';
@@ -2145,7 +2202,6 @@
     window.deleteLocationItem = async function(id) {
       await deleteEntityFromDB(STORE_LOCATIONS, id);
       await renderLocationsList();
-      await updateDatalists();
       showToast('Set eliminado');
     };
 
