@@ -12,7 +12,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="RaccordPro">
 
-  <!-- ICONO NATIVO DE LA CLAQUETA PARA PANTALLA DE INICIO (IPHONE Y ANDROID) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
 
@@ -90,6 +89,7 @@
       justify-content: space-between;
       flex-shrink: 0;
       z-index: 20;
+      position: relative;
     }
 
     .brand-box {
@@ -163,6 +163,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.15s, transform 0.1s;
     }
 
     .btn-icon:active {
@@ -260,13 +261,13 @@
     }
 
     .badge-count {
-      font-size: 12px;
+      font-size: 13px;
       font-family: monospace;
       font-weight: bold;
       background: var(--bg-800);
       color: var(--amber);
       border: 1px solid var(--border-700);
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: var(--btn-radius);
     }
 
@@ -334,6 +335,50 @@
 
     .btn-new-project-center:active {
       transform: scale(0.96);
+    }
+
+    /* MENÚ DESPLEGABLE SUPERIOR DERECHO */
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 18px;
+      background: var(--bg-850);
+      border: 1px solid var(--border-700);
+      border-radius: 14px;
+      width: 250px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
+      z-index: 50;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dropdown-item {
+      padding: 13px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-700);
+      text-align: left;
+      transition: background 0.15s;
+    }
+
+    .dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-item:active {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--amber);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-700);
+      margin: 0;
     }
 
     .toolbar {
@@ -824,6 +869,18 @@
       border-radius: var(--btn-radius);
     }
 
+    /* LISTADOS DE GESTIÓN (ESCENAS, PERSONAJES, SETS) */
+    .manager-item {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: var(--btn-radius);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
     .toast-bar {
       position: fixed;
       bottom: calc(90px + env(safe-area-inset-bottom, 0px));
@@ -909,14 +966,34 @@
         </div>
       </div>
 
+      <!-- BOTÓN MENÚ DESPLEGABLE SUPERIOR DERECHO -->
       <div style="display:flex; align-items:center; gap:8px;">
-        <button type="button" id="btn-export-json" class="btn-icon" title="Descargar Respaldo">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        </button>
-        <button type="button" id="btn-open-report" class="btn-icon" title="Hoja Resumen">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </button>
         <span id="badge-total-items" class="badge-count">0 tomas</span>
+        <button type="button" id="btn-project-menu-toggle" class="btn-icon" title="Opciones del Proyecto">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- MENÚ DESPLEGABLE CON LAS OPCIONES SOLICITADAS -->
+      <div id="project-dropdown-menu" class="dropdown-menu hidden">
+        <button type="button" class="dropdown-item" id="menu-opt-scenes">
+          <span>🎬</span> <span>Crear Escenas</span>
+        </button>
+        <button type="button" class="dropdown-item" id="menu-opt-characters">
+          <span>👤</span> <span>Crear Personajes</span>
+        </button>
+        <button type="button" class="dropdown-item" id="menu-opt-locations">
+          <span>🏛️</span> <span>Crear Sets / Locaciones</span>
+        </button>
+        <div class="dropdown-divider"></div>
+        <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
+          <span>📄</span> <span>Exportar Reporte (PDF/Print)</span>
+        </button>
+        <button type="button" class="dropdown-item" id="menu-opt-export-json">
+          <span>💾</span> <span>Guardar Respaldo JSON</span>
+        </button>
       </div>
     </header>
 
@@ -1000,6 +1077,65 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- MODAL: GESTIÓN DE ESCENAS                  -->
+  <!-- ========================================== -->
+  <div id="scenes-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">GESTIONAR ESCENAS</h2>
+        <button type="button" id="btn-close-scenes-modal" class="btn-close-touch">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="scenes-form" style="display:flex; gap:8px; margin-bottom:16px;">
+          <input type="text" id="new-scene-num" placeholder="Ej: 14A" required class="form-control" style="width:110px; text-align:center; font-weight:800; color:var(--amber);">
+          <input type="text" id="new-scene-desc" placeholder="Descripción (Int. Cocina - Día)" class="form-control" style="flex:1;">
+          <button type="submit" class="btn-primary" style="padding:10px 16px;">+ Añadir</button>
+        </form>
+        <div id="scenes-list" style="max-height:260px; overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: GESTIÓN DE PERSONAJES               -->
+  <!-- ========================================== -->
+  <div id="characters-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">GESTIONAR PERSONAJES</h2>
+        <button type="button" id="btn-close-characters-modal" class="btn-close-touch">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="characters-form" style="display:flex; gap:8px; margin-bottom:16px;">
+          <input type="text" id="new-character-name" placeholder="Ej: Valeria (Protagónica)" required class="form-control" style="flex:1;">
+          <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
+          <button type="submit" class="btn-primary" style="padding:10px 16px;">+ Añadir</button>
+        </form>
+        <div id="characters-list" style="max-height:260px; overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: GESTIÓN DE SETS / LOCACIONES        -->
+  <!-- ========================================== -->
+  <div id="locations-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">GESTIONAR SETS / LOCACIONES</h2>
+        <button type="button" id="btn-close-locations-modal" class="btn-close-touch">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="locations-form" style="display:flex; gap:8px; margin-bottom:16px;">
+          <input type="text" id="new-location-name" placeholder="Ej: Mansión Vieja - Sala Principal" required class="form-control" style="flex:1;">
+          <button type="submit" class="btn-primary" style="padding:10px 16px;">+ Añadir</button>
+        </form>
+        <div id="locations-list" style="max-height:260px; overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL: AGREGAR / EDITAR TOMA               -->
   <!-- ========================================== -->
   <div id="entry-modal" class="modal-backdrop hidden">
@@ -1014,10 +1150,12 @@
       <form id="raccord-form" class="modal-body">
         <input type="hidden" id="entry-id" value="">
 
+        <!-- Claqueta con lista desplegable opcional de escenas precargadas -->
         <div class="form-group grid-3">
           <div>
             <label class="form-label">Escena *</label>
-            <input type="text" id="input-scene" required placeholder="42B" class="form-control" style="text-align:center; font-weight:800; color:#f59e0b;">
+            <input type="text" id="input-scene" list="datalist-scenes" required placeholder="42B" class="form-control" style="text-align:center; font-weight:800; color:#f59e0b;">
+            <datalist id="datalist-scenes"></datalist>
           </div>
           <div>
             <label class="form-label">Plano</label>
@@ -1042,7 +1180,8 @@
           </div>
           <div>
             <label class="form-label">Personaje / Actor</label>
-            <input type="text" id="input-character" placeholder="Ej: Valeria" class="form-control">
+            <input type="text" id="input-character" list="datalist-characters" placeholder="Ej: Valeria" class="form-control">
+            <datalist id="datalist-characters"></datalist>
           </div>
         </div>
 
@@ -1108,9 +1247,7 @@
         <h3 id="viewer-title" style="margin:0; font-size:16px; color:#f59e0b; font-weight:800;">Escena</h3>
         <p id="viewer-subtitle" style="margin:3px 0 0 0; font-size:13px; color:#9ca3af;"></p>
       </div>
-      <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar visor">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
+      <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar visor">✕</button>
     </div>
 
     <div style="flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden; margin:14px 0;">
@@ -1124,17 +1261,15 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: REPORTE / IMPRESIÓN                 -->
+  <!-- MODAL: REPORTE / IMPRESIÓN (PDF)           -->
   <!-- ========================================== -->
   <div id="report-modal" class="modal-backdrop hidden">
     <div class="modal-card" style="max-width:680px;">
       <div class="modal-header">
         <h2 class="modal-title">Hoja de Continuidad (Resumen)</h2>
         <div style="display:flex; align-items:center; gap:10px;">
-          <button type="button" id="btn-print-report" class="btn-primary" style="padding:8px 14px; font-size:13px;">Imprimir</button>
-          <button type="button" id="btn-close-report" class="btn-close-touch" title="Cerrar reporte">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
+          <button type="button" id="btn-print-report" class="btn-primary" style="padding:8px 14px; font-size:13px;">Imprimir / Guardar PDF</button>
+          <button type="button" id="btn-close-report" class="btn-close-touch">✕</button>
         </div>
       </div>
       <div id="report-content" class="modal-body"></div>
@@ -1167,9 +1302,12 @@
   <!-- ========================================== -->
   <script>
     const DB_NAME = 'RaccordProDB';
-    const DB_VERSION = 2;
+    const DB_VERSION = 3; // Version para incluir stores de escenas, personajes y sets
     const STORE_PROJECTS = 'projects';
     const STORE_TAKES = 'takes';
+    const STORE_SCENES = 'scenes';
+    const STORE_CHARACTERS = 'characters';
+    const STORE_LOCATIONS = 'locations';
 
     let dbInstance = null;
     let useFallbackStorage = false;
@@ -1196,6 +1334,18 @@
             if (!db.objectStoreNames.contains(STORE_TAKES)) {
               const store = db.createObjectStore(STORE_TAKES, { keyPath: 'id' });
               store.createIndex('projectId', 'projectId', { unique: false });
+            }
+            if (!db.objectStoreNames.contains(STORE_SCENES)) {
+              const s = db.createObjectStore(STORE_SCENES, { keyPath: 'id' });
+              s.createIndex('projectId', 'projectId', { unique: false });
+            }
+            if (!db.objectStoreNames.contains(STORE_CHARACTERS)) {
+              const c = db.createObjectStore(STORE_CHARACTERS, { keyPath: 'id' });
+              c.createIndex('projectId', 'projectId', { unique: false });
+            }
+            if (!db.objectStoreNames.contains(STORE_LOCATIONS)) {
+              const l = db.createObjectStore(STORE_LOCATIONS, { keyPath: 'id' });
+              l.createIndex('projectId', 'projectId', { unique: false });
             }
           };
           request.onsuccess = (e) => {
@@ -1227,19 +1377,52 @@
       } catch (e) {}
     }
 
-    function saveProjectToDB(proj) {
+    // Genérico para guardar y listar entidades ligadas a projectId
+    function saveEntityToDB(storeName, item) {
       if (useFallbackStorage || !dbInstance) {
-        const list = getFallbackList('rp_projects').filter(p => p.id !== proj.id);
-        list.push(proj);
-        setFallbackList('rp_projects', list);
-        return Promise.resolve(proj);
+        const list = getFallbackList('rp_' + storeName).filter(x => x.id !== item.id);
+        list.push(item);
+        setFallbackList('rp_' + storeName, list);
+        return Promise.resolve(item);
       }
       return new Promise((resolve, reject) => {
-        const tx = dbInstance.transaction([STORE_PROJECTS], 'readwrite');
-        tx.objectStore(STORE_PROJECTS).put(proj);
-        tx.oncomplete = () => resolve(proj);
+        const tx = dbInstance.transaction([storeName], 'readwrite');
+        tx.objectStore(storeName).put(item);
+        tx.oncomplete = () => resolve(item);
         tx.onerror = () => reject(tx.error);
       });
+    }
+
+    function getEntitiesForProject(storeName, projId) {
+      if (useFallbackStorage || !dbInstance) {
+        return Promise.resolve(getFallbackList('rp_' + storeName).filter(x => x.projectId === projId));
+      }
+      return new Promise((resolve) => {
+        const tx = dbInstance.transaction([storeName], 'readonly');
+        const req = tx.objectStore(storeName).getAll();
+        req.onsuccess = () => {
+          const all = req.result || [];
+          resolve(all.filter(x => x.projectId === projId));
+        };
+        req.onerror = () => resolve([]);
+      });
+    }
+
+    function deleteEntityFromDB(storeName, id) {
+      if (useFallbackStorage || !dbInstance) {
+        setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.id !== id));
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        const tx = dbInstance.transaction([storeName], 'readwrite');
+        tx.objectStore(storeName).delete(id);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      });
+    }
+
+    function saveProjectToDB(proj) {
+      return saveEntityToDB(STORE_PROJECTS, proj);
     }
 
     function getAllProjectsFromDB() {
@@ -1255,67 +1438,41 @@
     }
 
     function deleteProjectFromDB(projId) {
-      if (useFallbackStorage || !dbInstance) {
-        setFallbackList('rp_projects', getFallbackList('rp_projects').filter(p => p.id !== projId));
-        setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
-        return Promise.resolve();
-      }
-      return new Promise((resolve) => {
-        const tx = dbInstance.transaction([STORE_PROJECTS, STORE_TAKES], 'readwrite');
+      return new Promise(async (resolve) => {
+        if (useFallbackStorage || !dbInstance) {
+          setFallbackList('rp_projects', getFallbackList('rp_projects').filter(p => p.id !== projId));
+          setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
+          setFallbackList('rp_scenes', getFallbackList('rp_scenes').filter(s => s.projectId !== projId));
+          setFallbackList('rp_characters', getFallbackList('rp_characters').filter(c => c.projectId !== projId));
+          setFallbackList('rp_locations', getFallbackList('rp_locations').filter(l => l.projectId !== projId));
+          return resolve();
+        }
+        const tx = dbInstance.transaction([STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS], 'readwrite');
         tx.objectStore(STORE_PROJECTS).delete(projId);
-        const takeStore = tx.objectStore(STORE_TAKES);
-        const req = takeStore.getAll();
-        req.onsuccess = () => {
-          (req.result || []).filter(t => t.projectId === projId).forEach(t => takeStore.delete(t.id));
-        };
+
+        [STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS].forEach(sName => {
+          const store = tx.objectStore(sName);
+          const req = store.getAll();
+          req.onsuccess = () => {
+            (req.result || []).filter(x => x.projectId === projId).forEach(x => store.delete(x.id));
+          };
+        });
+
         tx.oncomplete = () => resolve();
         tx.onerror = () => resolve();
       });
     }
 
     function saveTakeToDB(take) {
-      if (useFallbackStorage || !dbInstance) {
-        const list = getFallbackList('rp_takes').filter(t => t.id !== take.id);
-        list.push(take);
-        setFallbackList('rp_takes', list);
-        return Promise.resolve(take);
-      }
-      return new Promise((resolve, reject) => {
-        const tx = dbInstance.transaction([STORE_TAKES], 'readwrite');
-        tx.objectStore(STORE_TAKES).put(take);
-        tx.oncomplete = () => resolve(take);
-        tx.onerror = () => reject(tx.error);
-      });
+      return saveEntityToDB(STORE_TAKES, take);
     }
 
-    function getAllTakesDB() {
-      if (useFallbackStorage || !dbInstance) {
-        return Promise.resolve(getFallbackList('rp_takes'));
-      }
-      return new Promise((resolve) => {
-        const tx = dbInstance.transaction([STORE_TAKES], 'readonly');
-        const req = tx.objectStore(STORE_TAKES).getAll();
-        req.onsuccess = () => resolve(req.result || []);
-        req.onerror = () => resolve([]);
-      });
-    }
-
-    async function getAllTakesForProject(projId) {
-      const all = await getAllTakesDB();
-      return all.filter(t => t.projectId === projId);
+    function getAllTakesForProject(projId) {
+      return getEntitiesForProject(STORE_TAKES, projId);
     }
 
     function deleteTakeFromDB(id) {
-      if (useFallbackStorage || !dbInstance) {
-        setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.id !== id));
-        return Promise.resolve();
-      }
-      return new Promise((resolve) => {
-        const tx = dbInstance.transaction([STORE_TAKES], 'readwrite');
-        tx.objectStore(STORE_TAKES).delete(id);
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => resolve();
-      });
+      return deleteEntityFromDB(STORE_TAKES, id);
     }
 
     const confirmModal = document.getElementById('confirm-modal');
@@ -1346,6 +1503,7 @@
     async function showProjectsView() {
       activeProjectId = null;
       activeProjectData = null;
+      closeProjectMenu();
       viewTakes.classList.add('hidden');
       viewProjects.classList.remove('hidden');
       await renderProjects();
@@ -1368,6 +1526,7 @@
         c.classList.toggle('active', idx === 0);
       });
 
+      await updateDatalists();
       renderTakes();
     }
 
@@ -1522,16 +1681,21 @@
         if (data.project && data.project.id) {
           await saveProjectToDB(data.project);
           if (Array.isArray(data.takes)) {
-            for (const take of data.takes) {
-              await saveTakeToDB(take);
-            }
+            for (const take of data.takes) await saveTakeToDB(take);
+          }
+          if (Array.isArray(data.scenes)) {
+            for (const s of data.scenes) await saveEntityToDB(STORE_SCENES, s);
+          }
+          if (Array.isArray(data.characters)) {
+            for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
+          }
+          if (Array.isArray(data.locations)) {
+            for (const l of data.locations) await saveEntityToDB(STORE_LOCATIONS, l);
           }
           await renderProjects();
           showToast(`Proyecto "${data.project.name}" restaurado`);
         } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
-          for (const take of data) {
-            await saveTakeToDB(take);
-          }
+          for (const take of data) await saveTakeToDB(take);
           await renderProjects();
           showToast('Tomas restauradas con éxito');
         } else {
@@ -1545,6 +1709,273 @@
 
     document.getElementById('btn-back-to-projects').addEventListener('click', showProjectsView);
 
+    /* ==========================================================================
+       CONTROL DEL MENÚ DESPLEGABLE SUPERIOR DERECHO (SET)
+       ========================================================================== */
+    const dropdownMenu = document.getElementById('project-dropdown-menu');
+    const btnMenuToggle = document.getElementById('btn-project-menu-toggle');
+
+    function toggleProjectMenu() {
+      dropdownMenu.classList.toggle('hidden');
+    }
+
+    function closeProjectMenu() {
+      dropdownMenu.classList.add('hidden');
+    }
+
+    btnMenuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleProjectMenu();
+    });
+
+    // Cerrar al tocar fuera
+    document.addEventListener('click', (e) => {
+      if (!dropdownMenu.contains(e.target) && e.target !== btnMenuToggle) {
+        closeProjectMenu();
+      }
+    });
+
+    /* 1. GESTIÓN DE ESCENAS */
+    const scenesModal = document.getElementById('scenes-modal');
+    document.getElementById('menu-opt-scenes').addEventListener('click', () => {
+      closeProjectMenu();
+      openScenesManager();
+    });
+    document.getElementById('btn-close-scenes-modal').addEventListener('click', () => scenesModal.classList.add('hidden'));
+
+    async function openScenesManager() {
+      scenesModal.classList.remove('hidden');
+      await renderScenesList();
+    }
+
+    async function renderScenesList() {
+      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const container = document.getElementById('scenes-list');
+      if (scenes.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No hay escenas precargadas aún.</p>';
+        return;
+      }
+      container.innerHTML = scenes.map(s => `
+        <div class="manager-item">
+          <div>
+            <strong style="color:var(--amber); font-size:15px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
+            <span style="color:#d1d5db; font-size:13px;">${escapeHtml(s.desc || '')}</span>
+          </div>
+          <button type="button" onclick="deleteSceneItem('${s.id}')" style="color:#f87171; font-weight:bold; padding:4px 8px;">✕</button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('scenes-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const num = document.getElementById('new-scene-num').value.trim();
+      const desc = document.getElementById('new-scene-desc').value.trim();
+      if (!num) return;
+
+      await saveEntityToDB(STORE_SCENES, {
+        id: 'sc_' + Date.now(),
+        projectId: activeProjectId,
+        sceneNum: num,
+        desc
+      });
+
+      document.getElementById('new-scene-num').value = '';
+      document.getElementById('new-scene-desc').value = '';
+      await renderScenesList();
+      await updateDatalists();
+      showToast(`Escena ${num} guardada`);
+    });
+
+    window.deleteSceneItem = async function(id) {
+      await deleteEntityFromDB(STORE_SCENES, id);
+      await renderScenesList();
+      await updateDatalists();
+      showToast('Escena eliminada');
+    };
+
+    /* 2. GESTIÓN DE PERSONAJES */
+    const charactersModal = document.getElementById('characters-modal');
+    document.getElementById('menu-opt-characters').addEventListener('click', () => {
+      closeProjectMenu();
+      openCharactersManager();
+    });
+    document.getElementById('btn-close-characters-modal').addEventListener('click', () => charactersModal.classList.add('hidden'));
+
+    async function openCharactersManager() {
+      charactersModal.classList.remove('hidden');
+      await renderCharactersList();
+    }
+
+    async function renderCharactersList() {
+      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      const container = document.getElementById('characters-list');
+      if (chars.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No hay personajes precargados aún.</p>';
+        return;
+      }
+      container.innerHTML = chars.map(c => `
+        <div class="manager-item">
+          <div>
+            <strong style="color:#fff; font-size:14px; margin-right:8px;">🎭 ${escapeHtml(c.name)}</strong>
+            ${c.actor ? `<span style="color:var(--text-muted); font-size:12px;">(${escapeHtml(c.actor)})</span>` : ''}
+          </div>
+          <button type="button" onclick="deleteCharacterItem('${c.id}')" style="color:#f87171; font-weight:bold; padding:4px 8px;">✕</button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('characters-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-character-name').value.trim();
+      const actor = document.getElementById('new-actor-name').value.trim();
+      if (!name) return;
+
+      await saveEntityToDB(STORE_CHARACTERS, {
+        id: 'char_' + Date.now(),
+        projectId: activeProjectId,
+        name,
+        actor
+      });
+
+      document.getElementById('new-character-name').value = '';
+      document.getElementById('new-actor-name').value = '';
+      await renderCharactersList();
+      await updateDatalists();
+      showToast(`Personaje "${name}" añadido`);
+    });
+
+    window.deleteCharacterItem = async function(id) {
+      await deleteEntityFromDB(STORE_CHARACTERS, id);
+      await renderCharactersList();
+      await updateDatalists();
+      showToast('Personaje eliminado');
+    };
+
+    /* 3. GESTIÓN DE SETS / LOCACIONES */
+    const locationsModal = document.getElementById('locations-modal');
+    document.getElementById('menu-opt-locations').addEventListener('click', () => {
+      closeProjectMenu();
+      openLocationsManager();
+    });
+    document.getElementById('btn-close-locations-modal').addEventListener('click', () => locationsModal.classList.add('hidden'));
+
+    async function openLocationsManager() {
+      locationsModal.classList.remove('hidden');
+      await renderLocationsList();
+    }
+
+    async function renderLocationsList() {
+      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+      const container = document.getElementById('locations-list');
+      if (locs.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No hay sets o locaciones registradas.</p>';
+        return;
+      }
+      container.innerHTML = locs.map(l => `
+        <div class="manager-item">
+          <div>
+            <strong style="color:var(--amber); font-size:14px;">🏛️ ${escapeHtml(l.name)}</strong>
+          </div>
+          <button type="button" onclick="deleteLocationItem('${l.id}')" style="color:#f87171; font-weight:bold; padding:4px 8px;">✕</button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('locations-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-location-name').value.trim();
+      if (!name) return;
+
+      await saveEntityToDB(STORE_LOCATIONS, {
+        id: 'loc_' + Date.now(),
+        projectId: activeProjectId,
+        name
+      });
+
+      document.getElementById('new-location-name').value = '';
+      await renderLocationsList();
+      showToast(`Set "${name}" añadido`);
+    });
+
+    window.deleteLocationItem = async function(id) {
+      await deleteEntityFromDB(STORE_LOCATIONS, id);
+      await renderLocationsList();
+      showToast('Set eliminado');
+    };
+
+    // Actualizar sugerencias de autocompletado en el formulario de tomas
+    async function updateDatalists() {
+      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+
+      document.getElementById('datalist-scenes').innerHTML = scenes.map(s => `<option value="${escapeHtml(s.sceneNum)}">${escapeHtml(s.desc || '')}</option>`).join('');
+      document.getElementById('datalist-characters').innerHTML = chars.map(c => `<option value="${escapeHtml(c.name)}">${c.actor ? escapeHtml(c.actor) : ''}</option>`).join('');
+    }
+
+    /* 4. EXPORTAR PDF / IMPRIMIR */
+    const reportModal = document.getElementById('report-modal');
+    document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
+      closeProjectMenu();
+      const all = await getAllTakesForProject(activeProjectId);
+      if (all.length === 0) {
+        showToast('Aún no hay tomas para exportar');
+        return;
+      }
+      all.sort((a, b) => a.scene.localeCompare(b.scene) || (a.take - b.take));
+
+      document.getElementById('report-content').innerHTML = `
+        <div style="border-bottom:1px solid #262d38; padding-bottom:12px; margin-bottom:14px;">
+          <h3 style="margin:0; color:#f59e0b; font-size:18px; font-weight:800;">INFORME DE CONTINUIDAD — ${escapeHtml(activeProjectData ? activeProjectData.name : '')}</h3>
+          <p style="margin:4px 0 0 0; font-size:12px; color:#9ca3af;">Fecha: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+        </div>
+        ${all.map(t => `
+          <div style="display:flex; gap:12px; background:#0d0f12; border:1px solid #262d38; padding:12px; border-radius:10px; margin-bottom:10px; page-break-inside:avoid;">
+            ${t.photo ? `<img src="${t.photo}" style="width:84px; height:84px; object-fit:cover; border-radius:8px;">` : ''}
+            <div style="flex:1; font-size:13px;">
+              <strong style="color:#f59e0b; font-size:14px;">ESC ${escapeHtml(t.scene)} / TOMA ${escapeHtml(t.take)} (${escapeHtml(t.dept)})</strong>
+              ${t.character ? `<div style="margin-top:2px; font-weight:700;">🎭 ${escapeHtml(t.character)}</div>` : ''}
+              <p style="margin:6px 0 0 0; color:#d1d5db; line-height:1.4;">${escapeHtml(t.notes)}</p>
+            </div>
+          </div>
+        `).join('')}
+      `;
+      reportModal.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
+    document.getElementById('btn-print-report').addEventListener('click', () => window.print());
+
+    /* 5. GUARDAR RESPALDO JSON */
+    document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
+      closeProjectMenu();
+      const allTakes = await getAllTakesForProject(activeProjectId);
+      const allScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const allChars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      const allLocs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+
+      const backupBundle = {
+        project: activeProjectData,
+        takes: allTakes,
+        scenes: allScenes,
+        characters: allChars,
+        locations: allLocs
+      };
+
+      const blob = new Blob([JSON.stringify(backupBundle, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Raccord_${(activeProjectData ? activeProjectData.name : 'Set').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Respaldo JSON guardado en Descargas');
+    });
+
+    /* ==========================================================================
+       RENDERIZADO DE TOMAS EN SET
+       ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
     const badgeTotalItems = document.getElementById('badge-total-items');
@@ -1637,6 +2068,7 @@
       }
     });
 
+    /* FORMULARIO DE TOMA / RACCORD */
     const entryModal = document.getElementById('entry-modal');
     const form = document.getElementById('raccord-form');
     const photoInput = document.getElementById('input-photo');
@@ -1788,55 +2220,7 @@
 
     document.getElementById('btn-close-viewer').addEventListener('click', () => imageViewerModal.classList.add('hidden'));
 
-    const reportModal = document.getElementById('report-modal');
-    document.getElementById('btn-open-report').addEventListener('click', async () => {
-      const all = await getAllTakesForProject(activeProjectId);
-      if (all.length === 0) {
-        showToast('Aún no hay tomas registradas');
-        return;
-      }
-      all.sort((a, b) => a.scene.localeCompare(b.scene) || (a.take - b.take));
-
-      document.getElementById('report-content').innerHTML = `
-        <div style="border-bottom:1px solid #262d38; padding-bottom:12px; margin-bottom:14px;">
-          <h3 style="margin:0; color:#f59e0b; font-size:17px; font-weight:800;">INFORME — ${escapeHtml(activeProjectData ? activeProjectData.name : '')}</h3>
-          <p style="margin:4px 0 0 0; font-size:12px; color:#9ca3af;">Fecha: ${new Date().toLocaleDateString()}</p>
-        </div>
-        ${all.map(t => `
-          <div style="display:flex; gap:12px; background:#0d0f12; border:1px solid #262d38; padding:12px; border-radius:10px; margin-bottom:10px;">
-            ${t.photo ? `<img src="${t.photo}" style="width:80px; height:80px; object-fit:cover; border-radius:8px;">` : ''}
-            <div style="flex:1; font-size:13px;">
-              <strong style="color:#f59e0b; font-size:14px;">ESC ${escapeHtml(t.scene)} / TOMA ${escapeHtml(t.take)} (${escapeHtml(t.dept)})</strong>
-              ${t.character ? `<div style="margin-top:2px; font-weight:700;">🎭 ${escapeHtml(t.character)}</div>` : ''}
-              <p style="margin:6px 0 0 0; color:#d1d5db; line-height:1.4;">${escapeHtml(t.notes)}</p>
-            </div>
-          </div>
-        `).join('')}
-      `;
-      reportModal.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
-    document.getElementById('btn-print-report').addEventListener('click', () => window.print());
-
-    document.getElementById('btn-export-json').addEventListener('click', async () => {
-      const all = await getAllTakesForProject(activeProjectId);
-      if (all.length === 0) {
-        showToast('No hay datos para exportar');
-        return;
-      }
-      const blob = new Blob([JSON.stringify({ project: activeProjectData, takes: all }, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Raccord_${(activeProjectData ? activeProjectData.name : 'Set').replace(/\s+/g, '_')}.json`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showToast('Respaldo descargado');
-    });
-
+    /* FILTROS Y BÚSQUEDA */
     document.querySelectorAll('.dept-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active'));
