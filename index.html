@@ -527,7 +527,7 @@
       background: var(--bg-850);
       border: 1px solid var(--border-700);
       border-radius: 14px;
-      padding: 18px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -545,16 +545,32 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 10px;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--border-700);
       margin-bottom: 12px;
+    }
+
+    /* COLUMNA DERECHA DE CABECERA: BOTONES + HORA DEBAJO */
+    .raccord-header-right-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     .raccord-header-actions {
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-shrink: 0;
+    }
+
+    .raccord-time-compact {
+      font-size: 11px;
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--text-dim);
+      padding-right: 2px;
     }
 
     .raccord-scene-badge {
@@ -578,25 +594,16 @@
       margin: 0;
     }
 
-    .raccord-time-row {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-top: 10px;
-    }
-
-    .raccord-time {
-      font-size: 11px;
-      font-family: monospace;
-      color: var(--text-dim);
-    }
-
     .raccord-char-row {
       background: var(--bg-900);
       border: 1px solid var(--border-700);
       border-radius: 10px;
       padding: 10px 12px;
       margin-bottom: 8px;
+    }
+
+    .raccord-char-row:last-child {
+      margin-bottom: 0;
     }
 
     .raccord-char-top {
@@ -1116,7 +1123,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
           <span>Cambiar carpeta de respaldo</span>
         </button>
-        <!-- AVISO DE NAVEGADOR RECOMENDADO EN MAC/APPLE -->
         <div class="dropdown-hint-box">
           <strong>Nota Mac / Apple:</strong> Usa preferiblemente <strong>Chrome o Edge</strong>. Safari bloquea el acceso continuo a carpetas locales por políticas de seguridad de Apple, por lo que pedirá confirmar la ruta en cada guardado.
         </div>
@@ -1244,13 +1250,19 @@
             <button type="button" id="btn-cancel-edit-scene" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="scenes-list" style="max-height:300px; overflow-y:auto;"></div>
+        <div id="scenes-list" style="max-height:280px; overflow-y:auto;"></div>
+        <div id="delete-all-scenes-box" class="delete-project-box hidden">
+          <button type="button" id="btn-delete-all-scenes" class="btn-delete-project-full">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <span>ELIMINAR TODAS LAS ESCENAS</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GESTIÓN DE PERSONAJES (CON FOTO OPCIONAL DE ACTOR) -->
+  <!-- MODAL: GESTIÓN DE PERSONAJES               -->
   <!-- ========================================== -->
   <div id="characters-modal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1270,7 +1282,6 @@
             <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
           </div>
 
-          <!-- FOTO DEL ACTOR OPCIONAL -->
           <div style="display:flex; align-items:center; gap:10px;">
             <div id="actor-photo-preview-box" class="hidden" style="display:flex; align-items:center; gap:10px; background:var(--bg-800); border:1px solid var(--border-700); padding:6px 10px; border-radius:var(--btn-radius); flex:1;">
               <img id="actor-photo-preview-img" src="" alt="Actor" style="width:42px; height:42px; border-radius:8px; object-fit:cover;">
@@ -1291,7 +1302,13 @@
             <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="characters-list" style="max-height:280px; overflow-y:auto;"></div>
+        <div id="characters-list" style="max-height:260px; overflow-y:auto;"></div>
+        <div id="delete-all-characters-box" class="delete-project-box hidden">
+          <button type="button" id="btn-delete-all-characters" class="btn-delete-project-full">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <span>ELIMINAR TODOS LOS PERSONAJES</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1680,6 +1697,30 @@
         try {
           const tx = dbInstance.transaction([storeName], 'readwrite');
           tx.objectStore(storeName).delete(id);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => resolve();
+        } catch (err) {
+          resolve();
+        }
+      });
+    }
+
+    // Borrar todos los registros de una entidad pertenecientes al proyecto activo
+    function deleteAllEntitiesForProject(storeName, projId) {
+      setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.projectId !== projId));
+
+      if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
+        return Promise.resolve();
+      }
+
+      return new Promise((resolve) => {
+        try {
+          const tx = dbInstance.transaction([storeName], 'readwrite');
+          const store = tx.objectStore(storeName);
+          const req = store.getAll();
+          req.onsuccess = () => {
+            (req.result || []).filter(x => x.projectId === projId).forEach(x => store.delete(x.id));
+          };
           tx.oncomplete = () => resolve();
           tx.onerror = () => resolve();
         } catch (err) {
@@ -2263,13 +2304,14 @@
     });
 
     /* ==========================================================================
-       GESTIÓN Y EDICIÓN DE ESCENAS
+       GESTIÓN Y EDICIÓN DE ESCENAS (CON CONFIRMACIÓN NOMBRADA Y ELIMINAR TODO)
        ========================================================================== */
     const scenesModal = document.getElementById('scenes-modal');
     const scenesForm = document.getElementById('scenes-form');
     const editSceneId = document.getElementById('edit-scene-id');
     const btnSaveScene = document.getElementById('btn-save-scene');
     const btnCancelEditScene = document.getElementById('btn-cancel-edit-scene');
+    const deleteAllScenesBox = document.getElementById('delete-all-scenes-box');
 
     document.getElementById('menu-opt-scenes').addEventListener('click', () => {
       closeProjectMenu();
@@ -2300,8 +2342,11 @@
       const container = document.getElementById('scenes-list');
       if (scenes.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay escenas cargadas aún.</p>';
+        deleteAllScenesBox.classList.add('hidden');
         return;
       }
+
+      deleteAllScenesBox.classList.remove('hidden');
       container.innerHTML = scenes.map(s => `
         <div class="manager-item">
           <div style="min-width:0; flex:1;">
@@ -2351,14 +2396,32 @@
     };
 
     window.deleteSceneItem = async function(id) {
-      await deleteEntityFromDB(STORE_SCENES, id);
-      await renderScenesList();
-      await updateCatalogCaches();
-      showToast('Escena eliminada');
+      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const target = scenes.find(s => s.id === id);
+      if (!target) return;
+
+      const label = target.desc ? `ESC ${target.sceneNum} — ${target.desc}` : `ESC ${target.sceneNum}`;
+      askConfirmation(`¿Eliminar definitivamente "${label}"?`, async () => {
+        await deleteEntityFromDB(STORE_SCENES, id);
+        if (editSceneId.value === id) resetSceneForm();
+        await renderScenesList();
+        await updateCatalogCaches();
+        showToast(`Escena ${target.sceneNum} eliminada`);
+      });
     };
 
+    document.getElementById('btn-delete-all-scenes').addEventListener('click', () => {
+      askConfirmation('¿Eliminar definitivamente TODAS las escenas de este proyecto? Esta acción no se puede deshacer.', async () => {
+        await deleteAllEntitiesForProject(STORE_SCENES, activeProjectId);
+        resetSceneForm();
+        await renderScenesList();
+        await updateCatalogCaches();
+        showToast('Todas las escenas han sido eliminadas');
+      });
+    });
+
     /* ==========================================================================
-       GESTIÓN Y EDICIÓN DE PERSONAJES (CON FOTO OPCIONAL DEL ACTOR)
+       GESTIÓN DE PERSONAJES (CON CONFIRMACIÓN NOMBRADA Y ELIMINAR TODO)
        ========================================================================== */
     const charactersModal = document.getElementById('characters-modal');
     const charactersForm = document.getElementById('characters-form');
@@ -2369,6 +2432,7 @@
     const actorPhotoPreviewBox = document.getElementById('actor-photo-preview-box');
     const actorPhotoPreviewImg = document.getElementById('actor-photo-preview-img');
     const btnTriggerActorPhoto = document.getElementById('btn-trigger-actor-photo');
+    const deleteAllCharactersBox = document.getElementById('delete-all-characters-box');
 
     document.getElementById('menu-opt-characters').addEventListener('click', () => {
       closeProjectMenu();
@@ -2435,8 +2499,11 @@
       const container = document.getElementById('characters-list');
       if (chars.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay personajes cargados aún.</p>';
+        deleteAllCharactersBox.classList.add('hidden');
         return;
       }
+
+      deleteAllCharactersBox.classList.remove('hidden');
       container.innerHTML = chars.map(c => `
         <div class="manager-item">
           <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
@@ -2495,12 +2562,31 @@
     };
 
     window.deleteCharacterItem = async function(id) {
-      await deleteEntityFromDB(STORE_CHARACTERS, id);
-      await renderCharactersList();
-      await updateCatalogCaches();
-      await renderTakes();
-      showToast('Personaje eliminado');
+      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      const target = chars.find(c => c.id === id);
+      if (!target) return;
+
+      const label = target.actor ? `${target.name} (${target.actor})` : target.name;
+      askConfirmation(`¿Eliminar definitivamente al personaje "${label}"?`, async () => {
+        await deleteEntityFromDB(STORE_CHARACTERS, id);
+        if (editCharacterId.value === id) resetCharacterForm();
+        await renderCharactersList();
+        await updateCatalogCaches();
+        await renderTakes();
+        showToast(`Personaje "${target.name}" eliminado`);
+      });
     };
+
+    document.getElementById('btn-delete-all-characters').addEventListener('click', () => {
+      askConfirmation('¿Eliminar definitivamente TODOS los personajes de este proyecto? Esta acción no se puede deshacer.', async () => {
+        await deleteAllEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+        resetCharacterForm();
+        await renderCharactersList();
+        await updateCatalogCaches();
+        await renderTakes();
+        showToast('Todos los personajes han sido eliminados');
+      });
+    });
 
     /* ==========================================================================
        ACTUALIZACIÓN DE CACHÉS DE ESCENAS Y PERSONAJES
@@ -2534,7 +2620,7 @@
     }
 
     /* ==========================================================================
-       EXPORTAR REPORTE PDF PROFESIONAL (LOGO 30% MÁS PEQUEÑO + PIE DE PÁGINA)
+       EXPORTAR REPORTE PDF PROFESIONAL
        ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
@@ -2621,7 +2707,6 @@
       });
     }
 
-    // Logo RaccordPRO 30% más pequeño (font 7.4pt e icono 4.3mm)
     function drawExactRaccordProLogo(doc, clapperPng, rightX, topY) {
       const textRaccord = 'Raccord';
       const textPro = 'PRO';
@@ -2701,7 +2786,6 @@
         doc.setFillColor(19, 23, 29);
         doc.rect(0, 0, pageWidth, 32, 'F');
 
-        // Logo idéntico 30% más pequeño arriba a la derecha
         drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 8.2);
 
         doc.setTextColor(245, 158, 11);
@@ -2977,7 +3061,7 @@
     });
 
     /* ==========================================================================
-       RENDERIZADO DE RACCORDS ORDENADOS ESTRICTAMENTE POR NÚMERO DE ESCENA
+       RENDERIZADO DE RACCORDS CON HORA DEBAJO DE BOTONES EDITAR / ELIMINAR
        ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
@@ -3068,6 +3152,8 @@
           `;
         }
 
+        const timeFormatted = new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
         return `
           <article class="raccord-card" data-action="view-raccord" data-id="${take.id}">
             <div>
@@ -3076,23 +3162,22 @@
                   <span class="raccord-scene-badge">ESCENA ${escapeHtml(take.scene)}</span>
                   ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
                 </div>
-                <div class="raccord-header-actions">
-                  <button type="button" class="btn-edit-square" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
-                    ${ICON_EDIT_SVG}
-                  </button>
-                  <button type="button" class="btn-delete-square" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
-                    ${ICON_DELETE_SVG}
-                  </button>
+                <div class="raccord-header-right-col">
+                  <div class="raccord-header-actions">
+                    <button type="button" class="btn-edit-square" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
+                      ${ICON_EDIT_SVG}
+                    </button>
+                    <button type="button" class="btn-delete-square" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
+                      ${ICON_DELETE_SVG}
+                    </button>
+                  </div>
+                  <span class="raccord-time-compact">${timeFormatted}</span>
                 </div>
               </div>
 
               ${charactersHtml}
 
               ${take.notes ? `<p class="raccord-general-note">${escapeHtml(take.notes)}</p>` : ''}
-            </div>
-
-            <div class="raccord-time-row">
-              <span class="raccord-time">${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
           </article>
         `;
@@ -3110,10 +3195,18 @@
         openEditTake(id);
       } else if (action === 'delete-take') {
         e.stopPropagation();
-        askConfirmation('¿Seguro que deseas eliminar este registro de continuidad?', async () => {
+        const all = await getAllTakesForProject(activeProjectId);
+        const target = all.find(t => t.id === id);
+        if (!target) return;
+
+        const sceneLabel = target.sceneDesc
+          ? `ESCENA ${target.scene} — ${target.sceneDesc}`
+          : `ESCENA ${target.scene}`;
+
+        askConfirmation(`¿Eliminar definitivamente el raccord de "${sceneLabel}"?`, async () => {
           await deleteTakeFromDB(id);
           await renderTakes();
-          showToast('Registro eliminado');
+          showToast(`Raccord de Escena ${target.scene} eliminado`);
         });
       } else if (action === 'view-raccord') {
         openRaccordViewer(id);
@@ -3272,6 +3365,7 @@
 
       const uniqueChars = Array.from(new Set(currentPhotoItems.map(p => p.character).filter(Boolean)));
 
+      // Actualiza timestamp tanto al crear como al editar
       await saveTakeToDB({
         id,
         projectId: activeProjectId,
