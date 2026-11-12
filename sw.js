@@ -1,4 +1,4 @@
-const CACHE_NAME = 'raccordpro-v54';
+const CACHE_NAME = 'raccordpro-v59';
 const LOCAL_ASSETS = [
   './',
   './index.html',

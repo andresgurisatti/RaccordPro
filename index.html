@@ -161,8 +161,8 @@
     }
 
     .btn-primary {
-      background: var(--amber);
-      color: var(--bg-900);
+      background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+      color: #000;
       font-weight: 900;
       font-size: 16px;
       padding: 15px 24px;
@@ -637,9 +637,10 @@
 
     .raccord-card {
       background: var(--bg-850);
-      border: 1px solid var(--border-700);
+      border: 1px solid rgba(245, 158, 11, 0.45);
       border-radius: 12px;
-      padding: 11px 12px;
+      padding: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -649,29 +650,32 @@
     }
 
     .raccord-card:active {
-      border-color: var(--border-600);
+      border-color: var(--amber);
     }
 
     .raccord-scene-header {
+      background: rgba(245, 158, 11, 0.15);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 9px 12px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      padding-bottom: 7px;
-      border-bottom: 1px solid var(--border-700);
-      margin-bottom: 8px;
+      gap: 3px;
+    }
+
+    .raccord-card-body {
+      padding: 9px 12px;
     }
 
     .raccord-scene-badge {
       display: block;
       width: 100%;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
       color: var(--amber);
       font-family: monospace;
       font-weight: 900;
-      font-size: 15px;
-      padding: 4px 10px;
-      border-radius: 7px;
+      font-size: 16px;
+      letter-spacing: 0.4px;
+      line-height: 1.2;
+      padding: 0;
     }
 
     .raccord-scene-desc {
@@ -1032,17 +1036,72 @@
       margin-bottom: 0;
     }
 
+    .viewer-entry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .viewer-entry-char {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      color: #fff;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .viewer-entry-body {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+    }
+
     .viewer-square-mask {
       position: relative;
-      width: 175px;
-      height: 175px;
-      margin: 0 auto 10px auto;
-      border-radius: 12px;
+      width: 136px;
+      height: 136px;
+      flex-shrink: 0;
+      margin: 0;
+      border-radius: 11px;
       overflow: hidden;
       background: #000;
       border: 1px solid var(--border-600);
       cursor: pointer;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    .viewer-square-mask.viewer-no-photo {
+      background: var(--bg-850);
+      border: 1px dashed var(--border-700);
+      cursor: default;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .viewer-entry-note {
+      flex: 1;
+      min-width: 0;
+      color: #e5e7eb;
+      font-size: 14px;
+      line-height: 1.4;
+      background: var(--bg-850);
+      padding: 9px 11px;
+      border-radius: 11px;
+      border: 1px solid var(--border-700);
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .viewer-square-mask img {
@@ -1175,7 +1234,7 @@
     .btn-submit {
       flex: 2;
       min-height: 52px;
-      background: var(--amber);
+      background: linear-gradient(135deg, var(--amber), var(--amber-dark));
       color: #000;
       font-weight: 900;
       font-size: 16px;
@@ -1674,10 +1733,10 @@
             </select>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Entradas de Continuidad por Personaje</label>
-            <button type="button" id="btn-open-subentry-modal" class="btn-photo-single">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <div id="entries-form-group" class="form-group">
+            <label class="form-label">ENTRADAS</label>
+            <button type="button" id="btn-open-subentry-modal" class="btn-primary" style="width:100%;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
               <span>Añadir Entrada (Personaje / Foto / Nota)</span>
             </button>
             <div id="photos-entries-list"></div>
@@ -1747,6 +1806,13 @@
             <label class="form-label">Nota de Continuidad</label>
             <textarea id="subentry-note" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, estado..." class="form-control" style="font-size:15px; line-height:1.4; min-height:86px;"></textarea>
           </div>
+
+          <div id="delete-subentry-container" class="delete-project-box hidden">
+            <button type="button" id="btn-delete-subentry-modal" class="btn-delete-project-full">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>Eliminar Entrada</span>
+            </button>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" id="btn-cancel-subentry" class="btn-secondary">Cancelar</button>
@@ -1777,6 +1843,13 @@
       </div>
 
       <div id="viewer-body" class="modal-body"></div>
+
+      <div class="modal-footer" style="padding: 10px 12px;">
+        <button type="button" id="btn-add-subentry-from-viewer" class="btn-primary" style="width:100%;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <span>Añadir Entrada (Personaje / Foto / Nota)</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -3782,9 +3855,7 @@
                 <span class="raccord-scene-badge">ESC ${escapeHtml(take.scene)}</span>
                 ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
               </div>
-              <div>
-                ${entriesHtml}
-              </div>
+              ${entriesHtml ? `<div class="raccord-card-body">${entriesHtml}</div>` : ''}
             </div>
           </div>
         `;
@@ -3818,6 +3889,9 @@
     const btnRemoveSubentryPhoto = document.getElementById('btn-remove-subentry-photo');
 
     const deleteRaccordContainer = document.getElementById('delete-raccord-container');
+    const btnOpenSubentryModal = document.getElementById('btn-open-subentry-modal');
+    const entriesFormGroup = document.getElementById('entries-form-group');
+    const deleteSubentryContainer = document.getElementById('delete-subentry-container');
 
     document.getElementById('btn-add-entry').addEventListener('click', async () => {
       await updateCatalogCaches(null);
@@ -3827,12 +3901,22 @@
       document.getElementById('input-notes').value = '';
       currentPhotoItems = [];
       renderFormPhotoItems();
+      entriesFormGroup.classList.remove('hidden');
+      btnOpenSubentryModal.classList.remove('hidden');
       deleteRaccordContainer.classList.add('hidden');
       entryModal.classList.remove('hidden');
     });
 
-    document.getElementById('btn-close-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
-    document.getElementById('btn-cancel-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
+    async function handleCancelOrCloseEntryModal() {
+      const editingId = document.getElementById('entry-id').value;
+      entryModal.classList.add('hidden');
+      if (editingId) {
+        await openRaccordViewer(editingId);
+      }
+    }
+
+    document.getElementById('btn-close-modal').addEventListener('click', handleCancelOrCloseEntryModal);
+    document.getElementById('btn-cancel-modal').addEventListener('click', handleCancelOrCloseEntryModal);
 
     function setSubentryPhotoPreview(base64) {
       currentSubentryPhotoBase64 = base64;
@@ -3871,28 +3955,108 @@
       `).join('');
     }
 
-    document.getElementById('btn-open-subentry-modal').addEventListener('click', () => {
+    let addingSubentryDirectlyToViewer = false;
+    let editingSubentryDirectlyInViewer = false;
+
+    function openNewSubentryModal(fromViewer = false) {
+      addingSubentryDirectlyToViewer = fromViewer;
+      editingSubentryDirectlyInViewer = false;
       document.getElementById('subentry-modal-title').textContent = 'NUEVA ENTRADA DE RACCORD';
       subentryIdInput.value = '';
       subentryCharacterSelect.innerHTML = buildCharacterSelectOptions('');
       subentryNoteInput.value = '';
       inputSubentryPhoto.value = '';
       setSubentryPhotoPreview(null);
+      deleteSubentryContainer.classList.add('hidden');
       subentryModal.classList.remove('hidden');
+    }
+
+    document.getElementById('btn-open-subentry-modal').addEventListener('click', () => {
+      openNewSubentryModal(false);
+    });
+
+    document.getElementById('btn-add-subentry-from-viewer').addEventListener('click', () => {
+      if (!activeViewerTakeId) return;
+      openNewSubentryModal(true);
     });
 
     window.openEditSubentry = function(id) {
       const target = currentPhotoItems.find(p => p.id === id);
       if (!target) return;
 
+      addingSubentryDirectlyToViewer = false;
+      editingSubentryDirectlyInViewer = false;
       document.getElementById('subentry-modal-title').textContent = 'EDITAR ENTRADA DE RACCORD';
       subentryIdInput.value = target.id;
       subentryCharacterSelect.innerHTML = buildCharacterSelectOptions(target.character || '');
       subentryNoteInput.value = target.note || '';
       inputSubentryPhoto.value = '';
       setSubentryPhotoPreview(target.photo || null);
+      deleteSubentryContainer.classList.remove('hidden');
       subentryModal.classList.remove('hidden');
     };
+
+    async function openEditSubentryFromViewer(entryId) {
+      if (!activeViewerTakeId) return;
+      const all = await getAllTakesForProject(activeProjectId);
+      const targetTake = all.find(t => t.id === activeViewerTakeId);
+      if (!targetTake) return;
+
+      const entries = getNormalizedPhotos(targetTake);
+      const target = entries.find(p => p.id === entryId);
+      if (!target) return;
+
+      addingSubentryDirectlyToViewer = false;
+      editingSubentryDirectlyInViewer = true;
+      document.getElementById('subentry-modal-title').textContent = 'EDITAR ENTRADA DE RACCORD';
+      subentryIdInput.value = target.id;
+      subentryCharacterSelect.innerHTML = buildCharacterSelectOptions(target.character || '');
+      subentryNoteInput.value = target.note || '';
+      inputSubentryPhoto.value = '';
+      setSubentryPhotoPreview(target.photo || null);
+      deleteSubentryContainer.classList.remove('hidden');
+      subentryModal.classList.remove('hidden');
+    }
+
+    document.getElementById('btn-delete-subentry-modal').addEventListener('click', async () => {
+      const targetEntryId = subentryIdInput.value;
+      if (!targetEntryId) return;
+
+      if (editingSubentryDirectlyInViewer && activeViewerTakeId) {
+        const all = await getAllTakesForProject(activeProjectId);
+        const targetTake = all.find(t => t.id === activeViewerTakeId);
+        if (!targetTake) return;
+        const entries = getNormalizedPhotos(targetTake);
+        const target = entries.find(p => p.id === targetEntryId);
+        if (!target) return;
+
+        askConfirmation(`¿Eliminar definitivamente la entrada de "${target.character || 'Sin personaje'}"?`, async () => {
+          const updatedPhotos = entries.filter(p => p.id !== targetEntryId);
+          const uniqueChars = Array.from(new Set(updatedPhotos.map(p => p.character).filter(Boolean)));
+          await saveTakeToDB({
+            ...targetTake,
+            character: uniqueChars.join(', '),
+            photos: updatedPhotos
+          });
+          editingSubentryDirectlyInViewer = false;
+          subentryModal.classList.add('hidden');
+          await renderTakes();
+          await openRaccordViewer(activeViewerTakeId);
+          showToast('Entrada eliminada');
+        });
+        return;
+      }
+
+      const target = currentPhotoItems.find(p => p.id === targetEntryId);
+      if (!target) return;
+
+      askConfirmation(`¿Eliminar definitivamente la entrada de "${target.character || 'Sin personaje'}"?`, () => {
+        currentPhotoItems = currentPhotoItems.filter(p => p.id !== targetEntryId);
+        subentryModal.classList.add('hidden');
+        renderFormPhotoItems();
+        showToast('Entrada eliminada');
+      });
+    });
 
     window.deleteSubentryItem = function(id) {
       const target = currentPhotoItems.find(p => p.id === id);
@@ -3930,7 +4094,7 @@
     document.getElementById('btn-close-subentry-modal').addEventListener('click', () => subentryModal.classList.add('hidden'));
     document.getElementById('btn-cancel-subentry').addEventListener('click', () => subentryModal.classList.add('hidden'));
 
-    subentryForm.addEventListener('submit', (e) => {
+    subentryForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const charName = subentryCharacterSelect.value.trim();
       const note = subentryNoteInput.value.trim();
@@ -3939,7 +4103,59 @@
         return;
       }
 
+      const newEntryObj = {
+        id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        character: charName,
+        photo: currentSubentryPhotoBase64 || null,
+        note
+      };
+
       const existingId = subentryIdInput.value;
+
+      if (editingSubentryDirectlyInViewer && existingId && activeViewerTakeId && entryModal.classList.contains('hidden')) {
+        const all = await getAllTakesForProject(activeProjectId);
+        const targetTake = all.find(t => t.id === activeViewerTakeId);
+        if (targetTake) {
+          const updatedPhotos = getNormalizedPhotos(targetTake).map(p =>
+            p.id === existingId
+              ? { ...p, character: charName, photo: currentSubentryPhotoBase64 || null, note }
+              : p
+          );
+          const uniqueChars = Array.from(new Set(updatedPhotos.map(p => p.character).filter(Boolean)));
+          await saveTakeToDB({
+            ...targetTake,
+            character: uniqueChars.join(', '),
+            photos: updatedPhotos
+          });
+          editingSubentryDirectlyInViewer = false;
+          subentryModal.classList.add('hidden');
+          await renderTakes();
+          await openRaccordViewer(activeViewerTakeId);
+          showToast('Entrada actualizada');
+          return;
+        }
+      }
+
+      if (addingSubentryDirectlyToViewer && activeViewerTakeId && entryModal.classList.contains('hidden')) {
+        const all = await getAllTakesForProject(activeProjectId);
+        const targetTake = all.find(t => t.id === activeViewerTakeId);
+        if (targetTake) {
+          const updatedPhotos = [...getNormalizedPhotos(targetTake), newEntryObj];
+          const uniqueChars = Array.from(new Set(updatedPhotos.map(p => p.character).filter(Boolean)));
+          await saveTakeToDB({
+            ...targetTake,
+            character: uniqueChars.join(', '),
+            photos: updatedPhotos
+          });
+          addingSubentryDirectlyToViewer = false;
+          subentryModal.classList.add('hidden');
+          await renderTakes();
+          await openRaccordViewer(activeViewerTakeId);
+          showToast('Entrada añadida al raccord');
+          return;
+        }
+      }
+
       if (existingId) {
         currentPhotoItems = currentPhotoItems.map(p =>
           p.id === existingId
@@ -3947,14 +4163,11 @@
             : p
         );
       } else {
-        currentPhotoItems.push({
-          id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-          character: charName,
-          photo: currentSubentryPhotoBase64 || null,
-          note
-        });
+        currentPhotoItems.push(newEntryObj);
       }
 
+      addingSubentryDirectlyToViewer = false;
+      editingSubentryDirectlyInViewer = false;
       renderFormPhotoItems();
       subentryModal.classList.add('hidden');
     });
@@ -4002,6 +4215,9 @@
       entryModal.classList.add('hidden');
       await updateCatalogCaches();
       await renderTakes();
+      if (existingId) {
+        await openRaccordViewer(existingId);
+      }
       showToast(`Raccord de Escena ${scene} guardado`);
     });
 
@@ -4020,6 +4236,8 @@
 
       currentPhotoItems = getNormalizedPhotos(target).map(p => ({ ...p }));
       renderFormPhotoItems();
+      entriesFormGroup.classList.add('hidden');
+      btnOpenSubentryModal.classList.add('hidden');
       deleteRaccordContainer.classList.remove('hidden');
 
       entryModal.classList.remove('hidden');
@@ -4096,23 +4314,31 @@
       if (entries.length > 0) {
         htmlContent += entries.map((p, idx) => `
           <div class="viewer-photo-block">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
-              <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; color:#fff;">
+            <div class="viewer-entry-top">
+              <div class="viewer-entry-char">
                 ${getCharacterAvatarHtml(p.character, true)}
-                <span>${escapeHtml(p.character || 'Sin personaje')}</span>
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.character || 'Sin personaje')}</span>
               </div>
-              <span class="photo-note-badge">ENTRADA #${idx + 1}</span>
+              <button type="button" class="btn-action-small edit" data-action="edit-viewer-subentry" data-id="${p.id}" title="Editar entrada">
+                ${ICON_EDIT_SVG}
+              </button>
             </div>
-            ${p.photo ? `
-              <div class="viewer-square-mask" data-action="view-full-photo" data-idx="${idx}" title="Ver foto en tamaño original">
-                <img src="${p.photo}" alt="Entrada ${idx + 1}">
-                <button type="button" class="btn-view-photo-eye" data-action="view-full-photo" data-idx="${idx}">
-                  ${ICON_EYE_SVG}
-                  <span>VER</span>
-                </button>
-              </div>
-            ` : ''}
-            ${p.note ? `<div style="color:#e5e7eb; font-size:14px; line-height:1.4; background:var(--bg-850); padding:9px 11px; border-radius:9px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : ''}
+            <div class="viewer-entry-body">
+              ${p.photo ? `
+                <div class="viewer-square-mask" data-action="view-full-photo" data-idx="${idx}" title="Ver foto en tamaño original">
+                  <img src="${p.photo}" alt="${escapeHtml(p.character || 'Entrada')}">
+                  <button type="button" class="btn-view-photo-eye" data-action="view-full-photo" data-idx="${idx}">
+                    ${ICON_EYE_SVG}
+                    <span>VER</span>
+                  </button>
+                </div>
+              ` : `
+                <div class="viewer-square-mask viewer-no-photo">
+                  <span>Sin foto</span>
+                </div>
+              `}
+              <div class="viewer-entry-note">${p.note ? escapeHtml(p.note) : '<span style="color:var(--text-muted); font-style:italic;">Sin nota</span>'}</div>
+            </div>
           </div>
         `).join('');
       } else {
@@ -4124,6 +4350,14 @@
     }
 
     document.getElementById('viewer-body').addEventListener('click', (e) => {
+      const editEntryBtn = e.target.closest('[data-action="edit-viewer-subentry"]');
+      if (editEntryBtn) {
+        e.stopPropagation();
+        const entryId = editEntryBtn.getAttribute('data-id');
+        openEditSubentryFromViewer(entryId);
+        return;
+      }
+
       const trigger = e.target.closest('[data-action="view-full-photo"]');
       if (!trigger) return;
       e.stopPropagation();
