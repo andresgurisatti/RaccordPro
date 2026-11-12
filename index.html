@@ -151,7 +151,7 @@
       flex: 1;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding: 16px 20px;
+      padding: 12px 14px;
       padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px));
     }
 
@@ -232,7 +232,7 @@
     .raccords-counter-center-box {
       display: flex;
       justify-content: center;
-      margin: 2px 0 16px 0;
+      margin: 0 0 10px 0;
     }
 
     .raccords-count-pill {
@@ -255,13 +255,13 @@
     .project-card {
       background: var(--bg-850);
       border: 1px solid var(--border-700);
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 14px;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       transition: border-color 0.15s;
@@ -539,15 +539,15 @@
 
     .takes-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 10px;
     }
 
     .raccord-card {
       background: var(--bg-850);
       border: 1px solid var(--border-700);
-      border-radius: 14px;
-      padding: 16px 18px;
+      border-radius: 12px;
+      padding: 11px 12px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -562,63 +562,40 @@
 
     .raccord-scene-header {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-700);
-      margin-bottom: 12px;
-    }
-
-    .raccord-header-right-col {
-      display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .raccord-header-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .raccord-time-compact {
-      font-size: 11px;
-      font-family: monospace;
-      font-weight: 700;
-      color: var(--text-dim);
-      padding-right: 2px;
+      gap: 5px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border-700);
+      margin-bottom: 8px;
     }
 
     .raccord-scene-badge {
-      display: inline-block;
+      display: block;
+      width: 100%;
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.4);
       color: var(--amber);
       font-family: monospace;
       font-weight: 900;
       font-size: 15px;
-      padding: 5px 10px;
-      border-radius: 8px;
-      margin-bottom: 6px;
+      padding: 4px 10px;
+      border-radius: 7px;
     }
 
     .raccord-scene-desc {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       color: #fff;
-      line-height: 1.35;
+      line-height: 1.3;
       margin: 0;
     }
 
     .raccord-char-row {
       background: var(--bg-900);
       border: 1px solid var(--border-700);
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+      border-radius: 9px;
+      padding: 7px 10px;
+      margin-bottom: 6px;
     }
 
     .raccord-char-row:last-child {
@@ -633,18 +610,18 @@
     }
 
     .raccord-char-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .actor-avatar-mini {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
       object-fit: cover;
       border: 1px solid rgba(245, 158, 11, 0.45);
       flex-shrink: 0;
@@ -665,7 +642,7 @@
       color: var(--amber);
       background: rgba(245, 158, 11, 0.12);
       border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 6px;
       display: inline-flex;
       align-items: center;
@@ -676,8 +653,8 @@
     .raccord-char-note-preview {
       font-size: 13px;
       color: #d1d5db;
-      margin: 6px 0 0 0;
-      line-height: 1.4;
+      margin: 4px 0 0 0;
+      line-height: 1.35;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -685,14 +662,14 @@
     }
 
     .raccord-general-note {
-      font-size: 14px;
+      font-size: 13px;
       color: #d1d5db;
       background: rgba(255, 255, 255, 0.03);
       border-left: 3px solid var(--amber);
-      padding: 8px 10px;
+      padding: 6px 9px;
       border-radius: 6px;
-      margin: 8px 0 0 0;
-      line-height: 1.4;
+      margin: 6px 0 0 0;
+      line-height: 1.35;
     }
 
     .empty-box {
@@ -1008,6 +985,28 @@
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 10px;
+      transition: opacity 0.15s, border-color 0.15s;
+    }
+
+    .editing-lock {
+      pointer-events: none !important;
+      opacity: 0.35 !important;
+      user-select: none !important;
+    }
+
+    .manager-list-editing .manager-item {
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    .manager-list-editing .manager-item.is-editing-target {
+      opacity: 1;
+      border-color: var(--amber);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .manager-list-editing .manager-item.is-editing-target .btn-action-small {
+      opacity: 0.35;
     }
 
     .btn-action-small {
@@ -1223,18 +1222,12 @@
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          <div style="min-width:0; flex:1;">
-            <div>Guardar Respaldo JSON</div>
-            <div id="backup-folder-status" style="font-size:11px; font-weight:600; color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Carpeta: Sin asignar (se pedirá)</div>
-          </div>
+          <span>Guardar Respaldo</span>
         </button>
         <button type="button" class="dropdown-item sub-option hidden" id="menu-opt-change-json-folder">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
           <span>Cambiar carpeta de respaldo</span>
         </button>
-        <div class="dropdown-hint-box">
-          <strong>Nota Mac / Apple:</strong> Usa preferiblemente <strong>Chrome o Edge</strong>. Safari bloquea el acceso continuo a carpetas locales por políticas de seguridad de Apple, por lo que pedirá confirmar la ruta en cada guardado.
-        </div>
       </div>
     </header>
 
@@ -1347,13 +1340,17 @@
   <div id="scenes-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="scenes-modal-title" class="modal-title">ESCENAS DEL PROYECTO</h2>
+        <h2 id="scenes-modal-title" class="modal-title">
+          <span>ESCENAS DEL PROYECTO</span>
+          <span id="modal-count-scenes" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
+        </h2>
         <button type="button" id="btn-close-scenes-modal" class="btn-close-touch" title="Cerrar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <div class="modal-body">
-        <form id="scenes-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+        <div id="scenes-list" style="max-height:280px; overflow-y:auto; margin-bottom:16px;"></div>
+        <form id="scenes-form" style="display:flex; flex-direction:column; gap:10px; padding-top:16px; border-top:1px solid var(--border-700);">
           <input type="hidden" id="edit-scene-id" value="">
           <div style="display:flex; gap:10px;">
             <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
@@ -1364,7 +1361,6 @@
             <button type="button" id="btn-cancel-edit-scene" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="scenes-list" style="max-height:280px; overflow-y:auto;"></div>
         <div id="delete-all-scenes-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-scenes" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1381,13 +1377,17 @@
   <div id="characters-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="characters-modal-title" class="modal-title">PERSONAJES DEL PROYECTO</h2>
+        <h2 id="characters-modal-title" class="modal-title">
+          <span>PERSONAJES DEL PROYECTO</span>
+          <span id="modal-count-characters" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
+        </h2>
         <button type="button" id="btn-close-characters-modal" class="btn-close-touch" title="Cerrar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <div class="modal-body">
-        <form id="characters-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+        <div id="characters-list" style="max-height:260px; overflow-y:auto; margin-bottom:16px;"></div>
+        <form id="characters-form" style="display:flex; flex-direction:column; gap:10px; padding-top:16px; border-top:1px solid var(--border-700);">
           <input type="hidden" id="edit-character-id" value="">
           <input type="file" id="input-actor-photo" accept="image/*" class="hidden">
 
@@ -1416,7 +1416,6 @@
             <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="characters-list" style="max-height:260px; overflow-y:auto;"></div>
         <div id="delete-all-characters-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-characters" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1462,6 +1461,13 @@
           <div class="form-group">
             <label class="form-label">Notas Generales de la Escena</label>
             <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad para esta escena..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;"></textarea>
+          </div>
+
+          <div id="delete-raccord-container" class="delete-project-box hidden">
+            <button type="button" id="btn-delete-raccord-modal" class="btn-delete-project-full">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>Eliminar Raccord</span>
+            </button>
           </div>
         </div>
         <div class="modal-footer">
@@ -1537,7 +1543,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
           <button type="button" id="btn-edit-from-viewer" class="btn-edit-square" title="Editar raccord">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
           </button>
           <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -1763,22 +1769,18 @@
     }
 
     async function refreshBackupFolderLabel() {
-      const statusEl = document.getElementById('backup-folder-status');
       const changeBtn = document.getElementById('menu-opt-change-json-folder');
-      if (!activeProjectId) return;
+      if (!activeProjectId || !changeBtn) return;
 
       if (!('showDirectoryPicker' in window)) {
-        statusEl.textContent = 'Se abrirá selector al guardar';
         changeBtn.classList.add('hidden');
         return;
       }
 
       const savedRecord = await getDirectoryHandleFromDB(activeProjectId);
       if (savedRecord && savedRecord.folderName) {
-        statusEl.textContent = `Carpeta: 📁 ${savedRecord.folderName}`;
         changeBtn.classList.remove('hidden');
       } else {
-        statusEl.textContent = 'Carpeta: Sin asignar (se pedirá 1 vez)';
         changeBtn.classList.add('hidden');
       }
     }
@@ -2527,13 +2529,31 @@
     const btnSaveScene = document.getElementById('btn-save-scene');
     const btnCancelEditScene = document.getElementById('btn-cancel-edit-scene');
     const deleteAllScenesBox = document.getElementById('delete-all-scenes-box');
+    const btnCloseScenesModal = document.getElementById('btn-close-scenes-modal');
+    const btnDeleteAllScenes = document.getElementById('btn-delete-all-scenes');
+    const scenesListContainer = document.getElementById('scenes-list');
+
+    function setSceneEditingLock(isEditing, targetId = null) {
+      btnCloseScenesModal.disabled = isEditing;
+      btnCloseScenesModal.classList.toggle('editing-lock', isEditing);
+      btnDeleteAllScenes.disabled = isEditing;
+      deleteAllScenesBox.classList.toggle('editing-lock', isEditing);
+      scenesListContainer.classList.toggle('manager-list-editing', isEditing);
+
+      scenesListContainer.querySelectorAll('.manager-item').forEach(el => {
+        el.classList.toggle('is-editing-target', Boolean(isEditing && el.getAttribute('data-id') === targetId));
+      });
+    }
 
     document.getElementById('menu-opt-scenes').addEventListener('click', () => {
       closeProjectMenu();
       resetSceneForm();
       openScenesManager();
     });
-    document.getElementById('btn-close-scenes-modal').addEventListener('click', () => scenesModal.classList.add('hidden'));
+    btnCloseScenesModal.addEventListener('click', () => {
+      if (editSceneId.value) return;
+      scenesModal.classList.add('hidden');
+    });
 
     function resetSceneForm() {
       editSceneId.value = '';
@@ -2541,6 +2561,7 @@
       document.getElementById('new-scene-desc').value = '';
       btnSaveScene.textContent = '+ Añadir Escena';
       btnCancelEditScene.classList.add('hidden');
+      setSceneEditingLock(false);
     }
 
     btnCancelEditScene.addEventListener('click', resetSceneForm);
@@ -2554,16 +2575,18 @@
       const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
       scenes.sort((a, b) => compareSceneNumbers(a.sceneNum, b.sceneNum));
 
-      const container = document.getElementById('scenes-list');
+      const modalCountScenes = document.getElementById('modal-count-scenes');
+      if (modalCountScenes) modalCountScenes.textContent = scenes.length;
+
       if (scenes.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay escenas cargadas aún.</p>';
+        scenesListContainer.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay escenas cargadas aún.</p>';
         deleteAllScenesBox.classList.add('hidden');
         return;
       }
 
       deleteAllScenesBox.classList.remove('hidden');
-      container.innerHTML = scenes.map(s => `
-        <div class="manager-item">
+      scenesListContainer.innerHTML = scenes.map(s => `
+        <div class="manager-item" data-id="${s.id}">
           <div style="min-width:0; flex:1;">
             <strong style="color:var(--amber); font-size:16px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
             <span style="color:#d1d5db; font-size:14px;">${escapeHtml(s.desc || '')}</span>
@@ -2574,6 +2597,10 @@
           </div>
         </div>
       `).join('');
+
+      if (editSceneId.value) {
+        setSceneEditingLock(true, editSceneId.value);
+      }
     }
 
     scenesForm.addEventListener('submit', async (e) => {
@@ -2607,6 +2634,7 @@
       document.getElementById('new-scene-desc').value = target.desc || '';
       btnSaveScene.textContent = 'Guardar Cambios';
       btnCancelEditScene.classList.remove('hidden');
+      setSceneEditingLock(true, target.id);
       document.getElementById('new-scene-num').focus();
     };
 
@@ -2648,13 +2676,31 @@
     const actorPhotoPreviewImg = document.getElementById('actor-photo-preview-img');
     const btnTriggerActorPhoto = document.getElementById('btn-trigger-actor-photo');
     const deleteAllCharactersBox = document.getElementById('delete-all-characters-box');
+    const btnCloseCharactersModal = document.getElementById('btn-close-characters-modal');
+    const btnDeleteAllCharacters = document.getElementById('btn-delete-all-characters');
+    const charactersListContainer = document.getElementById('characters-list');
+
+    function setCharacterEditingLock(isEditing, targetId = null) {
+      btnCloseCharactersModal.disabled = isEditing;
+      btnCloseCharactersModal.classList.toggle('editing-lock', isEditing);
+      btnDeleteAllCharacters.disabled = isEditing;
+      deleteAllCharactersBox.classList.toggle('editing-lock', isEditing);
+      charactersListContainer.classList.toggle('manager-list-editing', isEditing);
+
+      charactersListContainer.querySelectorAll('.manager-item').forEach(el => {
+        el.classList.toggle('is-editing-target', Boolean(isEditing && el.getAttribute('data-id') === targetId));
+      });
+    }
 
     document.getElementById('menu-opt-characters').addEventListener('click', () => {
       closeProjectMenu();
       resetCharacterForm();
       openCharactersManager();
     });
-    document.getElementById('btn-close-characters-modal').addEventListener('click', () => charactersModal.classList.add('hidden'));
+    btnCloseCharactersModal.addEventListener('click', () => {
+      if (editCharacterId.value) return;
+      charactersModal.classList.add('hidden');
+    });
 
     function setActorPhotoPreview(base64) {
       currentActorPhotoBase64 = base64;
@@ -2677,6 +2723,7 @@
       setActorPhotoPreview(null);
       btnSaveCharacter.textContent = '+ Añadir Personaje';
       btnCancelEditCharacter.classList.add('hidden');
+      setCharacterEditingLock(false);
     }
 
     btnTriggerActorPhoto.addEventListener('click', () => {
@@ -2711,16 +2758,18 @@
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       chars.sort((a, b) => a.name.localeCompare(b.name));
 
-      const container = document.getElementById('characters-list');
+      const modalCountCharacters = document.getElementById('modal-count-characters');
+      if (modalCountCharacters) modalCountCharacters.textContent = chars.length;
+
       if (chars.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay personajes cargados aún.</p>';
+        charactersListContainer.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay personajes cargados aún.</p>';
         deleteAllCharactersBox.classList.add('hidden');
         return;
       }
 
       deleteAllCharactersBox.classList.remove('hidden');
-      container.innerHTML = chars.map(c => `
-        <div class="manager-item">
+      charactersListContainer.innerHTML = chars.map(c => `
+        <div class="manager-item" data-id="${c.id}">
           <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
             ${c.photo 
               ? `<img src="${c.photo}" alt="${escapeHtml(c.name)}" class="actor-avatar-list">` 
@@ -2737,6 +2786,10 @@
           </div>
         </div>
       `).join('');
+
+      if (editCharacterId.value) {
+        setCharacterEditingLock(true, editCharacterId.value);
+      }
     }
 
     charactersForm.addEventListener('submit', async (e) => {
@@ -2773,6 +2826,7 @@
       setActorPhotoPreview(target.photo || null);
       btnSaveCharacter.textContent = 'Guardar Cambios';
       btnCancelEditCharacter.classList.remove('hidden');
+      setCharacterEditingLock(true, target.id);
       document.getElementById('new-character-name').focus();
     };
 
@@ -3001,7 +3055,6 @@
         projectLabel: isEN ? 'Project' : 'Proyecto',
         generatedLabel: isEN ? 'Generated' : 'Generado',
         sceneLabel: isEN ? 'SCENE' : 'ESCENA',
-        timeLabel: isEN ? 'Logged' : 'Hora registro',
         generalNotesLabel: isEN ? 'General notes' : 'Notas generales',
         entryLabel: isEN ? 'ENTRY' : 'ENTRADA',
         noCharLabel: isEN ? 'Unassigned character' : 'Sin personaje',
@@ -3047,73 +3100,45 @@
         doc.setTextColor(180, 185, 195);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8.5);
-        const metaLine = `${prodName ? prodName + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        const metaLine = `${prodName ? prodName + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()}`;
         doc.text(metaLine, margin, 25.5);
 
         y = 40;
+        let hasDrawnTakeOnPage = false;
 
         for (const take of selectedTakes) {
-          if (y > bottomSafeY - 30) {
-            doc.addPage();
-            y = 16;
-          }
+          const headerBlockH = 13;
 
-          doc.setFillColor(242, 244, 247);
-          doc.setDrawColor(210, 215, 222);
-          doc.roundedRect(margin, y, contentWidth, 14, 2, 2, 'FD');
-
-          doc.setTextColor(180, 95, 6);
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(11.5);
-          doc.text(`${i18n.sceneLabel} ${take.scene}`, margin + 4, y + 6);
-
-          if (take.sceneDesc) {
-            doc.setTextColor(35, 40, 48);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(9.5);
-            const descTrunc = doc.splitTextToSize(take.sceneDesc, contentWidth - 42)[0];
-            doc.text(descTrunc, margin + 36, y + 6);
-          }
-
-          doc.setTextColor(110, 115, 125);
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(8.5);
-          doc.text(`${i18n.timeLabel}: ${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, margin + 4, y + 11.5);
-
-          y += 18;
-
+          let noteLines = [];
+          let generalNoteH = 0;
           if (take.notes && take.notes.trim()) {
-            doc.setTextColor(55, 65, 81);
             doc.setFont('helvetica', 'italic');
             doc.setFontSize(9.5);
-            const noteLines = doc.splitTextToSize(`${i18n.generalNotesLabel}: ${take.notes.trim()}`, contentWidth - 4);
-            if (y + (noteLines.length * 4.8) > bottomSafeY) {
-              doc.addPage();
-              y = 16;
-            }
-            doc.text(noteLines, margin + 2, y);
-            y += (noteLines.length * 4.8) + 4;
+            noteLines = doc.splitTextToSize(`${i18n.generalNotesLabel}: ${take.notes.trim()}`, contentWidth - 4);
+            generalNoteH = (noteLines.length * 4.8) + 4;
           }
 
-          const entries = getNormalizedPhotos(take);
+          const rawEntries = getNormalizedPhotos(take);
+          const preparedEntries = [];
+          let entriesTotalH = 0;
 
-          for (let i = 0; i < entries.length; i++) {
-            const p = entries[i];
+          for (let i = 0; i < rawEntries.length; i++) {
+            const p = rawEntries[i];
             const hasPhoto = Boolean(p.photo);
             let drawW = 0;
             let drawH = 0;
 
             if (hasPhoto) {
               const dims = await getImageDimensions(p.photo);
-              const maxImgW = 88;
-              const maxImgH = 70;
+              const maxImgW = 106;
+              const maxImgH = 84;
               const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
               drawW = dims.width * ratio;
               drawH = dims.height * ratio;
             }
 
-            const textColX = hasPhoto ? (margin + 88 + 6) : (margin + 4);
-            const textColW = hasPhoto ? (contentWidth - 88 - 8) : (contentWidth - 8);
+            const textColX = hasPhoto ? (margin + drawW + 6) : (margin + 4);
+            const textColW = hasPhoto ? (contentWidth - drawW - 10) : (contentWidth - 8);
 
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9.5);
@@ -3122,6 +3147,71 @@
 
             const textContentHeight = hasNote ? (pNoteLines.length * 4.8) + 18 : 18;
             const blockHeight = hasPhoto ? Math.max(drawH + 6, textContentHeight) : textContentHeight;
+
+            preparedEntries.push({
+              p,
+              hasPhoto,
+              drawW,
+              drawH,
+              textColX,
+              hasNote,
+              pNoteLines,
+              blockHeight
+            });
+
+            entriesTotalH += blockHeight + 4;
+          }
+
+          const totalTakeHeight = headerBlockH + generalNoteH + entriesTotalH;
+          const firstChunkHeight = headerBlockH + generalNoteH + (preparedEntries.length > 0 ? preparedEntries[0].blockHeight : 0);
+
+          if (hasDrawnTakeOnPage && (y + totalTakeHeight > bottomSafeY)) {
+            doc.addPage();
+            y = 16;
+            hasDrawnTakeOnPage = false;
+          } else if (!hasDrawnTakeOnPage && y > 16 && (y + totalTakeHeight > bottomSafeY) && (totalTakeHeight <= (bottomSafeY - 16)) && (y + firstChunkHeight > bottomSafeY)) {
+            doc.addPage();
+            y = 16;
+            hasDrawnTakeOnPage = false;
+          }
+
+          doc.setFillColor(242, 244, 247);
+          doc.setDrawColor(210, 215, 222);
+          doc.roundedRect(margin, y, contentWidth, 10, 2, 2, 'FD');
+
+          doc.setTextColor(180, 95, 6);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+          const sceneTitleStr = `${i18n.sceneLabel} ${take.scene}`;
+          doc.text(sceneTitleStr, margin + 4, y + 6.6);
+
+          if (take.sceneDesc) {
+            const titleW = doc.getTextWidth(sceneTitleStr);
+            const descX = margin + 4 + Math.max(32, titleW + 6);
+            doc.setTextColor(35, 40, 48);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9.5);
+            const descTrunc = doc.splitTextToSize(take.sceneDesc, contentWidth - (descX - margin) - 4)[0];
+            doc.text(descTrunc, descX, y + 6.6);
+          }
+
+          y += headerBlockH;
+
+          if (noteLines.length > 0) {
+            doc.setTextColor(55, 65, 81);
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(9.5);
+            if (y + (noteLines.length * 4.8) > bottomSafeY) {
+              doc.addPage();
+              y = 16;
+            }
+            doc.text(noteLines, margin + 2, y);
+            y += generalNoteH;
+          }
+
+          for (let i = 0; i < preparedEntries.length; i++) {
+            const item = preparedEntries[i];
+            const { p, hasPhoto, drawW, drawH, textColX, hasNote, pNoteLines, blockHeight } = item;
 
             if (y + blockHeight > bottomSafeY) {
               doc.addPage();
@@ -3160,7 +3250,8 @@
             y += blockHeight + 4;
           }
 
-          y += 6;
+          y += 4;
+          hasDrawnTakeOnPage = true;
         }
 
         const totalPages = doc.internal.getNumberOfPages();
@@ -3190,11 +3281,8 @@
 
         const now = new Date();
         const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-        const versionStorageKey = `rp_pdf_seq_${activeProjectId}_${datePart}`;
-        const nextVersion = (parseInt(localStorage.getItem(versionStorageKey) || '0', 10)) + 1;
-        localStorage.setItem(versionStorageKey, String(nextVersion));
 
-        const pdfFileName = `${rawProjName || 'RACCORDPRO'}_${datePart}_V${nextVersion}.pdf`;
+        const pdfFileName = `${rawProjName || 'RACCORDPRO'}_${datePart}.pdf`;
         const pdfBlob = doc.output('blob');
 
         await saveFileToUserDirectory(
@@ -3399,20 +3487,15 @@
 
       recordsGrid.innerHTML = filtered.map(take => {
         const entries = getNormalizedPhotos(take);
-        const timeStr = take.timestamp
-          ? new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          : '';
 
         const entriesHtml = entries.map(p => `
           <div class="raccord-char-row">
             <div class="raccord-char-top">
               <div class="raccord-char-name">
-                ${getCharacterAvatarHtml(p.character, true)}
                 <span>${escapeHtml(p.character || 'Sin personaje')}</span>
               </div>
               ${p.photo ? `<span class="raccord-photo-chip">${ICON_PHOTO_SVG}<span>1</span></span>` : ''}
             </div>
-            ${p.note ? `<p class="raccord-char-note-preview">${escapeHtml(p.note)}</p>` : ''}
           </div>
         `).join('');
 
@@ -3420,58 +3503,19 @@
           <div class="raccord-card" data-action="open-viewer" data-id="${take.id}">
             <div>
               <div class="raccord-scene-header">
-                <div style="min-width:0; flex:1;">
-                  <span class="raccord-scene-badge">ESC ${escapeHtml(take.scene)}</span>
-                  ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
-                </div>
-                <div class="raccord-header-right-col">
-                  <div class="raccord-header-actions">
-                    <button type="button" class="btn-action-small edit" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
-                      ${ICON_EDIT_SVG}
-                    </button>
-                    <button type="button" class="btn-action-small delete" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
-                      ${ICON_DELETE_SVG}
-                    </button>
-                  </div>
-                  ${timeStr ? `<span class="raccord-time-compact">${timeStr}</span>` : ''}
-                </div>
+                <span class="raccord-scene-badge">ESC ${escapeHtml(take.scene)}</span>
+                ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
               </div>
               <div>
                 ${entriesHtml}
               </div>
             </div>
-            ${take.notes ? `<div class="raccord-general-note">${escapeHtml(take.notes)}</div>` : ''}
           </div>
         `;
       }).join('');
     }
 
-    recordsGrid.addEventListener('click', async (e) => {
-      const editBtn = e.target.closest('[data-action="edit-take"]');
-      if (editBtn) {
-        e.stopPropagation();
-        const id = editBtn.getAttribute('data-id');
-        openEditTake(id);
-        return;
-      }
-
-      const deleteBtn = e.target.closest('[data-action="delete-take"]');
-      if (deleteBtn) {
-        e.stopPropagation();
-        const id = deleteBtn.getAttribute('data-id');
-        const all = await getAllTakesForProject(activeProjectId);
-        const target = all.find(t => t.id === id);
-        if (!target) return;
-
-        askConfirmation(`¿Eliminar definitivamente el raccord de la Escena ${target.scene}?`, async () => {
-          await deleteTakeFromDB(id);
-          await updateCatalogCaches();
-          await renderTakes();
-          showToast(`Raccord de Escena ${target.scene} eliminado`);
-        });
-        return;
-      }
-
+    recordsGrid.addEventListener('click', (e) => {
       const card = e.target.closest('[data-action="open-viewer"]');
       if (card) {
         const id = card.getAttribute('data-id');
@@ -3497,6 +3541,8 @@
     const subentryPhotoPreviewImg = document.getElementById('subentry-photo-preview-img');
     const btnRemoveSubentryPhoto = document.getElementById('btn-remove-subentry-photo');
 
+    const deleteRaccordContainer = document.getElementById('delete-raccord-container');
+
     document.getElementById('btn-add-entry').addEventListener('click', async () => {
       await updateCatalogCaches(null);
       document.getElementById('modal-title').textContent = 'NUEVO RACCORD DE ESCENA';
@@ -3505,6 +3551,7 @@
       document.getElementById('input-notes').value = '';
       currentPhotoItems = [];
       renderFormPhotoItems();
+      deleteRaccordContainer.classList.add('hidden');
       entryModal.classList.remove('hidden');
     });
 
@@ -3673,8 +3720,7 @@
         sceneDesc,
         character: uniqueChars.join(', '),
         notes,
-        photos: currentPhotoItems,
-        timestamp: Date.now()
+        photos: currentPhotoItems
       });
 
       entryModal.classList.add('hidden');
@@ -3698,9 +3744,27 @@
 
       currentPhotoItems = getNormalizedPhotos(target).map(p => ({ ...p }));
       renderFormPhotoItems();
+      deleteRaccordContainer.classList.remove('hidden');
 
       entryModal.classList.remove('hidden');
     }
+
+    document.getElementById('btn-delete-raccord-modal').addEventListener('click', async () => {
+      const id = document.getElementById('entry-id').value;
+      if (!id) return;
+
+      const all = await getAllTakesForProject(activeProjectId);
+      const target = all.find(t => t.id === id);
+      if (!target) return;
+
+      askConfirmation(`¿Eliminar definitivamente el raccord de la Escena ${target.scene}?`, async () => {
+        await deleteTakeFromDB(id);
+        entryModal.classList.add('hidden');
+        await updateCatalogCaches();
+        await renderTakes();
+        showToast(`Raccord de Escena ${target.scene} eliminado`);
+      });
+    });
 
     /* ==========================================================================
        VISOR DETALLADO DE RACCORD
