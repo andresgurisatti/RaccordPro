@@ -403,7 +403,6 @@
       margin: 4px 0;
     }
 
-    /* BARRA SUPERIOR DE SET LIMPIA (SIN DEPARTAMENTOS) */
     .toolbar {
       background: var(--bg-850);
       border-bottom: 1px solid var(--border-700);
@@ -962,7 +961,6 @@
       </div>
     </header>
 
-    <!-- BARRA SUPERIOR LIMPIA (SIN FRANJA DE DEPARTAMENTOS) -->
     <section class="toolbar">
       <div class="toolbar-clean-row">
         <div class="search-box">
@@ -1154,7 +1152,6 @@
       <form id="raccord-form" class="modal-body">
         <input type="hidden" id="entry-id" value="">
 
-        <!-- Seleccionables directos en vez de escribir -->
         <div class="form-group grid-2">
           <div>
             <label class="form-label">Escena *</label>
@@ -1276,7 +1273,7 @@
   <div id="toast" class="toast-bar hidden"></div>
 
   <!-- ========================================== -->
-  <!-- LÓGICA JAVASCRIPT                          -->
+  <!-- LÓGICA JAVASCRIPT CON BLINDAJE DE PERSISTENCIA -->
   <!-- ========================================== -->
   <script>
     if (window.pdfjsLib) {
@@ -1284,12 +1281,14 @@
     }
 
     const DB_NAME = 'RaccordProDB';
-    const DB_VERSION = 3;
+    const DB_VERSION = 4; // Versión incrementada para garantizar actualización
     const STORE_PROJECTS = 'projects';
     const STORE_TAKES = 'takes';
     const STORE_SCENES = 'scenes';
     const STORE_CHARACTERS = 'characters';
     const STORE_LOCATIONS = 'locations';
+
+    const REQUIRED_STORES = [STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS];
 
     let dbInstance = null;
     let useFallbackStorage = false;
@@ -1300,49 +1299,76 @@
     let pendingConfirmAction = null;
     let cachedScenesForProject = [];
 
-    function initDB() {
-      return new Promise((resolve) => {
-        if (!window.indexedDB) {
-          useFallbackStorage = true;
-          return resolve();
-        }
-        try {
-          const request = indexedDB.open(DB_NAME, DB_VERSION);
-          request.onupgradeneeded = (e) => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
-              db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
-            }
-            if (!db.objectStoreNames.contains(STORE_TAKES)) {
-              const store = db.createObjectStore(STORE_TAKES, { keyPath: 'id' });
-              store.createIndex('projectId', 'projectId', { unique: false });
-            }
-            if (!db.objectStoreNames.contains(STORE_SCENES)) {
-              const s = db.createObjectStore(STORE_SCENES, { keyPath: 'id' });
-              s.createIndex('projectId', 'projectId', { unique: false });
-            }
-            if (!db.objectStoreNames.contains(STORE_CHARACTERS)) {
-              const c = db.createObjectStore(STORE_CHARACTERS, { keyPath: 'id' });
-              c.createIndex('projectId', 'projectId', { unique: false });
-            }
-            if (!db.objectStoreNames.contains(STORE_LOCATIONS)) {
-              const l = db.createObjectStore(STORE_LOCATIONS, { keyPath: 'id' });
-              l.createIndex('projectId', 'projectId', { unique: false });
-            }
-          };
-          request.onsuccess = (e) => {
-            dbInstance = e.target.result;
-            resolve();
-          };
-          request.onerror = () => {
-            useFallbackStorage = true;
-            resolve();
-          };
-        } catch (err) {
-          useFallbackStorage = true;
-          resolve();
-        }
+    function openDBConnection(version) {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, version);
+
+        request.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
+            db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+          }
+          if (!db.objectStoreNames.contains(STORE_TAKES)) {
+            const store = db.createObjectStore(STORE_TAKES, { keyPath: 'id' });
+            store.createIndex('projectId', 'projectId', { unique: false });
+          }
+          if (!db.objectStoreNames.contains(STORE_SCENES)) {
+            const s = db.createObjectStore(STORE_SCENES, { keyPath: 'id' });
+            s.createIndex('projectId', 'projectId', { unique: false });
+          }
+          if (!db.objectStoreNames.contains(STORE_CHARACTERS)) {
+            const c = db.createObjectStore(STORE_CHARACTERS, { keyPath: 'id' });
+            c.createIndex('projectId', 'projectId', { unique: false });
+          }
+          if (!db.objectStoreNames.contains(STORE_LOCATIONS)) {
+            const l = db.createObjectStore(STORE_LOCATIONS, { keyPath: 'id' });
+            l.createIndex('projectId', 'projectId', { unique: false });
+          }
+        };
+
+        request.onblocked = () => {
+          console.warn('Actualización de BD bloqueada por otra instancia abierta');
+          reject(new Error('DB_BLOCKED'));
+        };
+
+        request.onsuccess = (e) => {
+          resolve(e.target.result);
+        };
+
+        request.onerror = (e) => {
+          reject(e.target.error);
+        };
       });
+    }
+
+    async function initDB() {
+      if (!window.indexedDB) {
+        useFallbackStorage = true;
+        return;
+      }
+
+      try {
+        let db = await openDBConnection(DB_VERSION);
+
+        // Verificar que TODOS los almacenes existan realmente
+        const missingStore = REQUIRED_STORES.some(name => !db.objectStoreNames.contains(name));
+
+        if (missingStore) {
+          const nextVer = db.version + 1;
+          db.close();
+          db = await openDBConnection(nextVer);
+        }
+
+        dbInstance = db;
+
+        // Si después de intentar reparar sigue faltando algún store, activar respaldo seguro
+        if (REQUIRED_STORES.some(name => !dbInstance.objectStoreNames.contains(name))) {
+          useFallbackStorage = true;
+        }
+      } catch (err) {
+        console.warn('Cambiando a almacenamiento local de respaldo:', err);
+        useFallbackStorage = true;
+      }
     }
 
     function getFallbackList(key) {
@@ -1359,46 +1385,81 @@
       } catch (e) {}
     }
 
+    // Doble escritura segura: IndexedDB + espejo en localStorage para entidades de catálogo
     function saveEntityToDB(storeName, item) {
-      if (useFallbackStorage || !dbInstance) {
+      const mirrorToFallback = () => {
         const list = getFallbackList('rp_' + storeName).filter(x => x.id !== item.id);
         list.push(item);
         setFallbackList('rp_' + storeName, list);
+      };
+
+      if (storeName !== STORE_TAKES) {
+        mirrorToFallback();
+      }
+
+      if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
+        mirrorToFallback();
         return Promise.resolve(item);
       }
-      return new Promise((resolve, reject) => {
-        const tx = dbInstance.transaction([storeName], 'readwrite');
-        tx.objectStore(storeName).put(item);
-        tx.oncomplete = () => resolve(item);
-        tx.onerror = () => reject(tx.error);
+
+      return new Promise((resolve) => {
+        try {
+          const tx = dbInstance.transaction([storeName], 'readwrite');
+          tx.objectStore(storeName).put(item);
+          tx.oncomplete = () => resolve(item);
+          tx.onerror = () => {
+            mirrorToFallback();
+            resolve(item);
+          };
+        } catch (err) {
+          mirrorToFallback();
+          resolve(item);
+        }
       });
     }
 
     function getEntitiesForProject(storeName, projId) {
-      if (useFallbackStorage || !dbInstance) {
-        return Promise.resolve(getFallbackList('rp_' + storeName).filter(x => x.projectId === projId));
+      const fallbackItems = getFallbackList('rp_' + storeName).filter(x => x.projectId === projId);
+
+      if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
+        return Promise.resolve(fallbackItems);
       }
+
       return new Promise((resolve) => {
-        const tx = dbInstance.transaction([storeName], 'readonly');
-        const req = tx.objectStore(storeName).getAll();
-        req.onsuccess = () => {
-          const all = req.result || [];
-          resolve(all.filter(x => x.projectId === projId));
-        };
-        req.onerror = () => resolve([]);
+        try {
+          const tx = dbInstance.transaction([storeName], 'readonly');
+          const req = tx.objectStore(storeName).getAll();
+          req.onsuccess = () => {
+            const dbItems = (req.result || []).filter(x => x.projectId === projId);
+            // Fusionar con fallback en caso de que algún registro previo quedara ahí
+            const map = new Map();
+            fallbackItems.forEach(item => map.set(item.id, item));
+            dbItems.forEach(item => map.set(item.id, item));
+            resolve(Array.from(map.values()));
+          };
+          req.onerror = () => resolve(fallbackItems);
+        } catch (err) {
+          resolve(fallbackItems);
+        }
       });
     }
 
     function deleteEntityFromDB(storeName, id) {
-      if (useFallbackStorage || !dbInstance) {
-        setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.id !== id));
+      setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.id !== id));
+
+      if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
         return Promise.resolve();
       }
+
       return new Promise((resolve) => {
-        const tx = dbInstance.transaction([storeName], 'readwrite');
-        tx.objectStore(storeName).delete(id);
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => resolve();
+        try {
+          const tx = dbInstance.transaction([storeName], 'readwrite');
+          tx.objectStore(storeName).delete(id);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => resolve();
+        } catch (err) {
+          resolve();
+        }
       });
     }
 
@@ -1407,40 +1468,62 @@
     }
 
     function getAllProjectsFromDB() {
-      if (useFallbackStorage || !dbInstance) {
-        return Promise.resolve(getFallbackList('rp_projects'));
+      const fallbackProjects = getFallbackList('rp_projects');
+      if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(STORE_PROJECTS)) {
+        return Promise.resolve(fallbackProjects);
       }
       return new Promise((resolve) => {
-        const tx = dbInstance.transaction([STORE_PROJECTS], 'readonly');
-        const req = tx.objectStore(STORE_PROJECTS).getAll();
-        req.onsuccess = () => resolve(req.result || []);
-        req.onerror = () => resolve([]);
+        try {
+          const tx = dbInstance.transaction([STORE_PROJECTS], 'readonly');
+          const req = tx.objectStore(STORE_PROJECTS).getAll();
+          req.onsuccess = () => {
+            const dbItems = req.result || [];
+            const map = new Map();
+            fallbackProjects.forEach(p => map.set(p.id, p));
+            dbItems.forEach(p => map.set(p.id, p));
+            resolve(Array.from(map.values()));
+          };
+          req.onerror = () => resolve(fallbackProjects);
+        } catch (err) {
+          resolve(fallbackProjects);
+        }
       });
     }
 
     function deleteProjectFromDB(projId) {
-      return new Promise(async (resolve) => {
-        if (useFallbackStorage || !dbInstance) {
-          setFallbackList('rp_projects', getFallbackList('rp_projects').filter(p => p.id !== projId));
-          setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
-          setFallbackList('rp_scenes', getFallbackList('rp_scenes').filter(s => s.projectId !== projId));
-          setFallbackList('rp_characters', getFallbackList('rp_characters').filter(c => c.projectId !== projId));
-          setFallbackList('rp_locations', getFallbackList('rp_locations').filter(l => l.projectId !== projId));
-          return resolve();
+      setFallbackList('rp_projects', getFallbackList('rp_projects').filter(p => p.id !== projId));
+      setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
+      setFallbackList('rp_scenes', getFallbackList('rp_scenes').filter(s => s.projectId !== projId));
+      setFallbackList('rp_characters', getFallbackList('rp_characters').filter(c => c.projectId !== projId));
+      setFallbackList('rp_locations', getFallbackList('rp_locations').filter(l => l.projectId !== projId));
+
+      if (useFallbackStorage || !dbInstance) {
+        return Promise.resolve();
+      }
+
+      return new Promise((resolve) => {
+        try {
+          const validStores = REQUIRED_STORES.filter(s => dbInstance.objectStoreNames.contains(s));
+          const tx = dbInstance.transaction(validStores, 'readwrite');
+          if (dbInstance.objectStoreNames.contains(STORE_PROJECTS)) {
+            tx.objectStore(STORE_PROJECTS).delete(projId);
+          }
+
+          [STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS].forEach(sName => {
+            if (dbInstance.objectStoreNames.contains(sName)) {
+              const store = tx.objectStore(sName);
+              const req = store.getAll();
+              req.onsuccess = () => {
+                (req.result || []).filter(x => x.projectId === projId).forEach(x => store.delete(x.id));
+              };
+            }
+          });
+
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => resolve();
+        } catch (err) {
+          resolve();
         }
-        const tx = dbInstance.transaction([STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS], 'readwrite');
-        tx.objectStore(STORE_PROJECTS).delete(projId);
-
-        [STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_LOCATIONS].forEach(sName => {
-          const store = tx.objectStore(sName);
-          const req = store.getAll();
-          req.onsuccess = () => {
-            (req.result || []).filter(x => x.projectId === projId).forEach(x => store.delete(x.id));
-          };
-        });
-
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => resolve();
       });
     }
 
@@ -2194,23 +2277,19 @@
       const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
       locs.sort((a, b) => a.name.localeCompare(b.name));
 
-      // 1. Selector de Escenas
       const selectScene = document.getElementById('select-scene');
       selectScene.innerHTML = '<option value="">Selecciona una escena...</option>' + 
         cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}" data-loc="${escapeHtml(s.location || '')}">ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}</option>`).join('');
 
-      // 2. Selector de Locaciones
       const selectLocation = document.getElementById('select-location');
       selectLocation.innerHTML = '<option value="">Selecciona un set (Opcional)...</option>' + 
         locs.map(l => `<option value="${escapeHtml(l.name)}">${escapeHtml(l.name)}</option>`).join('');
 
-      // 3. Selector de Personajes
       const selectCharacter = document.getElementById('select-character');
       selectCharacter.innerHTML = '<option value="">Selecciona un personaje (Opcional)...</option>' + 
         chars.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`).join('');
     }
 
-    // Al seleccionar una escena, autocompletar el set/locación si coincide
     document.getElementById('select-scene').addEventListener('change', (e) => {
       const selectedOption = e.target.options[e.target.selectedIndex];
       if (!selectedOption) return;
@@ -2534,7 +2613,6 @@
 
     document.getElementById('btn-close-viewer').addEventListener('click', () => imageViewerModal.classList.add('hidden'));
 
-    /* BÚSQUEDA Y FILTRO */
     document.getElementById('search-input').addEventListener('input', (e) => {
       searchQuery = e.target.value;
       renderTakes();
