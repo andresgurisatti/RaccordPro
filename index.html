@@ -15,9 +15,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
 
-  <!-- Librería PDF.js para lectura local de guiones -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <!-- Librería jsPDF para generación nativa de documentos PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
@@ -896,93 +894,24 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* ESTILOS DE FILTROS Y VISTA PREVIA DEL REPORTE PDF */
-    .report-filter-panel {
-      background: var(--bg-900);
+    /* CHECKBOX ESTILIZADO PARA SELECCIÓN DE ESCENAS EN REPORTE PDF */
+    .pdf-scene-check-item {
+      background: var(--bg-800);
       border: 1px solid var(--border-700);
-      border-radius: 14px;
+      border-radius: var(--btn-radius);
       padding: 14px;
-      margin-bottom: 18px;
-    }
-
-    .report-scene-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-      max-height: 130px;
-      overflow-y: auto;
-    }
-
-    .scene-filter-chip {
-      background: var(--bg-800);
-      border: 1px solid var(--border-700);
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 800;
-      padding: 8px 14px;
-      border-radius: 10px;
-      transition: all 0.15s;
-    }
-
-    .scene-filter-chip.active {
-      background: rgba(245, 158, 11, 0.18);
-      border-color: var(--amber);
-      color: var(--amber);
-    }
-
-    .btn-mini-filter {
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--amber);
-      background: var(--bg-800);
-      border: 1px solid var(--border-700);
-      padding: 5px 10px;
-      border-radius: 8px;
-    }
-
-    .report-sheet-card {
-      background: var(--bg-900);
-      border: 1px solid var(--border-700);
-      border-radius: 14px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-
-    .report-sheet-scene-bar {
-      background: rgba(245, 158, 11, 0.14);
-      border-bottom: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 10px 14px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .report-photo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 12px;
-      padding: 14px;
+      cursor: pointer;
     }
 
-    .report-photo-item {
-      background: var(--bg-850);
-      border: 1px solid var(--border-700);
-      border-radius: 12px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .report-photo-item img {
-      width: 100%;
-      height: 180px;
-      object-fit: contain;
-      background: #000;
-      border-radius: 8px;
-      display: block;
+    .pdf-scene-check-item input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--amber);
+      flex-shrink: 0;
     }
 
     .toast-bar {
@@ -1098,7 +1027,7 @@
         </button>
         <div class="dropdown-divider"></div>
         <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <span>Exportar Reporte PDF</span>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-export-json">
@@ -1108,7 +1037,6 @@
       </div>
     </header>
 
-    <!-- BARRA DE BÚSQUEDA -->
     <section class="toolbar">
       <div class="toolbar-clean-row">
         <div class="search-box">
@@ -1335,47 +1263,28 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: REPORTE PDF PROFESIONAL CON FILTROS -->
+  <!-- MODAL: CONFIGURAR Y EXPORTAR REPORTE PDF   -->
   <!-- ========================================== -->
-  <div id="report-modal" class="modal-backdrop hidden" style="z-index: 58;">
-    <div class="modal-card" style="max-width:720px;">
+  <div id="report-modal" class="modal-backdrop hidden">
+    <div class="modal-card" style="max-width:560px;">
       <div class="modal-header">
-        <h2 class="modal-title">REPORTE PDF DE CONTINUIDAD</h2>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button type="button" id="btn-download-pdf" class="btn-primary" style="padding:10px 16px; min-height:48px; font-size:14px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-            <span>Guardar PDF</span>
-          </button>
-          <button type="button" id="btn-close-report" class="btn-close-touch" title="Cerrar">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
+        <h2 class="modal-title">EXPORTAR REPORTE PDF</h2>
+        <button type="button" id="btn-close-report" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
-
       <div class="modal-body">
-        <!-- PANEL DE FILTROS DEL REPORTE -->
-        <div class="report-filter-panel">
-          <div style="margin-bottom:12px;">
-            <label class="form-label" style="font-size:12px;">Filtrar por Personaje</label>
-            <select id="report-filter-char" class="form-control" style="min-height:46px; font-size:15px;">
-              <option value="ALL">Todos los personajes</option>
-            </select>
-          </div>
-
-          <div>
-            <div style="display:flex; align-items:center; justify-content:space-between;">
-              <label class="form-label" style="font-size:12px; margin:0;">Escenas a incluir en el PDF</label>
-              <div style="display:flex; gap:6px;">
-                <button type="button" id="btn-report-scenes-all" class="btn-mini-filter">Todas</button>
-                <button type="button" id="btn-report-scenes-none" class="btn-mini-filter">Ninguna</button>
-              </div>
-            </div>
-            <div id="report-scenes-chips" class="report-scene-chips"></div>
-          </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <span class="form-label" style="margin:0;">Selecciona las escenas a incluir:</span>
+          <button type="button" id="btn-toggle-all-pdf-scenes" style="color:var(--amber); font-size:13px; font-weight:800;">Desmarcar todas</button>
         </div>
 
-        <!-- VISTA PREVIA DE LA HOJA DE CONTINUIDAD -->
-        <div id="report-content"></div>
+        <div id="pdf-scenes-checklist" style="max-height:300px; overflow-y:auto; margin-bottom:16px;"></div>
+
+        <button type="button" id="btn-generate-real-pdf" class="btn-primary" style="width:100%;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Generar y Guardar PDF</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1433,11 +1342,6 @@
     let cachedScenesForProject = [];
     let cachedCharactersForProject = [];
     let activeViewerTakeId = null;
-
-    // Estado de filtros del Reporte PDF
-    let reportAllTakes = [];
-    let reportSelectedScenes = new Set();
-    let reportSelectedCharacter = 'ALL';
 
     function openDBConnection(version) {
       return new Promise((resolve, reject) => {
@@ -1677,51 +1581,6 @@
         }];
       }
       return [];
-    }
-
-    // Selector universal de carpeta/directorio para guardar archivos (PDF y JSON)
-    async function saveFileWithDirectoryPicker(blob, fileName, mimeType, description, extension) {
-      if ('showSaveFilePicker' in window) {
-        try {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: fileName,
-            types: [{
-              description: description,
-              accept: { [mimeType]: [extension] }
-            }]
-          });
-          const writable = await handle.createWritable();
-          await writable.write(blob);
-          await writable.close();
-          showToast('Archivo guardado en la carpeta seleccionada');
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') return;
-        }
-      }
-
-      const file = new File([blob], fileName, { type: mimeType });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: fileName
-          });
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') return;
-        }
-      }
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showToast('Archivo descargado');
     }
 
     const confirmModal = document.getElementById('confirm-modal');
@@ -2348,4 +2207,786 @@
       cachedScenesForProject.sort((a, b) => String(a.sceneNum).localeCompare(String(b.sceneNum), undefined, { numeric: true }));
 
       cachedCharactersForProject = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-      cachedCharactersForProject.
+      cachedCharactersForProject.sort((a, b) => a.name.localeCompare(b.name));
+
+      const selectScene = document.getElementById('select-scene');
+      selectScene.innerHTML = '<option value="">Selecciona una escena...</option>' + 
+        cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}">ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}</option>`).join('');
+    }
+
+    function buildCharacterSelectOptions(selectedChar) {
+      return '<option value="">Selecciona un personaje...</option>' + 
+        cachedCharactersForProject.map(c => {
+          const isSelected = (c.name === selectedChar) ? 'selected' : '';
+          return `<option value="${escapeHtml(c.name)}" ${isSelected}>${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`;
+        }).join('');
+    }
+
+    /* ==========================================================================
+       EXPORTAR REPORTE PDF REAL (CON SELECTOR DE ESCENAS Y ARCHIVO .PDF)
+       ========================================================================== */
+    const reportModal = document.getElementById('report-modal');
+    const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
+    const btnToggleAllPdfScenes = document.getElementById('btn-toggle-all-pdf-scenes');
+    let cachedTakesForPdf = [];
+
+    document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
+      closeProjectMenu();
+      cachedTakesForPdf = await getAllTakesForProject(activeProjectId);
+
+      if (cachedTakesForPdf.length === 0) {
+        showToast('Aún no hay raccords registrados para exportar');
+        return;
+      }
+
+      cachedTakesForPdf.sort((a, b) => String(a.scene).localeCompare(String(b.scene), undefined, { numeric: true }));
+
+      pdfScenesChecklist.innerHTML = cachedTakesForPdf.map(t => {
+        const photosCount = getNormalizedPhotos(t).length;
+        return `
+          <label class="pdf-scene-check-item">
+            <input type="checkbox" class="pdf-scene-checkbox" value="${t.id}" checked>
+            <div style="min-width:0; flex:1;">
+              <strong style="color:var(--amber); font-size:15px; display:block;">ESCENA ${escapeHtml(t.scene)}</strong>
+              ${t.sceneDesc ? `<span style="color:#d1d5db; font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(t.sceneDesc)}</span>` : ''}
+            </div>
+            <span class="raccord-photo-chip">${photosCount} ${photosCount === 1 ? 'foto' : 'fotos'}</span>
+          </label>
+        `;
+      }).join('');
+
+      btnToggleAllPdfScenes.textContent = 'Desmarcar todas';
+      reportModal.classList.remove('hidden');
+    });
+
+    btnToggleAllPdfScenes.addEventListener('click', () => {
+      const checkboxes = Array.from(document.querySelectorAll('.pdf-scene-checkbox'));
+      const allChecked = checkboxes.every(cb => cb.checked);
+      checkboxes.forEach(cb => cb.checked = !allChecked);
+      btnToggleAllPdfScenes.textContent = allChecked ? 'Seleccionar todas' : 'Desmarcar todas';
+    });
+
+    document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
+
+    // Helper para obtener proporciones reales de cada imagen Base64 antes de dibujarla en el PDF
+    function getImageDimensions(base64) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve({ width: img.width, height: img.height });
+        img.onerror = () => resolve({ width: 4, height: 3 });
+        img.src = base64;
+      });
+    }
+
+    document.getElementById('btn-generate-real-pdf').addEventListener('click', async () => {
+      const selectedIds = new Set(
+        Array.from(document.querySelectorAll('.pdf-scene-checkbox:checked')).map(cb => cb.value)
+      );
+
+      if (selectedIds.size === 0) {
+        showToast('Selecciona al menos una escena');
+        return;
+      }
+
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        showToast('El generador PDF requiere conexión la primera vez');
+        return;
+      }
+
+      const selectedTakes = cachedTakesForPdf.filter(t => selectedIds.has(t.id));
+      reportModal.classList.add('hidden');
+      showToast('Construyendo documento PDF...');
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 14;
+        const contentWidth = pageWidth - (margin * 2);
+        let y = 18;
+
+        // Encabezado del Reporte
+        doc.setFillColor(19, 23, 29);
+        doc.rect(0, 0, pageWidth, 34, 'F');
+
+        doc.setTextColor(245, 158, 11);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(17);
+        doc.text('HOJA DE CONTINUIDAD — RACCORDPRO', margin, 14);
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(12);
+        const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
+        doc.text(`Proyecto: ${projTitle}`, margin, 22);
+
+        doc.setTextColor(180, 185, 195);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        const metaLine = `${activeProjectData && activeProjectData.director ? activeProjectData.director + '  |  ' : ''}Generado: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        doc.text(metaLine, margin, 28.5);
+
+        y = 42;
+
+        for (const take of selectedTakes) {
+          // Verificar espacio para encabezado de escena
+          if (y > pageHeight - 40) {
+            doc.addPage();
+            y = 18;
+          }
+
+          // Banda de Escena
+          doc.setFillColor(242, 244, 247);
+          doc.setDrawColor(210, 215, 222);
+          doc.roundedRect(margin, y, contentWidth, 14, 2, 2, 'FD');
+
+          doc.setTextColor(180, 95, 6);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(12);
+          doc.text(`ESCENA ${take.scene}`, margin + 4, y + 6);
+
+          if (take.sceneDesc) {
+            doc.setTextColor(35, 40, 48);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            const descTrunc = doc.splitTextToSize(take.sceneDesc, contentWidth - 42)[0];
+            doc.text(descTrunc, margin + 36, y + 6);
+          }
+
+          doc.setTextColor(110, 115, 125);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(8.5);
+          doc.text(`Hora registro: ${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, margin + 4, y + 11.5);
+
+          y += 18;
+
+          // Notas Generales de la Escena
+          if (take.notes && take.notes.trim()) {
+            doc.setTextColor(55, 65, 81);
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(10);
+            const noteLines = doc.splitTextToSize(`Notas generales: ${take.notes.trim()}`, contentWidth - 4);
+            if (y + (noteLines.length * 5) > pageHeight - 16) {
+              doc.addPage();
+              y = 18;
+            }
+            doc.text(noteLines, margin + 2, y);
+            y += (noteLines.length * 5) + 4;
+          }
+
+          // Bloques de Fotos + Personaje + Notas específicas
+          const photos = getNormalizedPhotos(take);
+
+          for (let i = 0; i < photos.length; i++) {
+            const p = photos[i];
+            const dims = await getImageDimensions(p.photo);
+            const maxImgW = 68;
+            const maxImgH = 54;
+            const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
+            const drawW = dims.width * ratio;
+            const drawH = dims.height * ratio;
+
+            const textColX = margin + maxImgW + 6;
+            const textColW = contentWidth - maxImgW - 8;
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            const pNoteText = (p.note && p.note.trim()) ? p.note.trim() : 'Sin notas específicas.';
+            const pNoteLines = doc.splitTextToSize(pNoteText, textColW);
+
+            const blockHeight = Math.max(drawH + 6, (pNoteLines.length * 4.8) + 18);
+
+            if (y + blockHeight > pageHeight - 16) {
+              doc.addPage();
+              y = 18;
+            }
+
+            // Recuadro del registro fotográfico
+            doc.setDrawColor(225, 228, 232);
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, 'FD');
+
+            // Foto
+            try {
+              doc.addImage(p.photo, 'JPEG', margin + 3, y + 3, drawW, drawH);
+            } catch (imgErr) {
+              console.warn('Error insertando imagen en PDF:', imgErr);
+            }
+
+            // Etiqueta Foto + Personaje
+            doc.setTextColor(180, 95, 6);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            doc.text(`FOTO #${i + 1}`, textColX, y + 7);
+
+            doc.setTextColor(17, 24, 39);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11.5);
+            doc.text(p.character || 'Sin personaje', textColX, y + 13);
+
+            // Notas de la foto
+            doc.setTextColor(55, 65, 81);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9.5);
+            doc.text(pNoteLines, textColX, y + 19);
+
+            y += blockHeight + 4;
+          }
+
+          y += 6;
+        }
+
+        const pdfBlob = doc.output('blob');
+        const safeName = (activeProjectData ? activeProjectData.name : 'Set').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const pdfFileName = `Continuidad_${safeName}_${new Date().toISOString().slice(0,10)}.pdf`;
+
+        // 1. Selector de carpetas nativo (Android Chrome / Desktop)
+        if ('showSaveFilePicker' in window) {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: pdfFileName,
+              types: [{
+                description: 'Reporte de Continuidad (PDF)',
+                accept: { 'application/pdf': ['.pdf'] }
+              }]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(pdfBlob);
+            await writable.close();
+            showToast('Reporte PDF guardado en la carpeta seleccionada');
+            return;
+          } catch (err) {
+            if (err.name === 'AbortError') return;
+          }
+        }
+
+        // 2. Hoja nativa de compartir / Guardar en Archivos (iPhone Safari / PWA)
+        const pdfFile = new File([pdfBlob], pdfFileName, { type: 'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+          try {
+            await navigator.share({
+              files: [pdfFile],
+              title: pdfFileName
+            });
+            return;
+          } catch (err) {
+            if (err.name === 'AbortError') return;
+          }
+        }
+
+        // 3. Descarga directa estándar
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = pdfFileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Reporte PDF generado');
+
+      } catch (err) {
+        console.error('Error generando PDF:', err);
+        showToast('Error al generar el documento PDF');
+      }
+    });
+
+    /* ==========================================================================
+       GUARDAR RESPALDO JSON CON SELECTOR DE CARPETA / DIRECTORIO
+       ========================================================================== */
+    document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
+      closeProjectMenu();
+      const allTakes = await getAllTakesForProject(activeProjectId);
+      const allScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      const allChars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+
+      const backupBundle = {
+        project: activeProjectData,
+        takes: allTakes,
+        scenes: allScenes,
+        characters: allChars
+      };
+
+      const jsonString = JSON.stringify(backupBundle, null, 2);
+      const fileName = `Raccord_${(activeProjectData ? activeProjectData.name : 'Set').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.json`;
+
+      if ('showSaveFilePicker' in window) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [{
+              description: 'Respaldo RaccordPro (JSON)',
+              accept: { 'application/json': ['.json'] }
+            }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(jsonString);
+          await writable.close();
+          showToast('Respaldo guardado en la carpeta seleccionada');
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const file = new File([blob], fileName, { type: 'application/json' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: fileName
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Archivo de respaldo generado');
+    });
+
+    /* ==========================================================================
+       RENDERIZADO DE RACCORDS EN PANTALLA PRINCIPAL
+       ========================================================================== */
+    const recordsGrid = document.getElementById('records-grid');
+    const emptyState = document.getElementById('empty-state');
+    const badgeTotalItems = document.getElementById('badge-total-items');
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, s => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[s]));
+    }
+
+    async function renderTakes() {
+      if (!activeProjectId) return;
+      const takes = await getAllTakesForProject(activeProjectId);
+      takes.sort((a, b) => b.timestamp - a.timestamp);
+
+      const filtered = takes.filter(item => {
+        const q = searchQuery.toLowerCase().trim();
+        const photos = getNormalizedPhotos(item);
+        const photoMatch = photos.some(p =>
+          (p.character || '').toLowerCase().includes(q) ||
+          (p.note || '').toLowerCase().includes(q)
+        );
+        return !q || 
+          String(item.scene || '').toLowerCase().includes(q) ||
+          (item.sceneDesc && item.sceneDesc.toLowerCase().includes(q)) ||
+          (item.character && item.character.toLowerCase().includes(q)) ||
+          String(item.notes || '').toLowerCase().includes(q) ||
+          photoMatch;
+      });
+
+      badgeTotalItems.textContent = `${filtered.length} ${filtered.length === 1 ? 'raccord' : 'raccords'}`;
+
+      if (filtered.length === 0) {
+        recordsGrid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      recordsGrid.innerHTML = filtered.map(take => {
+        const photos = getNormalizedPhotos(take);
+
+        const charGroupsMap = new Map();
+        photos.forEach(p => {
+          const cName = p.character || 'Sin personaje asignado';
+          if (!charGroupsMap.has(cName)) {
+            charGroupsMap.set(cName, { count: 0, notes: [] });
+          }
+          const grp = charGroupsMap.get(cName);
+          grp.count++;
+          if (p.note && p.note.trim()) grp.notes.push(p.note.trim());
+        });
+
+        let charactersHtml = '';
+        if (charGroupsMap.size > 0) {
+          charactersHtml = Array.from(charGroupsMap.entries()).map(([charName, info]) => {
+            const combinedNote = info.notes.join(' • ');
+            return `
+              <div class="raccord-char-row">
+                <div class="raccord-char-top">
+                  <div class="raccord-char-name">
+                    ${ICON_USER_SVG}
+                    <span>${escapeHtml(charName)}</span>
+                  </div>
+                  <span class="raccord-photo-chip">
+                    ${ICON_PHOTO_SVG}
+                    <span>${info.count} ${info.count === 1 ? 'foto' : 'fotos'}</span>
+                  </span>
+                </div>
+                ${combinedNote ? `<p class="raccord-char-note-preview">${escapeHtml(combinedNote)}</p>` : ''}
+              </div>
+            `;
+          }).join('');
+        } else if (take.character) {
+          charactersHtml = `
+            <div class="raccord-char-row">
+              <div class="raccord-char-top">
+                <div class="raccord-char-name">
+                  ${ICON_USER_SVG}
+                  <span>${escapeHtml(take.character)}</span>
+                </div>
+                <span class="raccord-photo-chip">Sin fotos</span>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <article class="raccord-card" data-action="view-raccord" data-id="${take.id}">
+            <div>
+              <div class="raccord-scene-header">
+                <div style="min-width:0; flex:1;">
+                  <span class="raccord-scene-badge">ESCENA ${escapeHtml(take.scene)}</span>
+                  ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
+                </div>
+                <span class="raccord-time">${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              </div>
+
+              ${charactersHtml}
+
+              ${take.notes ? `<p class="raccord-general-note">${escapeHtml(take.notes)}</p>` : ''}
+            </div>
+
+            <div class="take-footer">
+              <button type="button" class="btn-card-edit-wide" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
+                ${ICON_EDIT_SVG}
+                <span>Editar</span>
+              </button>
+              <button type="button" class="btn-card-delete-square" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
+                ${ICON_DELETE_SVG}
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    recordsGrid.addEventListener('click', async (e) => {
+      const actionEl = e.target.closest('[data-action]');
+      if (!actionEl) return;
+      const action = actionEl.getAttribute('data-action');
+      const id = actionEl.getAttribute('data-id');
+
+      if (action === 'edit-take') {
+        e.stopPropagation();
+        openEditTake(id);
+      } else if (action === 'delete-take') {
+        e.stopPropagation();
+        askConfirmation('¿Seguro que deseas eliminar este registro de continuidad?', async () => {
+          await deleteTakeFromDB(id);
+          await renderTakes();
+          showToast('Registro eliminado');
+        });
+      } else if (action === 'view-raccord') {
+        openRaccordViewer(id);
+      }
+    });
+
+    /* ==========================================================================
+       MANEJO DE MÚLTIPLES FOTOS ANCLADAS A PERSONAJES EN FORMULARIO
+       ========================================================================== */
+    const entryModal = document.getElementById('entry-modal');
+    const form = document.getElementById('raccord-form');
+    const galleryInput = document.getElementById('input-gallery-file');
+    const photosEntriesList = document.getElementById('photos-entries-list');
+
+    function compressImageFile(file, maxWidth = 1400, maxHeight = 1400, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height && width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = reject;
+        };
+        reader.onerror = reject;
+      });
+    }
+
+    function renderFormPhotoItems() {
+      if (currentPhotoItems.length === 0) {
+        photosEntriesList.innerHTML = '';
+        return;
+      }
+
+      photosEntriesList.innerHTML = currentPhotoItems.map((item, idx) => `
+        <div class="photo-note-item">
+          <div class="photo-note-header">
+            <span class="photo-note-badge">FOTO #${idx + 1}</span>
+            <button type="button" class="btn-action-small delete" onclick="removeFormPhotoItem('${item.id}')" title="Quitar esta foto">
+              ${ICON_DELETE_SVG}
+            </button>
+          </div>
+          <img src="${item.photo}" alt="Foto ${idx + 1}" class="photo-note-img">
+          <div>
+            <label class="form-label" style="font-size:12px;">Personaje de esta foto *</label>
+            <select required class="form-control" style="min-height:48px; font-size:15px;" onchange="updateFormPhotoCharacter('${item.id}', this.value)">
+              ${buildCharacterSelectOptions(item.character)}
+            </select>
+          </div>
+          <div>
+            <label class="form-label" style="font-size:12px;">Notas de esta foto</label>
+            <textarea rows="2" class="form-control" style="font-size:15px; min-height:74px;" placeholder="Detalles de vestuario, peinado, accesorios..." oninput="updateFormPhotoNote('${item.id}', this.value)">${escapeHtml(item.note)}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.updateFormPhotoCharacter = function(photoId, charVal) {
+      const target = currentPhotoItems.find(p => p.id === photoId);
+      if (target) target.character = charVal;
+    };
+
+    window.updateFormPhotoNote = function(photoId, text) {
+      const target = currentPhotoItems.find(p => p.id === photoId);
+      if (target) target.note = text;
+    };
+
+    window.removeFormPhotoItem = function(photoId) {
+      currentPhotoItems = currentPhotoItems.filter(p => p.id !== photoId);
+      renderFormPhotoItems();
+    };
+
+    document.getElementById('btn-trigger-gallery').addEventListener('click', () => {
+      galleryInput.value = '';
+      galleryInput.click();
+    });
+
+    galleryInput.addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0) return;
+
+      showToast(`Procesando ${files.length} ${files.length === 1 ? 'foto' : 'fotos'}...`);
+
+      const lastSelectedChar = currentPhotoItems.length > 0 ? currentPhotoItems[currentPhotoItems.length - 1].character : '';
+
+      for (const file of files) {
+        try {
+          const base64 = await compressImageFile(file);
+          currentPhotoItems.push({
+            id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+            photo: base64,
+            character: lastSelectedChar,
+            note: ''
+          });
+        } catch (err) {
+          console.warn('Error procesando una imagen:', err);
+        }
+      }
+
+      renderFormPhotoItems();
+    });
+
+    document.getElementById('btn-add-entry').addEventListener('click', async () => {
+      await updateCatalogCaches();
+      if (cachedScenesForProject.length === 0) {
+        showToast('Primero importa tu guion o crea escenas en la llave inglesa');
+      }
+      document.getElementById('modal-title').textContent = 'NUEVO RACCORD DE ESCENA';
+      form.reset();
+      document.getElementById('entry-id').value = '';
+      currentPhotoItems = [];
+      renderFormPhotoItems();
+      entryModal.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
+    document.getElementById('btn-cancel-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('entry-id').value || 'take_' + Date.now();
+      const selectSceneEl = document.getElementById('select-scene');
+      const scene = selectSceneEl.value;
+      const selectedOption = selectSceneEl.options[selectSceneEl.selectedIndex];
+      const sceneDesc = selectedOption ? (selectedOption.getAttribute('data-desc') || '') : '';
+      const notes = document.getElementById('input-notes').value.trim();
+
+      if (!scene) {
+        showToast('Por favor selecciona una escena');
+        return;
+      }
+
+      const missingCharPhoto = currentPhotoItems.find(p => !p.character || !p.character.trim());
+      if (missingCharPhoto) {
+        showToast('Selecciona el personaje para cada foto agregada');
+        return;
+      }
+
+      const uniqueChars = Array.from(new Set(currentPhotoItems.map(p => p.character).filter(Boolean)));
+
+      await saveTakeToDB({
+        id,
+        projectId: activeProjectId,
+        scene,
+        sceneDesc,
+        character: uniqueChars.join(', '),
+        notes,
+        photos: currentPhotoItems,
+        timestamp: Date.now()
+      });
+
+      entryModal.classList.add('hidden');
+      await renderTakes();
+      showToast(`Raccord de Escena ${scene} guardado`);
+    });
+
+    async function openEditTake(id) {
+      const all = await getAllTakesForProject(activeProjectId);
+      const target = all.find(item => item.id === id);
+      if (!target) return;
+
+      await updateCatalogCaches();
+
+      document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
+      document.getElementById('entry-id').value = target.id;
+      document.getElementById('select-scene').value = target.scene;
+      document.getElementById('input-notes').value = target.notes || '';
+
+      currentPhotoItems = getNormalizedPhotos(target).map(p => ({ ...p }));
+      renderFormPhotoItems();
+
+      entryModal.classList.remove('hidden');
+    }
+
+    /* ==========================================================================
+       VISOR DETALLADO DE RACCORD
+       ========================================================================== */
+    const raccordViewerModal = document.getElementById('raccord-viewer-modal');
+
+    async function openRaccordViewer(id) {
+      const all = await getAllTakesForProject(activeProjectId);
+      const item = all.find(t => t.id === id);
+      if (!item) return;
+
+      activeViewerTakeId = item.id;
+
+      document.getElementById('viewer-title').textContent = `ESCENA ${item.scene}`;
+      document.getElementById('viewer-subtitle').textContent = item.sceneDesc || '';
+
+      const photos = getNormalizedPhotos(item);
+      let htmlContent = '';
+
+      if (item.notes) {
+        htmlContent += `
+          <div style="background:var(--bg-800); border:1px solid var(--border-700); padding:14px; border-radius:var(--btn-radius); margin-bottom:16px;">
+            <strong style="color:var(--amber); font-size:12px; text-transform:uppercase; display:block; margin-bottom:6px;">Notas Generales de la Escena:</strong>
+            <div style="color:#f9fafb; font-size:15px; line-height:1.45; white-space:pre-wrap;">${escapeHtml(item.notes)}</div>
+          </div>
+        `;
+      }
+
+      if (photos.length > 0) {
+        htmlContent += photos.map((p, idx) => `
+          <div class="viewer-photo-block">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+              <div style="display:flex; align-items:center; gap:6px; font-weight:800; font-size:15px; color:#fff;">
+                ${ICON_USER_SVG}
+                <span>${escapeHtml(p.character || 'Sin personaje')}</span>
+              </div>
+              <span class="photo-note-badge">FOTO #${idx + 1}</span>
+            </div>
+            <img src="${p.photo}" alt="Foto ${idx + 1}">
+            ${p.note ? `<div style="color:#e5e7eb; font-size:15px; line-height:1.45; background:var(--bg-850); padding:10px 12px; border-radius:10px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : '<div style="color:var(--text-dim); font-size:13px;">Sin notas específicas para esta foto</div>'}
+          </div>
+        `).join('');
+      } else {
+        htmlContent += `<p style="color:var(--text-muted); text-align:center; padding:24px 0;">Este raccord no tiene fotografías adjuntas.</p>`;
+      }
+
+      document.getElementById('viewer-body').innerHTML = htmlContent;
+      raccordViewerModal.classList.remove('hidden');
+    }
+
+    document.getElementById('btn-close-viewer').addEventListener('click', () => {
+      activeViewerTakeId = null;
+      raccordViewerModal.classList.add('hidden');
+    });
+
+    document.getElementById('btn-edit-from-viewer').addEventListener('click', () => {
+      if (!activeViewerTakeId) return;
+      const targetId = activeViewerTakeId;
+      raccordViewerModal.classList.add('hidden');
+      openEditTake(targetId);
+    });
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderTakes();
+    });
+
+    document.getElementById('btn-reset-filters').addEventListener('click', () => {
+      searchQuery = '';
+      document.getElementById('search-input').value = '';
+      renderTakes();
+    });
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+    }
+
+    /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
+    if ('serviceWorker' in navigator) {
+      let refreshing = false;
+
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
+      });
+
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((registration) => {
+          registration.update();
+        }).catch((err) => console.warn('SW error:', err));
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await initDB();
+      await showProjectsView();
+    });
+  </script>
+</body>
+</html>
