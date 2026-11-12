@@ -60,6 +60,11 @@
       font-family: inherit;
     }
 
+    select option:disabled {
+      color: #6b7280;
+      background-color: #13171d;
+    }
+
     button {
       font-family: inherit;
       cursor: pointer;
@@ -822,7 +827,6 @@
       gap: 8px;
     }
 
-    /* TARJETAS COMPACTAS DE ENTRADA DENTRO DEL MODAL DE RACCORD */
     .subentry-compact-card {
       background: var(--bg-900);
       border: 1px solid var(--border-700);
@@ -1395,13 +1399,11 @@
         <div class="form-group">
           <label class="form-label">Entradas de Continuidad por Personaje</label>
 
-          <!-- Botón para abrir la sub-ventana dedicada -->
           <button type="button" id="btn-open-subentry-modal" class="btn-photo-single">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             <span>Añadir Entrada (Personaje / Foto / Nota)</span>
           </button>
 
-          <!-- Tarjetas compactas generadas por cada entrada -->
           <div id="photos-entries-list"></div>
         </div>
 
@@ -2699,18 +2701,33 @@
     });
 
     /* ==========================================================================
-       ACTUALIZACIÓN DE CACHÉS DE ESCENAS Y PERSONAJES
+       ACTUALIZACIÓN DE CACHÉS Y SELECTOR SIN ESCENAS DUPLICADAS
        ========================================================================== */
-    async function updateCatalogCaches() {
+    async function updateCatalogCaches(allowedSceneNum = null) {
       cachedScenesForProject = await getEntitiesForProject(STORE_SCENES, activeProjectId);
       cachedScenesForProject.sort((a, b) => compareSceneNumbers(a.sceneNum, b.sceneNum));
 
       cachedCharactersForProject = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       cachedCharactersForProject.sort((a, b) => a.name.localeCompare(b.name));
 
+      // Obtener las escenas que ya tienen un raccord guardado en este proyecto
+      const existingTakes = await getAllTakesForProject(activeProjectId);
+      const usedScenesSet = new Set(
+        existingTakes.map(t => String(t.scene || '').trim().toUpperCase())
+      );
+
+      // Si estamos editando un raccord existente, permitir su propia escena
+      const allowedUpper = allowedSceneNum ? String(allowedSceneNum).trim().toUpperCase() : null;
+
       const selectScene = document.getElementById('select-scene');
       selectScene.innerHTML = '<option value="">Selecciona una escena...</option>' + 
-        cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}">ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}</option>`).join('');
+        cachedScenesForProject.map(s => {
+          const scUpper = String(s.sceneNum).trim().toUpperCase();
+          const isTaken = usedScenesSet.has(scUpper) && (scUpper !== allowedUpper);
+          const disabledAttr = isTaken ? 'disabled' : '';
+          const takenLabel = isTaken ? ' (Ya tiene raccord)' : '';
+          return `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}" ${disabledAttr}>ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}${takenLabel}</option>`;
+        }).join('');
     }
 
     function buildCharacterSelectOptions(selectedChar) {
@@ -3394,7 +3411,6 @@
       }
     }
 
-    // Renderizar las tarjetas compactas dentro del modal de Nuevo/Editar Raccord
     function renderFormPhotoItems() {
       if (currentPhotoItems.length === 0) {
         photosEntriesList.innerHTML = '';
@@ -3426,7 +3442,6 @@
       }).join('');
     }
 
-    // Abrir sub-ventana dedicada para NUEVA entrada
     document.getElementById('btn-open-subentry-modal').addEventListener('click', () => {
       if (cachedCharactersForProject.length === 0) {
         showToast('Primero crea personajes en la llave inglesa');
@@ -3440,7 +3455,6 @@
       subentryModal.classList.remove('hidden');
     });
 
-    // Abrir sub-ventana dedicada para EDITAR una entrada existente
     window.openEditSubentryModal = function(entryId) {
       const target = currentPhotoItems.find(p => p.id === entryId);
       if (!target) return;
@@ -3484,7 +3498,6 @@
       setSubentryPhotoUI(null);
     });
 
-    // Guardar entrada desde la sub-ventana hacia la lista del raccord
     subentryForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const charVal = subentryCharacterSelect.value.trim();
@@ -3520,7 +3533,7 @@
     });
 
     document.getElementById('btn-add-entry').addEventListener('click', async () => {
-      await updateCatalogCaches();
+      await updateCatalogCaches(null);
       if (cachedScenesForProject.length === 0) {
         showToast('Primero importa tu guion o crea escenas en la llave inglesa');
       }
@@ -3535,17 +3548,31 @@
     document.getElementById('btn-close-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
     document.getElementById('btn-cancel-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
 
+    // VALIDACIÓN ESTRICTA ANTI-DUPLICADOS EN BASE DE DATOS AL GUARDAR
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const id = document.getElementById('entry-id').value || 'take_' + Date.now();
+      const existingId = document.getElementById('entry-id').value;
+      const id = existingId || ('take_' + Date.now());
       const selectSceneEl = document.getElementById('select-scene');
-      const scene = selectSceneEl.value;
+      const scene = selectSceneEl.value.trim();
       const selectedOption = selectSceneEl.options[selectSceneEl.selectedIndex];
       const sceneDesc = selectedOption ? (selectedOption.getAttribute('data-desc') || '') : '';
       const notes = document.getElementById('input-notes').value.trim();
 
       if (!scene) {
         showToast('Por favor selecciona una escena');
+        return;
+      }
+
+      // Verificar en base de datos que ninguna otra ficha tenga esta escena
+      const allProjectTakes = await getAllTakesForProject(activeProjectId);
+      const duplicateTake = allProjectTakes.find(t =>
+        String(t.scene || '').trim().toUpperCase() === scene.toUpperCase() &&
+        t.id !== id
+      );
+
+      if (duplicateTake) {
+        showToast(`La Escena ${scene} ya tiene un raccord registrado`);
         return;
       }
 
@@ -3572,7 +3599,8 @@
       const target = all.find(item => item.id === id);
       if (!target) return;
 
-      await updateCatalogCaches();
+      // Pasar target.scene como permitida para poder editar el raccord de esa misma escena
+      await updateCatalogCaches(target.scene);
 
       document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
       document.getElementById('entry-id').value = target.id;
