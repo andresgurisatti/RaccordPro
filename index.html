@@ -2298,40 +2298,54 @@
         inputImportJson.click();
       });
 
-      inputImportJson.addEventListener('change', async (e) => {
+      inputImportJson.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
+  
         showToast('Abriendo archivo de respaldo...');
-
-        try {
-          const text = await file.text();
-          const data = JSON.parse(text);
-
-          if (data.project && data.project.id) {
-            await saveProjectToDB(data.project);
-            if (Array.isArray(data.takes)) {
-              for (const take of data.takes) await saveTakeToDB(take);
+  
+        const reader = new FileReader();
+  
+        reader.onload = async (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+  
+            if (data.project && data.project.id) {
+              await saveProjectToDB(data.project);
+              if (Array.isArray(data.takes)) {
+                for (const take of data.takes) await saveTakeToDB(take);
+              }
+              if (Array.isArray(data.scenes)) {
+                for (const s of data.scenes) await saveEntityToDB(STORE_SCENES, s);
+              }
+              if (Array.isArray(data.characters)) {
+                for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
+              }
+              await renderProjects();
+              showToast(`Proyecto "${data.project.name}" restaurado`);
+            } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
+              for (const take of data) await saveTakeToDB(take);
+              await renderProjects();
+              showToast('Registros restaurados con éxito');
+            } else {
+              showToast('Formato JSON no compatible');
             }
-            if (Array.isArray(data.scenes)) {
-              for (const s of data.scenes) await saveEntityToDB(STORE_SCENES, s);
-            }
-            if (Array.isArray(data.characters)) {
-              for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
-            }
-            await renderProjects();
-            showToast(`Proyecto "${data.project.name}" restaurado`);
-          } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
-            for (const take of data) await saveTakeToDB(take);
-            await renderProjects();
-            showToast('Registros restaurados con éxito');
-          } else {
-            showToast('Formato JSON no compatible');
+          } catch (err) {
+            console.error('Error importando JSON:', err);
+            showToast('Error de formato en el archivo');
+          } finally {
+            // Limpiamos el input para permitir recargar el mismo archivo si es necesario
+            e.target.value = '';
           }
-        } catch (err) {
-          console.error('Error importando JSON:', err);
-          showToast('Error al leer el archivo');
-        }
+        };
+  
+        reader.onerror = () => {
+          console.error('Error fatal al leer el archivo');
+          showToast('Error al leer el disco. Inténtalo de nuevo.');
+          e.target.value = '';
+        };
+  
+        reader.readAsText(file);
       });
     }
 
