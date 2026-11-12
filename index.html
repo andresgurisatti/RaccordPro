@@ -286,10 +286,10 @@
     }
 
     .btn-edit-square {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      min-height: 48px;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
       border-radius: var(--btn-radius);
       background: var(--bg-800);
       border: 1px solid var(--border-700);
@@ -304,6 +304,27 @@
     .btn-edit-square:active {
       transform: scale(0.92);
       background: rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-delete-square {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: var(--btn-radius);
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.1s, background 0.15s;
+    }
+
+    .btn-delete-square:active {
+      transform: scale(0.92);
+      background: rgba(239, 68, 68, 0.25);
     }
 
     .delete-project-box {
@@ -506,6 +527,13 @@
       margin-bottom: 12px;
     }
 
+    .raccord-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
     .raccord-scene-badge {
       display: inline-block;
       background: rgba(245, 158, 11, 0.15);
@@ -527,12 +555,17 @@
       margin: 0;
     }
 
+    .raccord-time-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
     .raccord-time {
-      font-size: 12px;
+      font-size: 11px;
       font-family: monospace;
-      color: var(--text-muted);
-      white-space: nowrap;
-      flex-shrink: 0;
+      color: var(--text-dim);
     }
 
     .raccord-char-row {
@@ -593,58 +626,6 @@
       border-radius: 6px;
       margin: 8px 0 0 0;
       line-height: 1.4;
-    }
-
-    .take-footer {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-top: 1px solid var(--border-700);
-      margin-top: 14px;
-      padding-top: 12px;
-    }
-
-    .btn-card-edit-wide {
-      flex: 1;
-      min-height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--bg-800);
-      border: 1px solid var(--border-700);
-      color: var(--amber);
-      font-size: 15px;
-      font-weight: 800;
-      padding: 10px 14px;
-      border-radius: var(--btn-radius);
-      transition: transform 0.1s, background 0.15s;
-    }
-
-    .btn-card-edit-wide:active {
-      transform: scale(0.97);
-      background: rgba(245, 158, 11, 0.15);
-    }
-
-    .btn-card-delete-square {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      min-height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #f87171;
-      border-radius: var(--btn-radius);
-      flex-shrink: 0;
-      transition: transform 0.1s, background 0.15s;
-    }
-
-    .btn-card-delete-square:active {
-      transform: scale(0.92);
-      background: rgba(239, 68, 68, 0.25);
     }
 
     .empty-box {
@@ -894,7 +875,6 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* CHECKBOX ESTILIZADO PARA SELECCIÓN DE ESCENAS EN REPORTE PDF */
     .pdf-scene-check-item {
       background: var(--bg-800);
       border: 1px solid var(--border-700);
@@ -912,6 +892,41 @@
       height: 22px;
       accent-color: var(--amber);
       flex-shrink: 0;
+    }
+
+    .lang-selector-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .lang-option {
+      display: block;
+      cursor: pointer;
+    }
+
+    .lang-option input {
+      display: none;
+    }
+
+    .lang-box {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: var(--btn-radius);
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+      display: block;
+      transition: all 0.15s;
+    }
+
+    .lang-option input:checked + .lang-box {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: rgba(245, 158, 11, 0.15);
     }
 
     .toast-bar {
@@ -951,14 +966,15 @@
         </div>
       </div>
 
+      <!-- ICONO NUEVO IMPORTAR JSON: Hoja con flecha entrando de derecha a izquierda (#f59e0b) -->
       <div style="display:flex; align-items:center;">
         <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
-        <button type="button" id="btn-import-json" class="btn-icon" title="Abrir / Importar Proyecto desde archivo">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
-            <path d="M2 10h20"/>
-            <path d="m12 13-3 3 3 3"/>
-            <path d="M9 16h8"/>
+        <button type="button" id="btn-import-json" class="btn-icon" title="Importar Proyecto desde JSON">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="21" y1="14" x2="11" y2="14"/>
+            <polyline points="15 10 11 14 15 18"/>
           </svg>
         </button>
       </div>
@@ -1030,8 +1046,13 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <span>Exportar Reporte PDF</span>
         </button>
+        <!-- ICONO NUEVO DISQUETE (DISKETTE) PARA GUARDAR RESPALDO JSON -->
         <button type="button" class="dropdown-item" id="menu-opt-export-json">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
           <span>Guardar Respaldo JSON</span>
         </button>
       </div>
@@ -1274,12 +1295,25 @@
         </button>
       </div>
       <div class="modal-body">
+        <!-- SELECTOR DE IDIOMA DEL PDF -->
+        <label class="form-label">Idioma del Reporte:</label>
+        <div class="lang-selector-grid">
+          <label class="lang-option">
+            <input type="radio" name="pdf-lang" value="ES" checked>
+            <span class="lang-box">Español (ES)</span>
+          </label>
+          <label class="lang-option">
+            <input type="radio" name="pdf-lang" value="EN">
+            <span class="lang-box">English (EN)</span>
+          </label>
+        </div>
+
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
           <span class="form-label" style="margin:0;">Selecciona las escenas a incluir:</span>
           <button type="button" id="btn-toggle-all-pdf-scenes" style="color:var(--amber); font-size:13px; font-weight:800;">Desmarcar todas</button>
         </div>
 
-        <div id="pdf-scenes-checklist" style="max-height:300px; overflow-y:auto; margin-bottom:16px;"></div>
+        <div id="pdf-scenes-checklist" style="max-height:260px; overflow-y:auto; margin-bottom:16px;"></div>
 
         <button type="button" id="btn-generate-real-pdf" class="btn-primary" style="width:100%;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -1342,6 +1376,13 @@
     let cachedScenesForProject = [];
     let cachedCharactersForProject = [];
     let activeViewerTakeId = null;
+
+    // Detectar si el dispositivo es táctil móvil (iPhone / Android / iPad) vs Computadora (Mac / Windows)
+    function isMobileTouchDevice() {
+      const ua = navigator.userAgent || '';
+      const isTouchMac = /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || isTouchMac;
+    }
 
     function openDBConnection(version) {
       return new Promise((resolve, reject) => {
@@ -1581,6 +1622,57 @@
         }];
       }
       return [];
+    }
+
+    // Función unificada de guardado de archivos (Mac Finder, Windows, Android e iOS)
+    async function saveFileToUserDirectory(blob, fileName, mimeType, fileDescription, fileExt) {
+      // 1. Selector de carpetas nativo de escritorio / Android Chrome (Finder en Mac, Explorador en Windows)
+      if ('showSaveFilePicker' in window) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [{
+              description: fileDescription,
+              accept: { [mimeType]: [fileExt] }
+            }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          showToast('Archivo guardado en la carpeta seleccionada');
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      // 2. Hoja nativa de compartir / Guardar en Archivos SOLO en dispositivos móviles (iPhone/iPad/Android)
+      // Se desactiva en Mac/Windows para evitar que macOS abra el menú de AirDrop/Notas
+      if (isMobileTouchDevice()) {
+        const file = new File([blob], fileName, { type: mimeType });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: fileName
+            });
+            return;
+          } catch (err) {
+            if (err.name === 'AbortError') return;
+          }
+        }
+      }
+
+      // 3. Descarga directa estándar (Safari en Mac u otros navegadores sin File System Access)
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('Archivo guardado correctamente');
     }
 
     const confirmModal = document.getElementById('confirm-modal');
@@ -2223,7 +2315,7 @@
     }
 
     /* ==========================================================================
-       EXPORTAR REPORTE PDF REAL (CON SELECTOR DE ESCENAS Y ARCHIVO .PDF)
+       EXPORTAR REPORTE PDF PROFESIONAL (BILINGÜE + LOGO + V1/V2/V3 + IMAGEN GRANDE)
        ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
@@ -2268,7 +2360,6 @@
 
     document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
 
-    // Helper para obtener proporciones reales de cada imagen Base64 antes de dibujarla en el PDF
     function getImageDimensions(base64) {
       return new Promise((resolve) => {
         const img = new Image();
@@ -2276,6 +2367,47 @@
         img.onerror = () => resolve({ width: 4, height: 3 });
         img.src = base64;
       });
+    }
+
+    // Dibuja el logo idéntico de RaccordPRO arriba a la derecha en el PDF
+    function drawRaccordProLogo(doc, rightX, topY) {
+      const textRaccord = 'Raccord';
+      const textPro = 'PRO';
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+
+      const wRaccord = doc.getTextWidth(textRaccord);
+      const wPro = doc.getTextWidth(textPro);
+      const iconBoxSize = 7.5;
+      const gap = 2.5;
+      const totalWidth = iconBoxSize + gap + wRaccord + wPro;
+      const startX = rightX - totalWidth;
+
+      // Recuadro del icono de claqueta
+      doc.setFillColor(38, 32, 22);
+      doc.setDrawColor(245, 158, 11);
+      doc.setLineWidth(0.35);
+      doc.roundedRect(startX, topY, iconBoxSize, iconBoxSize, 1.8, 1.8, 'FD');
+
+      // Dibujo vectorial de la claqueta dentro del recuadro
+      doc.setDrawColor(245, 158, 11);
+      doc.setLineWidth(0.45);
+      // Cuerpo inferior de claqueta
+      doc.rect(startX + 1.6, topY + 3.4, 4.3, 2.7);
+      // Parte superior inclinada
+      doc.line(startX + 1.6, topY + 3.4, startX + 5.7, topY + 2.0);
+      doc.line(startX + 1.4, topY + 2.6, startX + 5.5, topY + 1.3);
+      // Líneas diagonales de claqueta
+      doc.line(startX + 2.4, topY + 2.3, startX + 3.0, topY + 3.0);
+      doc.line(startX + 3.9, topY + 1.8, startX + 4.5, topY + 2.5);
+
+      // Texto "Raccord" en blanco + "PRO" en ámbar
+      const textY = topY + 5.4;
+      doc.setTextColor(255, 255, 255);
+      doc.text(textRaccord, startX + iconBoxSize + gap, textY);
+
+      doc.setTextColor(245, 158, 11);
+      doc.text(textPro, startX + iconBoxSize + gap + wRaccord, textY);
     }
 
     document.getElementById('btn-generate-real-pdf').addEventListener('click', async () => {
@@ -2293,9 +2425,24 @@
         return;
       }
 
+      const langEl = document.querySelector('input[name="pdf-lang"]:checked');
+      const lang = langEl ? langEl.value : 'ES';
+      const isEN = (lang === 'EN');
+
+      const i18n = {
+        reportTitle: isEN ? 'CONTINUITY REPORT' : 'REPORTE DE CONTINUIDAD',
+        projectLabel: isEN ? 'Project' : 'Proyecto',
+        generatedLabel: isEN ? 'Generated' : 'Generado',
+        sceneLabel: isEN ? 'SCENE' : 'ESCENA',
+        timeLabel: isEN ? 'Logged' : 'Hora registro',
+        generalNotesLabel: isEN ? 'General notes' : 'Notas generales',
+        photoLabel: isEN ? 'PHOTO' : 'FOTO',
+        noCharLabel: isEN ? 'Unassigned character' : 'Sin personaje'
+      };
+
       const selectedTakes = cachedTakesForPdf.filter(t => selectedIds.has(t.id));
       reportModal.classList.add('hidden');
-      showToast('Construyendo documento PDF...');
+      showToast(isEN ? 'Building PDF report...' : 'Construyendo reporte PDF...');
 
       try {
         const { jsPDF } = window.jspdf;
@@ -2307,31 +2454,36 @@
         const contentWidth = pageWidth - (margin * 2);
         let y = 18;
 
-        // Encabezado del Reporte
+        // Encabezado oscuro profesional
         doc.setFillColor(19, 23, 29);
-        doc.rect(0, 0, pageWidth, 34, 'F');
+        doc.rect(0, 0, pageWidth, 36, 'F');
 
+        // Logo RaccordPRO arriba a la derecha
+        drawRaccordProLogo(doc, pageWidth - margin, 8.5);
+
+        // Título principal: REPORTE DE CONTINUIDAD / CONTINUITY REPORT
         doc.setTextColor(245, 158, 11);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(17);
-        doc.text('HOJA DE CONTINUIDAD — RACCORDPRO', margin, 14);
+        doc.text(i18n.reportTitle, margin, 14.5);
 
+        // Nombre del Proyecto
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(12);
         const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
-        doc.text(`Proyecto: ${projTitle}`, margin, 22);
+        doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 22.5);
 
+        // Director / Productora y fecha
         doc.setTextColor(180, 185, 195);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9.5);
-        const metaLine = `${activeProjectData && activeProjectData.director ? activeProjectData.director + '  |  ' : ''}Generado: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-        doc.text(metaLine, margin, 28.5);
+        const metaLine = `${activeProjectData && activeProjectData.director ? activeProjectData.director + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        doc.text(metaLine, margin, 29);
 
-        y = 42;
+        y = 44;
 
         for (const take of selectedTakes) {
-          // Verificar espacio para encabezado de escena
-          if (y > pageHeight - 40) {
+          if (y > pageHeight - 45) {
             doc.addPage();
             y = 18;
           }
@@ -2344,7 +2496,7 @@
           doc.setTextColor(180, 95, 6);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(12);
-          doc.text(`ESCENA ${take.scene}`, margin + 4, y + 6);
+          doc.text(`${i18n.sceneLabel} ${take.scene}`, margin + 4, y + 6);
 
           if (take.sceneDesc) {
             doc.setTextColor(35, 40, 48);
@@ -2357,16 +2509,16 @@
           doc.setTextColor(110, 115, 125);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(8.5);
-          doc.text(`Hora registro: ${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, margin + 4, y + 11.5);
+          doc.text(`${i18n.timeLabel}: ${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`, margin + 4, y + 11.5);
 
           y += 18;
 
-          // Notas Generales de la Escena
+          // Notas Generales de la Escena (solo si existen)
           if (take.notes && take.notes.trim()) {
             doc.setTextColor(55, 65, 81);
             doc.setFont('helvetica', 'italic');
             doc.setFontSize(10);
-            const noteLines = doc.splitTextToSize(`Notas generales: ${take.notes.trim()}`, contentWidth - 4);
+            const noteLines = doc.splitTextToSize(`${i18n.generalNotesLabel}: ${take.notes.trim()}`, contentWidth - 4);
             if (y + (noteLines.length * 5) > pageHeight - 16) {
               doc.addPage();
               y = 18;
@@ -2375,14 +2527,14 @@
             y += (noteLines.length * 5) + 4;
           }
 
-          // Bloques de Fotos + Personaje + Notas específicas
+          // Bloques de Fotos + Personaje + Notas específicas (30% más grandes: 88x70 mm)
           const photos = getNormalizedPhotos(take);
 
           for (let i = 0; i < photos.length; i++) {
             const p = photos[i];
             const dims = await getImageDimensions(p.photo);
-            const maxImgW = 68;
-            const maxImgH = 54;
+            const maxImgW = 88;
+            const maxImgH = 70;
             const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
             const drawW = dims.width * ratio;
             const drawH = dims.height * ratio;
@@ -2392,44 +2544,44 @@
 
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
-            const pNoteText = (p.note && p.note.trim()) ? p.note.trim() : 'Sin notas específicas.';
-            const pNoteLines = doc.splitTextToSize(pNoteText, textColW);
+            // Si no hay notas, dejar completamente en blanco
+            const hasNote = p.note && p.note.trim().length > 0;
+            const pNoteLines = hasNote ? doc.splitTextToSize(p.note.trim(), textColW) : [];
 
-            const blockHeight = Math.max(drawH + 6, (pNoteLines.length * 4.8) + 18);
+            const textContentHeight = hasNote ? (pNoteLines.length * 4.8) + 18 : 18;
+            const blockHeight = Math.max(drawH + 6, textContentHeight);
 
             if (y + blockHeight > pageHeight - 16) {
               doc.addPage();
               y = 18;
             }
 
-            // Recuadro del registro fotográfico
             doc.setDrawColor(225, 228, 232);
             doc.setFillColor(255, 255, 255);
             doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, 'FD');
 
-            // Foto
             try {
               doc.addImage(p.photo, 'JPEG', margin + 3, y + 3, drawW, drawH);
             } catch (imgErr) {
               console.warn('Error insertando imagen en PDF:', imgErr);
             }
 
-            // Etiqueta Foto + Personaje
             doc.setTextColor(180, 95, 6);
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(9);
-            doc.text(`FOTO #${i + 1}`, textColX, y + 7);
+            doc.text(`${i18n.photoLabel} #${i + 1}`, textColX, y + 7.5);
 
             doc.setTextColor(17, 24, 39);
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(11.5);
-            doc.text(p.character || 'Sin personaje', textColX, y + 13);
+            doc.setFontSize(12);
+            doc.text(p.character || i18n.noCharLabel, textColX, y + 14);
 
-            // Notas de la foto
-            doc.setTextColor(55, 65, 81);
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9.5);
-            doc.text(pNoteLines, textColX, y + 19);
+            if (hasNote) {
+              doc.setTextColor(55, 65, 81);
+              doc.setFont('helvetica', 'normal');
+              doc.setFontSize(9.5);
+              doc.text(pNoteLines, textColX, y + 20.5);
+            }
 
             y += blockHeight + 4;
           }
@@ -2437,54 +2589,29 @@
           y += 6;
         }
 
+        // Consecutivo automático V1, V2, V3... por proyecto y fecha en mayúsculas
+        const rawProjName = (activeProjectData ? activeProjectData.name : 'PROYECTO')
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .toUpperCase()
+          .replace(/[^A-Z0-9]+/g, '_')
+          .replace(/^_+|_+$/g, '');
+
+        const now = new Date();
+        const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+        const versionStorageKey = `rp_pdf_seq_${activeProjectId}_${datePart}`;
+        const nextVersion = (parseInt(localStorage.getItem(versionStorageKey) || '0', 10)) + 1;
+        localStorage.setItem(versionStorageKey, String(nextVersion));
+
+        const pdfFileName = `${rawProjName || 'RACCORDPRO'}_${datePart}_V${nextVersion}.pdf`;
         const pdfBlob = doc.output('blob');
-        const safeName = (activeProjectData ? activeProjectData.name : 'Set').replace(/[^a-zA-Z0-9_-]/g, '_');
-        const pdfFileName = `Continuidad_${safeName}_${new Date().toISOString().slice(0,10)}.pdf`;
 
-        // 1. Selector de carpetas nativo (Android Chrome / Desktop)
-        if ('showSaveFilePicker' in window) {
-          try {
-            const handle = await window.showSaveFilePicker({
-              suggestedName: pdfFileName,
-              types: [{
-                description: 'Reporte de Continuidad (PDF)',
-                accept: { 'application/pdf': ['.pdf'] }
-              }]
-            });
-            const writable = await handle.createWritable();
-            await writable.write(pdfBlob);
-            await writable.close();
-            showToast('Reporte PDF guardado en la carpeta seleccionada');
-            return;
-          } catch (err) {
-            if (err.name === 'AbortError') return;
-          }
-        }
-
-        // 2. Hoja nativa de compartir / Guardar en Archivos (iPhone Safari / PWA)
-        const pdfFile = new File([pdfBlob], pdfFileName, { type: 'application/pdf' });
-        if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-          try {
-            await navigator.share({
-              files: [pdfFile],
-              title: pdfFileName
-            });
-            return;
-          } catch (err) {
-            if (err.name === 'AbortError') return;
-          }
-        }
-
-        // 3. Descarga directa estándar
-        const url = URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = pdfFileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        showToast('Reporte PDF generado');
+        await saveFileToUserDirectory(
+          pdfBlob,
+          pdfFileName,
+          'application/pdf',
+          'Reporte de Continuidad (PDF)',
+          '.pdf'
+        );
 
       } catch (err) {
         console.error('Error generando PDF:', err);
@@ -2509,55 +2636,25 @@
       };
 
       const jsonString = JSON.stringify(backupBundle, null, 2);
-      const fileName = `Raccord_${(activeProjectData ? activeProjectData.name : 'Set').replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.json`;
-
-      if ('showSaveFilePicker' in window) {
-        try {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: fileName,
-            types: [{
-              description: 'Respaldo RaccordPro (JSON)',
-              accept: { 'application/json': ['.json'] }
-            }]
-          });
-          const writable = await handle.createWritable();
-          await writable.write(jsonString);
-          await writable.close();
-          showToast('Respaldo guardado en la carpeta seleccionada');
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') return;
-        }
-      }
-
+      const safeName = (activeProjectData ? activeProjectData.name : 'SET')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+      const fileName = `RACCORD_${safeName}_${new Date().toISOString().slice(0,10)}.json`;
       const blob = new Blob([jsonString], { type: 'application/json' });
-      const file = new File([blob], fileName, { type: 'application/json' });
 
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: fileName
-          });
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') return;
-        }
-      }
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showToast('Archivo de respaldo generado');
+      await saveFileToUserDirectory(
+        blob,
+        fileName,
+        'application/json',
+        'Respaldo RaccordPro (JSON)',
+        '.json'
+      );
     });
 
     /* ==========================================================================
-       RENDERIZADO DE RACCORDS EN PANTALLA PRINCIPAL
+       RENDERIZADO DE RACCORDS EN PANTALLA PRINCIPAL (BOTONES ARRIBA A LA DERECHA)
        ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
@@ -2655,7 +2752,15 @@
                   <span class="raccord-scene-badge">ESCENA ${escapeHtml(take.scene)}</span>
                   ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
                 </div>
-                <span class="raccord-time">${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <!-- BOTONES SOLO ICONOS ARRIBA A LA DERECHA -->
+                <div class="raccord-header-actions">
+                  <button type="button" class="btn-edit-square" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
+                    ${ICON_EDIT_SVG}
+                  </button>
+                  <button type="button" class="btn-delete-square" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
+                    ${ICON_DELETE_SVG}
+                  </button>
+                </div>
               </div>
 
               ${charactersHtml}
@@ -2663,14 +2768,8 @@
               ${take.notes ? `<p class="raccord-general-note">${escapeHtml(take.notes)}</p>` : ''}
             </div>
 
-            <div class="take-footer">
-              <button type="button" class="btn-card-edit-wide" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
-                ${ICON_EDIT_SVG}
-                <span>Editar</span>
-              </button>
-              <button type="button" class="btn-card-delete-square" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
-                ${ICON_DELETE_SVG}
-              </button>
+            <div class="raccord-time-row">
+              <span class="raccord-time">${new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
           </article>
         `;
@@ -2922,7 +3021,7 @@
               <span class="photo-note-badge">FOTO #${idx + 1}</span>
             </div>
             <img src="${p.photo}" alt="Foto ${idx + 1}">
-            ${p.note ? `<div style="color:#e5e7eb; font-size:15px; line-height:1.45; background:var(--bg-850); padding:10px 12px; border-radius:10px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : '<div style="color:var(--text-dim); font-size:13px;">Sin notas específicas para esta foto</div>'}
+            ${p.note ? `<div style="color:#e5e7eb; font-size:15px; line-height:1.45; background:var(--bg-850); padding:10px 12px; border-radius:10px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : ''}
           </div>
         `).join('');
       } else {
