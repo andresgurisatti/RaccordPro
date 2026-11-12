@@ -1123,7 +1123,6 @@
       </div>
     </header>
 
-    <!-- BARRA DE BÚSQUEDA DE PROYECTOS (Oculta por defecto) -->
     <section id="projects-search-bar" class="toolbar hidden">
       <div class="toolbar-clean-row">
         <div class="search-box">
@@ -1236,9 +1235,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
           <span>Cambiar carpeta de respaldo</span>
         </button>
-        <div class="dropdown-hint-box">
-          <strong>Nota Mac / Apple:</strong> Usa preferiblemente <strong>Chrome o Edge</strong>. Safari bloquea el acceso continuo a carpetas locales por políticas de seguridad de Apple, por lo que pedirá confirmar la ruta en cada guardado.
-        </div>
       </div>
     </header>
 
@@ -1258,9 +1254,7 @@
       <div class="raccords-counter-center-box">
         <span id="badge-total-items" class="raccords-count-pill">0 raccords</span>
       </div>
-
       <div id="records-grid" class="takes-grid"></div>
-
       <div id="empty-state" class="empty-box hidden">
         <div class="empty-icon">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
@@ -1296,7 +1290,7 @@
         <div style="background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.35); padding:14px; border-radius:12px; margin-bottom:18px;">
           <strong style="color:var(--amber); font-size:14px; display:block; margin-bottom:6px;">RECOMENDACIÓN DE SET:</strong>
           <p style="margin:0; font-size:14px; color:#d1d5db; line-height:1.45;">
-            Por favor <strong>revisa los datos extraídos</strong> en los apartados de <em>Escenas</em> y <em>Personajes</em>. Debido a las variaciones de formato o maquetación del guion, pudieron cometerse omisiones o pequeñas diferencias en los nombres.
+            Por favor <strong>revisa los datos extraídos</strong> en los apartados de <em>Escenas</em> y <em>Personajes</em>.
           </p>
         </div>
       </div>
@@ -1361,7 +1355,7 @@
           <input type="hidden" id="edit-scene-id" value="">
           <div style="display:flex; gap:10px;">
             <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
-            <input type="text" id="new-scene-desc" placeholder="Encabezado / Set (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
+            <input type="text" id="new-scene-desc" placeholder="Encabezado (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
           </div>
           <div style="display:flex; gap:8px;">
             <button type="submit" id="btn-save-scene" class="btn-primary" style="flex:1;">+ Añadir Escena</button>
@@ -1465,7 +1459,7 @@
 
           <div class="form-group">
             <label class="form-label">Notas Generales de la Escena</label>
-            <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad para esta escena..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;"></textarea>
+            <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -1502,12 +1496,10 @@
 
           <div class="form-group">
             <label class="form-label">Foto de Continuidad</label>
-
             <button type="button" id="btn-trigger-subentry-photo" class="btn-photo-single">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
               <span>Seleccionar Foto de Fototeca</span>
             </button>
-
             <div id="subentry-photo-preview-box" class="subentry-preview-box hidden">
               <img id="subentry-photo-preview-img" src="" alt="Previsualización">
               <button type="button" id="btn-remove-subentry-photo" class="btn-secondary" style="width:100%; min-height:44px; padding:10px; font-size:14px; color:#f87171;">
@@ -1518,7 +1510,7 @@
 
           <div class="form-group">
             <label class="form-label">Nota de Continuidad</label>
-            <textarea id="subentry-note" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, estado..." class="form-control" style="font-size:15px; line-height:1.4; min-height:86px;"></textarea>
+            <textarea id="subentry-note" rows="3" placeholder="Detalles de vestuario, peinado, accesorios..." class="form-control" style="font-size:15px; line-height:1.4; min-height:86px;"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -1548,7 +1540,6 @@
           </button>
         </div>
       </div>
-
       <div id="viewer-body" class="modal-body"></div>
     </div>
   </div>
@@ -1576,12 +1567,10 @@
             <span class="lang-box">English (EN)</span>
           </label>
         </div>
-
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
           <span class="form-label" style="margin:0;">Selecciona las escenas a incluir:</span>
           <button type="button" id="btn-toggle-all-pdf-scenes" style="color:var(--amber); font-size:13px; font-weight:800;">Desmarcar todas</button>
         </div>
-
         <div id="pdf-scenes-checklist" style="max-height:260px; overflow-y:auto; margin-bottom:16px;"></div>
       </div>
       <div class="modal-footer">
