@@ -1023,19 +1023,138 @@
     .viewer-photo-block {
       background: var(--bg-900);
       border: 1px solid var(--border-700);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 16px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
     }
 
-    .viewer-photo-block img.main-photo {
+    .viewer-photo-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .viewer-square-mask {
+      position: relative;
+      width: 175px;
+      height: 175px;
+      margin: 0 auto 10px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid var(--border-600);
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    .viewer-square-mask img {
       width: 100%;
-      max-height: 440px;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+
+    .viewer-square-mask:active img {
+      transform: scale(1.03);
+    }
+
+    .btn-view-photo-eye {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(13, 15, 18, 0.88);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(245, 158, 11, 0.65);
+      color: var(--amber);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      padding: 6px 11px;
+      border-radius: 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+
+    .btn-view-photo-eye:active {
+      transform: scale(0.94);
+      background: rgba(245, 158, 11, 0.22);
+    }
+
+    #raccord-viewer-modal {
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: calc(10px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+
+    #raccord-viewer-modal .modal-card {
+      max-width: 680px;
+      border-radius: 14px;
+    }
+
+    #raccord-viewer-modal .modal-header {
+      padding: 11px 14px;
+    }
+
+    #raccord-viewer-modal .modal-body {
+      padding: 10px 12px;
+    }
+
+    .lightbox-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 10, 0.94);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 95;
+      display: flex;
+      flex-direction: column;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .lightbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 4px 6px 12px 6px;
+      flex-shrink: 0;
+    }
+
+    .lightbox-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--amber);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lightbox-stage {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .lightbox-stage img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
       object-fit: contain;
       border-radius: 10px;
-      background: #000;
-      display: block;
-      margin-bottom: 10px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85);
     }
 
     .btn-secondary {
@@ -1641,7 +1760,7 @@
   <!-- MODAL: VISOR COMPLETO DE RACCORD           -->
   <!-- ========================================== -->
   <div id="raccord-viewer-modal" class="modal-backdrop hidden" style="z-index: 55;">
-    <div class="modal-card" style="max-width:600px;">
+    <div class="modal-card">
       <div class="modal-header">
         <div style="min-width:0; flex:1;">
           <h3 id="viewer-title" class="modal-title" style="color:var(--amber);">ESCENA</h3>
@@ -1658,6 +1777,21 @@
       </div>
 
       <div id="viewer-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: VISOR DE FOTO ORIGINAL (LIGHTBOX)   -->
+  <!-- ========================================== -->
+  <div id="photo-lightbox-modal" class="lightbox-backdrop hidden">
+    <div class="lightbox-header">
+      <h3 id="lightbox-title" class="lightbox-title">FOTO DE CONTINUIDAD</h3>
+      <button type="button" id="btn-close-lightbox" class="btn-close-touch" title="Cerrar foto">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div id="lightbox-stage" class="lightbox-stage">
+      <img id="lightbox-img" src="" alt="Foto en tamaño original">
     </div>
   </div>
 
@@ -1734,6 +1868,7 @@
     const ICON_DELETE_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>`;
     const ICON_USER_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
     const ICON_PHOTO_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`;
+    const ICON_EYE_SVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
 
     const DB_NAME = 'RaccordProDB';
     const DB_VERSION = 5;
@@ -3908,9 +4043,32 @@
     });
 
     /* ==========================================================================
-       VISOR DETALLADO DE RACCORD
+       VISOR DETALLADO DE RACCORD Y LIGHTBOX DE FOTO ORIGINAL
        ========================================================================== */
     const raccordViewerModal = document.getElementById('raccord-viewer-modal');
+    const photoLightboxModal = document.getElementById('photo-lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    let viewerPhotosCache = [];
+
+    function openPhotoLightbox(photoSrc, titleText) {
+      if (!photoSrc) return;
+      lightboxImg.src = photoSrc;
+      lightboxTitle.textContent = titleText || 'FOTO DE CONTINUIDAD';
+      photoLightboxModal.classList.remove('hidden');
+    }
+
+    function closePhotoLightbox() {
+      photoLightboxModal.classList.add('hidden');
+      lightboxImg.src = '';
+    }
+
+    document.getElementById('btn-close-lightbox').addEventListener('click', closePhotoLightbox);
+    document.getElementById('lightbox-stage').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        closePhotoLightbox();
+      }
+    });
 
     async function openRaccordViewer(id) {
       const all = await getAllTakesForProject(activeProjectId);
@@ -3923,13 +4081,14 @@
       document.getElementById('viewer-subtitle').textContent = item.sceneDesc || '';
 
       const entries = getNormalizedPhotos(item);
+      viewerPhotosCache = entries;
       let htmlContent = '';
 
       if (item.notes) {
         htmlContent += `
-          <div style="background:var(--bg-800); border:1px solid var(--border-700); padding:14px; border-radius:var(--btn-radius); margin-bottom:16px;">
-            <strong style="color:var(--amber); font-size:12px; text-transform:uppercase; display:block; margin-bottom:6px;">Notas Generales de la Escena:</strong>
-            <div style="color:#f9fafb; font-size:15px; line-height:1.45; white-space:pre-wrap;">${escapeHtml(item.notes)}</div>
+          <div style="background:var(--bg-800); border:1px solid var(--border-700); padding:10px 12px; border-radius:10px; margin-bottom:10px;">
+            <strong style="color:var(--amber); font-size:11px; text-transform:uppercase; display:block; margin-bottom:4px;">Notas Generales de la Escena:</strong>
+            <div style="color:#f9fafb; font-size:14px; line-height:1.4; white-space:pre-wrap;">${escapeHtml(item.notes)}</div>
           </div>
         `;
       }
@@ -3937,15 +4096,23 @@
       if (entries.length > 0) {
         htmlContent += entries.map((p, idx) => `
           <div class="viewer-photo-block">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
               <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; color:#fff;">
                 ${getCharacterAvatarHtml(p.character, true)}
                 <span>${escapeHtml(p.character || 'Sin personaje')}</span>
               </div>
               <span class="photo-note-badge">ENTRADA #${idx + 1}</span>
             </div>
-            ${p.photo ? `<img src="${p.photo}" alt="Entrada ${idx + 1}" class="main-photo">` : ''}
-            ${p.note ? `<div style="color:#e5e7eb; font-size:15px; line-height:1.45; background:var(--bg-850); padding:10px 12px; border-radius:10px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : ''}
+            ${p.photo ? `
+              <div class="viewer-square-mask" data-action="view-full-photo" data-idx="${idx}" title="Ver foto en tamaño original">
+                <img src="${p.photo}" alt="Entrada ${idx + 1}">
+                <button type="button" class="btn-view-photo-eye" data-action="view-full-photo" data-idx="${idx}">
+                  ${ICON_EYE_SVG}
+                  <span>VER</span>
+                </button>
+              </div>
+            ` : ''}
+            ${p.note ? `<div style="color:#e5e7eb; font-size:14px; line-height:1.4; background:var(--bg-850); padding:9px 11px; border-radius:9px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : ''}
           </div>
         `).join('');
       } else {
@@ -3955,6 +4122,18 @@
       document.getElementById('viewer-body').innerHTML = htmlContent;
       raccordViewerModal.classList.remove('hidden');
     }
+
+    document.getElementById('viewer-body').addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-action="view-full-photo"]');
+      if (!trigger) return;
+      e.stopPropagation();
+      const idx = parseInt(trigger.getAttribute('data-idx'), 10);
+      const entry = viewerPhotosCache[idx];
+      if (entry && entry.photo) {
+        const sceneTitle = document.getElementById('viewer-title').textContent;
+        openPhotoLightbox(entry.photo, `${sceneTitle} — ${entry.character || 'Sin personaje'}`);
+      }
+    });
 
     document.getElementById('btn-close-viewer').addEventListener('click', () => {
       activeViewerTakeId = null;
