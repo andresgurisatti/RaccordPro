@@ -2290,15 +2290,13 @@
       inputImportJson.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
-  
+
         showToast('Abriendo archivo de respaldo...');
-  
         const reader = new FileReader();
-  
+
         reader.onload = async (event) => {
           try {
             const data = JSON.parse(event.target.result);
-  
             if (data.project && data.project.id) {
               await saveProjectToDB(data.project);
               if (Array.isArray(data.takes)) {
@@ -2321,19 +2319,18 @@
             }
           } catch (err) {
             console.error('Error importando JSON:', err);
-            showToast('Error de formato en el archivo');
+            showToast('Error de formato en el archivo JSON');
           } finally {
-            // Limpiamos el input para permitir recargar el mismo archivo si es necesario
             e.target.value = '';
           }
         };
-  
+
         reader.onerror = () => {
           console.error('Error fatal al leer el archivo');
           showToast('Error al leer el disco. Inténtalo de nuevo.');
           e.target.value = '';
         };
-  
+
         reader.readAsText(file);
       });
     }
