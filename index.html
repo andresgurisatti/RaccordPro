@@ -16,6 +16,9 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
 
+  <!-- Librería PDF.js para lectura local de guiones -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
     :root {
       --bg-900: #0d0f12;
@@ -50,7 +53,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       overflow: hidden;
       user-select: none;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     input, textarea, select {
@@ -97,11 +100,12 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
     }
 
     .brand-icon {
-      width: 40px;
-      height: 40px;
+      width: 46px;
+      height: 46px;
       border-radius: var(--btn-radius);
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.35);
@@ -113,11 +117,14 @@
     }
 
     .brand-title {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 900;
       margin: 0;
       letter-spacing: 0.5px;
       color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .brand-title span {
@@ -129,7 +136,7 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 20px;
-      padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(135px + env(safe-area-inset-bottom, 0px));
     }
 
     .container-narrow {
@@ -140,14 +147,15 @@
     .btn-primary {
       background: var(--amber);
       color: var(--bg-900);
-      font-weight: 800;
-      font-size: 15px;
-      padding: 12px 20px;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 15px 24px;
+      min-height: 52px;
       border-radius: var(--btn-radius);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       transition: transform 0.1s;
     }
 
@@ -159,7 +167,9 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: var(--text-main);
-      padding: 10px;
+      min-width: 48px;
+      min-height: 48px;
+      padding: 12px;
       border-radius: var(--btn-radius);
       display: inline-flex;
       align-items: center;
@@ -172,14 +182,16 @@
     }
 
     .btn-close-touch {
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      min-height: 44px;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
       border-radius: var(--btn-radius);
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: var(--text-muted);
+      font-size: 18px;
+      font-weight: 800;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -193,7 +205,7 @@
     }
 
     .section-label-center {
-      font-size: 14px;
+      font-size: 15px;
       text-transform: uppercase;
       font-weight: 900;
       color: var(--text-muted);
@@ -206,7 +218,7 @@
       background: var(--bg-850);
       border: 1px solid var(--border-700);
       border-radius: 14px;
-      padding: 18px;
+      padding: 20px;
       margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -227,7 +239,7 @@
     }
 
     .project-card-title {
-      font-size: 19px;
+      font-size: 20px;
       font-weight: 800;
       color: #fff;
       margin-bottom: 6px;
@@ -235,16 +247,16 @@
     }
 
     .project-card-meta {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-muted);
       margin: 0;
     }
 
     .btn-edit-project {
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      min-height: 44px;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
       border-radius: var(--btn-radius);
       background: var(--bg-800);
       border: 1px solid var(--border-700);
@@ -268,24 +280,26 @@
       background: var(--bg-800);
       color: var(--amber);
       border: 1px solid var(--border-700);
-      padding: 8px 14px;
+      padding: 10px 14px;
       border-radius: var(--btn-radius);
+      white-space: nowrap;
     }
 
     .delete-project-box {
-      margin-top: 16px;
-      padding-top: 16px;
+      margin-top: 18px;
+      padding-top: 18px;
       border-top: 1px solid var(--border-700);
     }
 
     .btn-delete-project-full {
       width: 100%;
+      min-height: 52px;
       background: rgba(239, 68, 68, 0.12);
       border: 1px solid rgba(239, 68, 68, 0.4);
       color: #f87171;
       font-weight: 800;
-      font-size: 14px;
-      padding: 13px;
+      font-size: 15px;
+      padding: 14px;
       border-radius: var(--btn-radius);
       display: flex;
       align-items: center;
@@ -307,7 +321,7 @@
       padding-top: 14px;
       padding-left: 20px;
       padding-right: 20px;
-      padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       background: linear-gradient(180deg, rgba(13, 15, 18, 0) 0%, rgba(13, 15, 18, 0.95) 30%, #0d0f12 100%);
       display: flex;
       justify-content: center;
@@ -320,17 +334,17 @@
       background: linear-gradient(135deg, var(--amber), var(--amber-dark));
       color: #000;
       font-weight: 900;
-      font-size: 16px;
+      font-size: 17px;
       letter-spacing: 0.8px;
-      padding: 19px 34px;
-      min-height: 58px;
+      padding: 20px 34px;
+      min-height: 62px;
       border-radius: var(--btn-radius);
       box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
       display: inline-flex;
       align-items: center;
       gap: 12px;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       justify-content: center;
     }
 
@@ -341,50 +355,57 @@
     .dropdown-menu {
       position: absolute;
       top: calc(100% + 8px);
-      right: 18px;
+      right: 16px;
       background: var(--bg-850);
-      border: 1px solid var(--border-700);
-      border-radius: 14px;
-      width: 250px;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--border-600);
+      border-radius: 16px;
+      width: 300px;
+      padding: 8px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
       z-index: 50;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      gap: 6px;
     }
 
     .dropdown-item {
-      padding: 13px 16px;
-      font-size: 14px;
-      font-weight: 700;
+      padding: 16px 18px;
+      min-height: 54px;
+      font-size: 16px;
+      font-weight: 800;
       color: var(--text-main);
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: var(--btn-radius);
       display: flex;
       align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid var(--border-700);
+      gap: 14px;
       text-align: left;
-      transition: background 0.15s;
+      transition: background 0.15s, transform 0.1s;
     }
 
-    .dropdown-item:last-child {
-      border-bottom: none;
+    .dropdown-item.highlight {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.5);
+      color: var(--amber);
     }
 
     .dropdown-item:active {
-      background: rgba(245, 158, 11, 0.15);
+      transform: scale(0.97);
+      background: rgba(245, 158, 11, 0.25);
       color: var(--amber);
     }
 
     .dropdown-divider {
       height: 1px;
       background: var(--border-700);
-      margin: 0;
+      margin: 4px 0;
     }
 
     .toolbar {
       background: var(--bg-850);
       border-bottom: 1px solid var(--border-700);
-      padding: 12px 16px;
+      padding: 14px 16px;
       flex-shrink: 0;
     }
 
@@ -401,7 +422,7 @@
 
     .search-box svg {
       position: absolute;
-      left: 12px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
@@ -410,11 +431,12 @@
 
     .search-input {
       width: 100%;
+      min-height: 48px;
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: #fff;
-      font-size: 15px;
-      padding: 10px 32px 10px 38px;
+      font-size: 16px;
+      padding: 12px 16px 12px 42px;
       border-radius: var(--btn-radius);
       outline: none;
     }
@@ -425,7 +447,7 @@
 
     .chips-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: none;
@@ -439,9 +461,10 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 700;
-      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 12px 18px;
+      min-height: 44px;
       border-radius: var(--btn-radius);
       white-space: nowrap;
       flex-shrink: 0;
@@ -471,7 +494,7 @@
 
     .take-img-box {
       position: relative;
-      height: 200px;
+      height: 210px;
       background: var(--bg-900);
       cursor: pointer;
       overflow: hidden;
@@ -492,7 +515,7 @@
       align-items: center;
       justify-content: center;
       color: var(--text-dim);
-      font-size: 13px;
+      font-size: 14px;
       gap: 8px;
     }
 
@@ -500,34 +523,32 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 6px 10px;
-      border-radius: 8px;
+      padding: 7px 12px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       gap: 8px;
       font-family: monospace;
+      max-width: 72%;
     }
 
     .slate-scene {
       color: var(--amber);
       font-weight: 900;
-      font-size: 14px;
+      font-size: 15px;
+      white-space: nowrap;
     }
 
-    .slate-shot {
-      color: #ccc;
-      font-size: 13px;
-    }
-
-    .slate-take {
-      background: rgba(245, 158, 11, 0.3);
-      color: #fff;
-      font-weight: 800;
-      font-size: 13px;
-      padding: 2px 7px;
-      border-radius: 6px;
+    .slate-location {
+      color: #e5e7eb;
+      font-size: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .status-pill {
@@ -536,7 +557,7 @@
       right: 10px;
       font-size: 11px;
       font-weight: 900;
-      padding: 5px 8px;
+      padding: 6px 10px;
       border-radius: 8px;
     }
 
@@ -545,7 +566,7 @@
     .status-CHANGE { background: #7f1d1d; color: #f87171; border: 1px solid #ef4444; }
 
     .take-body {
-      padding: 14px;
+      padding: 16px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -560,10 +581,10 @@
     }
 
     .dept-tag {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
-      padding: 4px 9px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
       background: var(--bg-800);
       border: 1px solid var(--border-600);
       color: #e5e7eb;
@@ -576,7 +597,7 @@
     }
 
     .take-char {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       color: #fff;
       margin-bottom: 8px;
@@ -586,11 +607,11 @@
     }
 
     .take-notes {
-      font-size: 14px;
+      font-size: 15px;
       color: #d1d5db;
       background: var(--bg-900);
       border: 1px solid var(--border-700);
-      padding: 10px;
+      padding: 12px;
       border-radius: var(--btn-radius);
       margin: 0;
       line-height: 1.5;
@@ -601,23 +622,35 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       border-top: 1px solid var(--border-700);
-      margin-top: 12px;
+      margin-top: 14px;
       padding-top: 12px;
-      font-size: 13px;
     }
 
     .action-link {
+      flex: 1;
+      min-height: 44px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      color: var(--text-muted);
-      padding: 6px 10px;
-      border-radius: 8px;
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 800;
+      padding: 10px 12px;
+      border-radius: var(--btn-radius);
+    }
+
+    .action-link:active {
+      transform: scale(0.96);
     }
 
     .action-link.delete {
       color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
     }
 
     .fab-container {
@@ -631,13 +664,14 @@
       background: linear-gradient(135deg, var(--amber), var(--amber-dark));
       color: #000;
       font-weight: 900;
-      font-size: 14px;
-      padding: 16px 22px;
+      font-size: 16px;
+      padding: 18px 26px;
+      min-height: 58px;
       border-radius: var(--btn-radius);
       box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       letter-spacing: 0.5px;
     }
 
@@ -652,8 +686,8 @@
     }
 
     .empty-icon {
-      width: 70px;
-      height: 70px;
+      width: 72px;
+      height: 72px;
       border-radius: var(--btn-radius);
       background: var(--bg-800);
       border: 1px solid var(--border-700);
@@ -694,7 +728,7 @@
     .modal-header {
       background: var(--bg-800);
       border-bottom: 1px solid var(--border-700);
-      padding: 12px 18px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -702,8 +736,8 @@
     }
 
     .modal-title {
-      font-size: 15px;
-      font-weight: 800;
+      font-size: 16px;
+      font-weight: 900;
       color: #fff;
       margin: 0;
       display: flex;
@@ -724,7 +758,7 @@
 
     .form-label {
       display: block;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
       text-transform: uppercase;
       color: var(--text-muted);
@@ -734,6 +768,7 @@
 
     .form-control {
       width: 100%;
+      min-height: 50px;
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       border-radius: var(--btn-radius);
@@ -778,12 +813,15 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       border-radius: var(--btn-radius);
-      padding: 12px 8px;
+      padding: 14px 8px;
+      min-height: 48px;
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       color: var(--text-muted);
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .status-option input[value="OK"]:checked + .status-box {
@@ -819,8 +857,8 @@
     }
 
     .camera-circle {
-      width: 50px;
-      height: 50px;
+      width: 54px;
+      height: 54px;
       border-radius: var(--btn-radius);
       background: var(--bg-800);
       border: 1px solid var(--border-700);
@@ -850,22 +888,24 @@
 
     .btn-secondary {
       flex: 1;
+      min-height: 52px;
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       color: var(--text-main);
       font-weight: 800;
-      font-size: 14px;
-      padding: 13px;
+      font-size: 15px;
+      padding: 14px;
       border-radius: var(--btn-radius);
     }
 
     .btn-submit {
       flex: 2;
+      min-height: 52px;
       background: var(--amber);
       color: #000;
       font-weight: 900;
-      font-size: 15px;
-      padding: 13px;
+      font-size: 16px;
+      padding: 14px;
       border-radius: var(--btn-radius);
     }
 
@@ -873,29 +913,47 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       border-radius: var(--btn-radius);
-      padding: 12px 14px;
+      padding: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn-delete-small {
+      min-width: 42px;
+      min-height: 42px;
+      border-radius: var(--btn-radius);
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      font-weight: 900;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .toast-bar {
       position: fixed;
-      bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(95px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%);
       background: var(--bg-800);
       color: #fff;
       border: 1px solid var(--amber);
-      padding: 14px 24px;
+      padding: 15px 26px;
       border-radius: var(--btn-radius);
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       z-index: 100;
       box-shadow: 0 10px 30px rgba(0,0,0,0.7);
       pointer-events: none;
       transition: opacity 0.25s, transform 0.25s;
+      text-align: center;
+      max-width: 90%;
     }
   </style>
 </head>
@@ -908,7 +966,7 @@
     <header class="app-header">
       <div class="brand-box">
         <div class="brand-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
         </div>
         <div>
           <h1 class="brand-title">Raccord<span>PRO</span></h1>
@@ -918,7 +976,7 @@
       <div style="display:flex; align-items:center;">
         <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
         <button type="button" id="btn-import-json" class="btn-icon" title="Abrir / Importar Proyecto desde archivo">
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
             <path d="M2 10h20"/>
             <path d="m12 13-3 3 3 3"/>
@@ -935,61 +993,68 @@
 
         <div id="empty-projects" class="empty-box hidden">
           <div class="empty-icon">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
           </div>
-          <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:17px; font-weight:800;">No hay proyectos creados</h3>
-          <p style="margin:0; font-size:14px;">Pulsa el botón <strong>NUEVO PROYECTO</strong> abajo para comenzar.</p>
+          <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:18px; font-weight:800;">No hay proyectos creados</h3>
+          <p style="margin:0; font-size:15px;">Pulsa el botón <strong>NUEVO PROYECTO</strong> abajo para comenzar.</p>
         </div>
       </div>
     </main>
 
     <div class="bottom-bar-center">
       <button type="button" id="btn-new-project" class="btn-new-project-center">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
         <span>NUEVO PROYECTO</span>
       </button>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- VISTA 2: SET Y CONTINUIDAD                 -->
+  <!-- VISTA 2: SET Y CONTINUIDAD POR ESCENAS     -->
   <!-- ========================================== -->
   <div id="view-takes" class="app-view hidden">
     <header class="app-header">
       <div class="brand-box">
         <button type="button" id="btn-back-to-projects" class="btn-icon" title="Volver a proyectos">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
         </button>
-        <div>
-          <h1 id="active-project-title" class="brand-title" style="font-size:16px;">Proyecto</h1>
+        <div style="min-width:0;">
+          <h1 id="active-project-title" class="brand-title" style="font-size:18px;">Proyecto</h1>
         </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span id="badge-total-items" class="badge-count">0 tomas</span>
-        <button type="button" id="btn-project-menu-toggle" class="btn-icon" title="Opciones del Proyecto">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span id="badge-total-items" class="badge-count">0 raccords</span>
+        <button type="button" id="btn-project-menu-toggle" class="btn-icon" title="Menú del Proyecto">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="19" r="1.8"/>
           </svg>
         </button>
       </div>
 
+      <!-- Input oculto para leer PDF del Guion -->
+      <input type="file" id="input-script-pdf" accept=".pdf,application/pdf" class="hidden">
+
+      <!-- MENÚ DESPLEGABLE CON BOTONES GRANDES -->
       <div id="project-dropdown-menu" class="dropdown-menu hidden">
+        <button type="button" class="dropdown-item highlight" id="menu-opt-script-pdf">
+          <span style="font-size:20px;">📖</span> <span>Importar Guion (PDF)</span>
+        </button>
         <button type="button" class="dropdown-item" id="menu-opt-scenes">
-          <span>🎬</span> <span>Crear Escenas</span>
+          <span style="font-size:20px;">🎬</span> <span>Escenas</span>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-characters">
-          <span>👤</span> <span>Crear Personajes</span>
+          <span style="font-size:20px;">👤</span> <span>Personajes</span>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-locations">
-          <span>🏛️</span> <span>Crear Sets / Locaciones</span>
+          <span style="font-size:20px;">🏛️</span> <span>Sets / Locaciones</span>
         </button>
         <div class="dropdown-divider"></div>
         <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
-          <span>📄</span> <span>Exportar Reporte (PDF/Print)</span>
+          <span style="font-size:20px;">📄</span> <span>Exportar Reporte PDF</span>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-export-json">
-          <span>💾</span> <span>Guardar Respaldo JSON</span>
+          <span style="font-size:20px;">💾</span> <span>Guardar Respaldo JSON</span>
         </button>
       </div>
     </header>
@@ -997,10 +1062,10 @@
     <section class="toolbar">
       <div class="search-row">
         <div class="search-box">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="search-input" class="search-input" placeholder="Buscar personaje, escena o nota...">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar escena, set, personaje o nota...">
         </div>
-        <button type="button" id="btn-reset-filters" class="btn-icon" style="font-size:13px; font-weight:700; padding:0 12px;">
+        <button type="button" id="btn-reset-filters" class="btn-icon" style="font-size:14px; font-weight:800; padding:0 16px;">
           Limpiar
         </button>
       </div>
@@ -1020,16 +1085,16 @@
 
       <div id="empty-state" class="empty-box hidden">
         <div class="empty-icon">
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
         </div>
-        <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:17px; font-weight:800;">Sin tomas registradas</h3>
-        <p style="margin:0; font-size:14px;">Pulsa el botón <strong>NUEVO RACCORD</strong> abajo a la derecha para agregar la primera toma.</p>
+        <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:18px; font-weight:800;">Sin continuidades registradas</h3>
+        <p style="margin:0; font-size:15px; line-height:1.4;">Importa tu guion en PDF desde el menú superior (⋮) o pulsa <strong>NUEVO RACCORD</strong> abajo.</p>
       </div>
     </main>
 
     <div class="fab-container">
       <button type="button" id="btn-add-entry" class="fab-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
         <span>NUEVO RACCORD</span>
       </button>
     </div>
@@ -1042,9 +1107,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="project-modal-title" class="modal-title">NUEVO PROYECTO</h2>
-        <button type="button" id="btn-close-project-modal" class="btn-close-touch" title="Cerrar ventana">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
+        <button type="button" id="btn-close-project-modal" class="btn-close-touch" title="Cerrar ventana">✕</button>
       </div>
       <form id="project-form" class="modal-body">
         <input type="hidden" id="proj-id" value="">
@@ -1065,7 +1128,7 @@
 
         <div id="delete-project-container" class="delete-project-box hidden">
           <button type="button" id="btn-delete-project-modal" class="btn-delete-project-full">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
             <span>Eliminar Proyecto</span>
           </button>
         </div>
@@ -1079,16 +1142,18 @@
   <div id="scenes-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">GESTIONAR ESCENAS</h2>
+        <h2 class="modal-title">ESCENAS DEL PROYECTO</h2>
         <button type="button" id="btn-close-scenes-modal" class="btn-close-touch">✕</button>
       </div>
       <div class="modal-body">
-        <form id="scenes-form" style="display:flex; gap:8px; margin-bottom:16px;">
-          <input type="text" id="new-scene-num" placeholder="Ej: 14A" required class="form-control" style="width:110px; text-align:center; font-weight:800; color:var(--amber);">
-          <input type="text" id="new-scene-desc" placeholder="Descripción (Int. Cocina - Día)" class="form-control" style="flex:1;">
-          <button type="submit" class="btn-primary" style="padding:10px 16px;">+ Añadir</button>
+        <form id="scenes-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);">
+            <input type="text" id="new-scene-desc" placeholder="Encabezado (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;">
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;">+ Añadir Escena</button>
         </form>
-        <div id="scenes-list" style="max-height:260px; overflow-y:auto;"></div>
+        <div id="scenes-list" style="max-height:300px; overflow-y:auto;"></div>
       </div>
     </div>
   </div>
@@ -1099,16 +1164,18 @@
   <div id="characters-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">GESTIONAR PERSONAJES</h2>
+        <h2 class="modal-title">PERSONAJES DEL PROYECTO</h2>
         <button type="button" id="btn-close-characters-modal" class="btn-close-touch">✕</button>
       </div>
       <div class="modal-body">
-        <form id="characters-form" style="display:flex; gap:8px; margin-bottom:16px;">
-          <input type="text" id="new-character-name" placeholder="Ej: Valeria (Protagónica)" required class="form-control" style="flex:1;">
-          <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
-          <button type="submit" class="btn-primary" style="padding:10px 16px;">+ Añadir</button>
+        <form id="characters-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="new-character-name" placeholder="Personaje (Ej: Valeria)" required class="form-control" style="flex:1;">
+            <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%;">+ Añadir Personaje</button>
         </form>
-        <div id="characters-list" style="max-height:260px; overflow-y:auto;"></div>
+        <div id="characters-list" style="max-height:300px; overflow-y:auto;"></div>
       </div>
     </div>
   </div>
@@ -1119,47 +1186,42 @@
   <div id="locations-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title">GESTIONAR SETS / LOCACIONES</h2>
+        <h2 class="modal-title">SETS / LOCACIONES</h2>
         <button type="button" id="btn-close-locations-modal" class="btn-close-touch">✕</button>
       </div>
       <div class="modal-body">
-        <form id="locations-form" style="display:flex; gap:8px; margin-bottom:16px;">
-          <input type="text" id="new-location-name" placeholder="Ej: Mansión Vieja - Sala Principal" required class="form-control" style="flex:1;">
-          <button type="submit" class="btn-primary" style="padding:10px 16px;">+ Añadir</button>
+        <form id="locations-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
+          <input type="text" id="new-location-name" placeholder="Ej: COCINA DE VALERIA" required class="form-control">
+          <button type="submit" class="btn-primary" style="width:100%;">+ Añadir Set / Locación</button>
         </form>
-        <div id="locations-list" style="max-height:260px; overflow-y:auto;"></div>
+        <div id="locations-list" style="max-height:300px; overflow-y:auto;"></div>
       </div>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: AGREGAR / EDITAR TOMA               -->
+  <!-- MODAL: AGREGAR / EDITAR RACCORD POR ESCENA -->
   <!-- ========================================== -->
   <div id="entry-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="modal-title" class="modal-title">NUEVO REGISTRO DE CONTINUIDAD</h2>
-        <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar ventana">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
+        <h2 id="modal-title" class="modal-title">NUEVO RACCORD DE ESCENA</h2>
+        <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar ventana">✕</button>
       </div>
 
       <form id="raccord-form" class="modal-body">
         <input type="hidden" id="entry-id" value="">
 
-        <div class="form-group grid-3">
+        <div class="form-group grid-2">
           <div>
             <label class="form-label">Escena *</label>
-            <input type="text" id="input-scene" list="datalist-scenes" required placeholder="42B" class="form-control" style="text-align:center; font-weight:800; color:#f59e0b;">
+            <input type="text" id="input-scene" list="datalist-scenes" required placeholder="Ej: 14" class="form-control" style="font-weight:800; color:#f59e0b;">
             <datalist id="datalist-scenes"></datalist>
           </div>
           <div>
-            <label class="form-label">Plano</label>
-            <input type="text" id="input-shot" placeholder="1 / Master" class="form-control" style="text-align:center;">
-          </div>
-          <div>
-            <label class="form-label">Toma *</label>
-            <input type="number" id="input-take" required min="1" placeholder="1" class="form-control" style="text-align:center; font-weight:800;">
+            <label class="form-label">Set / Locación</label>
+            <input type="text" id="input-location" list="datalist-locations" placeholder="Ej: Cocina de Valeria" class="form-control">
+            <datalist id="datalist-locations"></datalist>
           </div>
         </div>
 
@@ -1206,29 +1268,29 @@
             
             <div id="photo-preview-wrapper" class="hidden">
               <img id="photo-preview" src="" alt="Previsualización" class="preview-img">
-              <button type="button" id="btn-remove-photo" class="btn-secondary" style="padding:8px 14px; font-size:13px; color:#f87171;">
+              <button type="button" id="btn-remove-photo" class="btn-secondary" style="padding:10px 16px; font-size:14px; color:#f87171;">
                 Quitar o Cambiar Foto
               </button>
             </div>
 
             <label for="input-photo" id="photo-placeholder" class="camera-trigger-label">
               <div class="camera-circle">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
               </div>
-              <div style="font-size:15px; font-weight:800; color:#e5e7eb;">Tocar para abrir Cámara o Galería</div>
-              <div style="font-size:12px; color:#9ca3af; margin-top:4px;">Compresión automática para ahorrar memoria</div>
+              <div style="font-size:16px; font-weight:800; color:#e5e7eb;">Tocar para abrir Cámara o Galería</div>
+              <div style="font-size:13px; color:#9ca3af; margin-top:4px;">Compresión automática en el dispositivo</div>
             </label>
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Notas de Continuidad / Raccord *</label>
-          <textarea id="input-notes" required rows="3" placeholder="Ej: Reloj en muñeca izquierda, botón superior desabrochado..." class="form-control" style="font-size:15px; line-height:1.4;"></textarea>
+          <textarea id="input-notes" required rows="3" placeholder="Ej: Reloj en muñeca izquierda, botón superior desabrochado..." class="form-control" style="font-size:16px; line-height:1.4; min-height:90px;"></textarea>
         </div>
 
         <div class="modal-actions">
           <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
-          <button type="submit" class="btn-submit">Guardar Toma</button>
+          <button type="submit" class="btn-submit">Guardar Raccord</button>
         </div>
       </form>
     </div>
@@ -1240,8 +1302,8 @@
   <div id="image-viewer-modal" class="modal-backdrop hidden" style="flex-direction:column; justify-content:space-between; background:rgba(0,0,0,0.96);">
     <div style="width:100%; display:flex; align-items:center; justify-content:space-between;">
       <div>
-        <h3 id="viewer-title" style="margin:0; font-size:16px; color:#f59e0b; font-weight:800;">Escena</h3>
-        <p id="viewer-subtitle" style="margin:3px 0 0 0; font-size:13px; color:#9ca3af;"></p>
+        <h3 id="viewer-title" style="margin:0; font-size:17px; color:#f59e0b; font-weight:800;">Escena</h3>
+        <p id="viewer-subtitle" style="margin:3px 0 0 0; font-size:14px; color:#9ca3af;"></p>
       </div>
       <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar visor">✕</button>
     </div>
@@ -1250,8 +1312,8 @@
       <img id="viewer-img" src="" alt="Continuidad" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:10px;">
     </div>
 
-    <div style="width:100%; background:#13171d; border:1px solid #262d38; padding:14px; border-radius:var(--btn-radius); font-size:14px;">
-      <strong style="color:#f59e0b; display:block; font-size:11px; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Notas Registradas:</strong>
+    <div style="width:100%; background:#13171d; border:1px solid #262d38; padding:16px; border-radius:var(--btn-radius); font-size:15px;">
+      <strong style="color:#f59e0b; display:block; font-size:12px; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Notas Registradas:</strong>
       <div id="viewer-notes" style="color:#e5e7eb; line-height:1.45;"></div>
     </div>
   </div>
@@ -1262,9 +1324,9 @@
   <div id="report-modal" class="modal-backdrop hidden">
     <div class="modal-card" style="max-width:680px;">
       <div class="modal-header">
-        <h2 class="modal-title">Hoja de Continuidad (Resumen)</h2>
+        <h2 class="modal-title">Hoja de Continuidad por Escenas</h2>
         <div style="display:flex; align-items:center; gap:10px;">
-          <button type="button" id="btn-print-report" class="btn-primary" style="padding:8px 14px; font-size:13px;">Imprimir / Guardar PDF</button>
+          <button type="button" id="btn-print-report" class="btn-primary" style="padding:10px 16px; min-height:44px; font-size:14px;">Imprimir / PDF</button>
           <button type="button" id="btn-close-report" class="btn-close-touch">✕</button>
         </div>
       </div>
@@ -1276,12 +1338,12 @@
   <!-- MODAL: CONFIRMACIÓN                        -->
   <!-- ========================================== -->
   <div id="confirm-modal" class="modal-backdrop hidden" style="z-index: 60;">
-    <div class="modal-card" style="max-width:380px;">
+    <div class="modal-card" style="max-width:400px;">
       <div class="modal-header">
         <h2 class="modal-title" style="color:#f87171;">CONFIRMAR ELIMINACIÓN</h2>
       </div>
       <div class="modal-body">
-        <p id="confirm-text" style="margin:0 0 18px 0; font-size:15px; color:#e5e7eb; line-height:1.45;"></p>
+        <p id="confirm-text" style="margin:0 0 18px 0; font-size:16px; color:#e5e7eb; line-height:1.45;"></p>
         <div class="modal-actions">
           <button type="button" id="btn-confirm-cancel" class="btn-secondary">Cancelar</button>
           <button type="button" id="btn-confirm-ok" class="btn-submit" style="background:#ef4444; color:#fff;">Eliminar</button>
@@ -1297,6 +1359,10 @@
   <!-- LÓGICA JAVASCRIPT                          -->
   <!-- ========================================== -->
   <script>
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
     const DB_NAME = 'RaccordProDB';
     const DB_VERSION = 3;
     const STORE_PROJECTS = 'projects';
@@ -1313,6 +1379,7 @@
     let activeFilterDept = 'ALL';
     let searchQuery = '';
     let pendingConfirmAction = null;
+    let cachedScenesForProject = [];
 
     function initDB() {
       return new Promise((resolve) => {
@@ -1549,7 +1616,7 @@
               </p>
             </div>
             <button type="button" class="btn-edit-project" data-action="edit-project" data-id="${proj.id}" title="Editar proyecto">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
             </button>
           </div>
         `;
@@ -1646,7 +1713,7 @@
       const proj = projects.find(p => p.id === id);
       if (!proj) return;
 
-      askConfirmation(`¿Eliminar definitivamente "${proj.name}" y todas sus tomas registradas?`, async () => {
+      askConfirmation(`¿Eliminar definitivamente "${proj.name}" y todos sus registros?`, async () => {
         await deleteProjectFromDB(id);
         projectModal.classList.add('hidden');
         await renderProjects();
@@ -1692,7 +1759,7 @@
         } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
           for (const take of data) await saveTakeToDB(take);
           await renderProjects();
-          showToast('Tomas restauradas con éxito');
+          showToast('Registros restaurados con éxito');
         } else {
           showToast('Formato JSON no compatible');
         }
@@ -1729,7 +1796,190 @@
       }
     });
 
-    /* 1. GESTIÓN DE ESCENAS */
+    /* ==========================================================================
+       OPCIÓN 1 DEL MENÚ: IMPORTAR GUION EN PDF (ESCENAS + SETS + PERSONAJES)
+       ========================================================================== */
+    const inputScriptPdf = document.getElementById('input-script-pdf');
+    document.getElementById('menu-opt-script-pdf').addEventListener('click', () => {
+      closeProjectMenu();
+      inputScriptPdf.value = '';
+      inputScriptPdf.click();
+    });
+
+    inputScriptPdf.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!window.pdfjsLib) {
+        showToast('El lector PDF requiere conexión la primera vez');
+        return;
+      }
+
+      showToast('Analizando guion PDF...');
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+        const existingScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+        const existingLocations = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
+        const existingCharacters = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+
+        const knownSceneNums = new Set(existingScenes.map(s => String(s.sceneNum).toUpperCase()));
+        const knownLocNames = new Set(existingLocations.map(l => String(l.name).toUpperCase()));
+        const knownCharNames = new Set(existingCharacters.map(c => String(c.name).toUpperCase()));
+
+        let autoSceneCounter = existingScenes.length + 1;
+        let addedScenesCount = 0;
+        let addedLocationsCount = 0;
+        let addedCharactersCount = 0;
+
+        // Regex 1: Encabezados de escena (INT. / EXT. / I/E.)
+        const slugRegex = /^(?:(?:ESC(?:ENA)?\.?\s*)?(\d+[A-Z]?)\s*[-.º°]?\s*)?(INT\.?\s*\/\s*EXT\.?|EXT\.?\s*\/\s*INT\.?|I\s*\/\s*E\.?|INT\.|EXT\.|INTERIOR|EXTERIOR)\s+(.+)$/i;
+
+        // Palabras clave de transición o formato de guion que NO son personajes
+        const nonCharacterKeywords = new Set([
+          'CORTE A', 'FADE IN', 'FADE OUT', 'DISSOLVE TO', 'DISOLVENCIA A', 'FUNDIDO A',
+          'FUNDIDO A NEGRO', 'CONTINÚA', 'CONTINUA', 'CONT', 'FIN', 'THE END', 'FLASHBACK',
+          'FIN DEL FLASHBACK', 'INSERT', 'INSERTO', 'INTERCUT', 'TÍTULO', 'TITULO',
+          'SUPER', 'SOBREIMPRESO', 'VOZ EN OFF', 'MONTAJE', 'FIN DE MONTAJE', 'POV', 'PUNTO DE VISTA'
+        ]);
+
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const viewport = page.getViewport({ scale: 1.0 });
+          const pageWidth = viewport.width;
+          const textContent = await page.getTextContent();
+
+          // Agrupar fragmentos por coordenada Y para reconstruir cada línea
+          const rows = [];
+          for (const item of textContent.items) {
+            const text = item.str;
+            if (!text || !text.trim()) continue;
+            const y = Math.round(item.transform[5]);
+            let row = rows.find(r => Math.abs(r.y - y) <= 4);
+            if (!row) {
+              row = { y, items: [] };
+              rows.push(row);
+            }
+            row.items.push({ x: item.transform[4], str: text });
+          }
+
+          // Ordenar líneas de arriba hacia abajo
+          rows.sort((a, b) => b.y - a.y);
+
+          for (let rIdx = 0; rIdx < rows.length; rIdx++) {
+            const row = rows[rIdx];
+            row.items.sort((a, b) => a.x - b.x);
+            const firstX = row.items[0].x;
+            const line = row.items.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
+
+            if (!line) continue;
+
+            // A) DETECCIÓN DE ESCENAS Y SETS
+            const slugMatch = line.match(slugRegex);
+            if (slugMatch) {
+              let rawSceneNum = slugMatch[1] ? slugMatch[1].trim() : '';
+              const intExt = slugMatch[2].toUpperCase().replace(/\s+/g, '');
+              let restOfLine = slugMatch[3].trim();
+
+              const trailingNumMatch = restOfLine.match(/\s+(\d+[A-Z]?)$/);
+              if (trailingNumMatch) {
+                if (!rawSceneNum) rawSceneNum = trailingNumMatch[1];
+                restOfLine = restOfLine.replace(/\s+\d+[A-Z]?$/, '').trim();
+              }
+
+              const sceneNum = rawSceneNum || String(autoSceneCounter++);
+
+              let setName = restOfLine;
+              const parts = restOfLine.split(/\s+[-–—]\s+|\s*[-–—]\s*(?:D[IÍ]A|NOCHE|TARDE|MA[ÑN]ANA|AMANECER|ATARDECER|CONTINUO|MOMENTOS DESPU[EÉ]S)/i);
+              if (parts && parts[0]) {
+                setName = parts[0].replace(/[-–—.]+$/, '').trim();
+              }
+
+              const fullDesc = `${intExt} ${restOfLine}`;
+
+              if (!knownSceneNums.has(sceneNum.toUpperCase())) {
+                knownSceneNums.add(sceneNum.toUpperCase());
+                await saveEntityToDB(STORE_SCENES, {
+                  id: 'sc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                  projectId: activeProjectId,
+                  sceneNum: sceneNum,
+                  desc: fullDesc,
+                  location: setName
+                });
+                addedScenesCount++;
+              }
+
+              if (setName && setName.length >= 2 && !knownLocNames.has(setName.toUpperCase())) {
+                knownLocNames.add(setName.toUpperCase());
+                await saveEntityToDB(STORE_LOCATIONS, {
+                  id: 'loc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                  projectId: activeProjectId,
+                  name: setName
+                });
+                addedLocationsCount++;
+              }
+              continue;
+            }
+
+            // B) DETECCIÓN DE PERSONAJES (Bloques en MAYÚSCULAS centrados antes de un diálogo)
+            // En guion estándar, el nombre de personaje suele tener sangría > 25% del ancho de página
+            const isIndented = firstX > (pageWidth * 0.26) && firstX < (pageWidth * 0.72);
+            const hasNextLine = (rIdx + 1) < rows.length;
+
+            if (isIndented && hasNextLine) {
+              // Limpiar acotaciones entre paréntesis como (V.O.), (O.S.), (OFF), (CONT'D)
+              const cleanCandidate = line
+                .replace(/\s*\([^)]*\)/g, '')
+                .replace(/[:.]+$/, '')
+                .trim();
+
+              // Verificar que esté en MAYÚSCULAS, tenga letras reales, no tenga números de página ni símbolos raros
+              const isAllCaps = cleanCandidate === cleanCandidate.toUpperCase() && /[A-ZÁÉÍÓÚÑ]{2,}/.test(cleanCandidate);
+              const validLength = cleanCandidate.length >= 2 && cleanCandidate.length <= 32;
+              const noNumbersOrPunct = !/[0-9!?¿¡;]/.test(cleanCandidate);
+
+              if (isAllCaps && validLength && noNumbersOrPunct && !nonCharacterKeywords.has(cleanCandidate)) {
+                // Comprobar que la línea siguiente no sea otro encabezado de escena ni otra línea en mayúsculas
+                const nextLineText = rows[rIdx + 1].items.map(i => i.str).join(' ').trim();
+                const nextIsNotSlug = !slugRegex.test(nextLineText);
+                const nextIsDialogue = nextLineText.length > 0 && nextLineText !== nextLineText.toUpperCase();
+
+                if (nextIsNotSlug && nextIsDialogue && !knownCharNames.has(cleanCandidate)) {
+                  knownCharNames.add(cleanCandidate);
+                  // Formatear a Tipo Título (ej: "VALERIA" -> "Valeria")
+                  const formattedName = cleanCandidate
+                    .toLowerCase()
+                    .replace(/\b\w/g, l => l.toUpperCase());
+
+                  await saveEntityToDB(STORE_CHARACTERS, {
+                    id: 'char_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                    projectId: activeProjectId,
+                    name: formattedName,
+                    actor: ''
+                  });
+                  addedCharactersCount++;
+                }
+              }
+            }
+          }
+        }
+
+        await updateDatalists();
+
+        if (addedScenesCount > 0 || addedLocationsCount > 0 || addedCharactersCount > 0) {
+          showToast(`Guion leído: +${addedScenesCount} escenas, +${addedLocationsCount} sets y +${addedCharactersCount} personajes`);
+        } else {
+          showToast('No se detectaron elementos nuevos en el PDF');
+        }
+      } catch (err) {
+        console.error('Error procesando PDF:', err);
+        showToast('Error al leer el archivo PDF');
+      }
+    });
+
+    /* 2. GESTIÓN DE ESCENAS */
     const scenesModal = document.getElementById('scenes-modal');
     document.getElementById('menu-opt-scenes').addEventListener('click', () => {
       closeProjectMenu();
@@ -1746,16 +1996,16 @@
       const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
       const container = document.getElementById('scenes-list');
       if (scenes.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No hay escenas precargadas aún.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay escenas cargadas aún.</p>';
         return;
       }
       container.innerHTML = scenes.map(s => `
         <div class="manager-item">
-          <div>
-            <strong style="color:var(--amber); font-size:15px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
-            <span style="color:#d1d5db; font-size:13px;">${escapeHtml(s.desc || '')}</span>
+          <div style="min-width:0;">
+            <strong style="color:var(--amber); font-size:16px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
+            <span style="color:#d1d5db; font-size:14px;">${escapeHtml(s.desc || '')}</span>
           </div>
-          <button type="button" onclick="deleteSceneItem('${s.id}')" style="color:#f87171; font-weight:bold; padding:4px 8px;">✕</button>
+          <button type="button" class="btn-delete-small" onclick="deleteSceneItem('${s.id}')">✕</button>
         </div>
       `).join('');
     }
@@ -1787,7 +2037,7 @@
       showToast('Escena eliminada');
     };
 
-    /* 2. GESTIÓN DE PERSONAJES */
+    /* 3. GESTIÓN DE PERSONAJES */
     const charactersModal = document.getElementById('characters-modal');
     document.getElementById('menu-opt-characters').addEventListener('click', () => {
       closeProjectMenu();
@@ -1804,16 +2054,16 @@
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       const container = document.getElementById('characters-list');
       if (chars.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No hay personajes precargados aún.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay personajes cargados aún.</p>';
         return;
       }
       container.innerHTML = chars.map(c => `
         <div class="manager-item">
           <div>
-            <strong style="color:#fff; font-size:14px; margin-right:8px;">🎭 ${escapeHtml(c.name)}</strong>
-            ${c.actor ? `<span style="color:var(--text-muted); font-size:12px;">(${escapeHtml(c.actor)})</span>` : ''}
+            <strong style="color:#fff; font-size:15px; margin-right:8px;">🎭 ${escapeHtml(c.name)}</strong>
+            ${c.actor ? `<span style="color:var(--text-muted); font-size:13px;">(${escapeHtml(c.actor)})</span>` : ''}
           </div>
-          <button type="button" onclick="deleteCharacterItem('${c.id}')" style="color:#f87171; font-weight:bold; padding:4px 8px;">✕</button>
+          <button type="button" class="btn-delete-small" onclick="deleteCharacterItem('${c.id}')">✕</button>
         </div>
       `).join('');
     }
@@ -1845,7 +2095,7 @@
       showToast('Personaje eliminado');
     };
 
-    /* 3. GESTIÓN DE SETS / LOCACIONES */
+    /* 4. GESTIÓN DE SETS / LOCACIONES */
     const locationsModal = document.getElementById('locations-modal');
     document.getElementById('menu-opt-locations').addEventListener('click', () => {
       closeProjectMenu();
@@ -1862,15 +2112,15 @@
       const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
       const container = document.getElementById('locations-list');
       if (locs.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px;">No hay sets o locaciones registradas.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">No hay sets o locaciones registradas.</p>';
         return;
       }
       container.innerHTML = locs.map(l => `
         <div class="manager-item">
           <div>
-            <strong style="color:var(--amber); font-size:14px;">🏛️ ${escapeHtml(l.name)}</strong>
+            <strong style="color:var(--amber); font-size:15px;">🏛️ ${escapeHtml(l.name)}</strong>
           </div>
-          <button type="button" onclick="deleteLocationItem('${l.id}')" style="color:#f87171; font-weight:bold; padding:4px 8px;">✕</button>
+          <button type="button" class="btn-delete-small" onclick="deleteLocationItem('${l.id}')">✕</button>
         </div>
       `).join('');
     }
@@ -1888,45 +2138,58 @@
 
       document.getElementById('new-location-name').value = '';
       await renderLocationsList();
+      await updateDatalists();
       showToast(`Set "${name}" añadido`);
     });
 
     window.deleteLocationItem = async function(id) {
       await deleteEntityFromDB(STORE_LOCATIONS, id);
       await renderLocationsList();
+      await updateDatalists();
       showToast('Set eliminado');
     };
 
     async function updateDatalists() {
-      const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
+      cachedScenesForProject = await getEntitiesForProject(STORE_SCENES, activeProjectId);
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      const locs = await getEntitiesForProject(STORE_LOCATIONS, activeProjectId);
 
-      document.getElementById('datalist-scenes').innerHTML = scenes.map(s => `<option value="${escapeHtml(s.sceneNum)}">${escapeHtml(s.desc || '')}</option>`).join('');
+      document.getElementById('datalist-scenes').innerHTML = cachedScenesForProject.map(s => `<option value="${escapeHtml(s.sceneNum)}">${escapeHtml(s.desc || '')}</option>`).join('');
       document.getElementById('datalist-characters').innerHTML = chars.map(c => `<option value="${escapeHtml(c.name)}">${c.actor ? escapeHtml(c.actor) : ''}</option>`).join('');
+      document.getElementById('datalist-locations').innerHTML = locs.map(l => `<option value="${escapeHtml(l.name)}"></option>`).join('');
     }
 
-    /* 4. EXPORTAR PDF / IMPRIMIR */
+    document.getElementById('input-scene').addEventListener('input', (e) => {
+      const val = e.target.value.trim().toUpperCase();
+      const matchedScene = cachedScenesForProject.find(s => String(s.sceneNum).toUpperCase() === val);
+      const locInput = document.getElementById('input-location');
+      if (matchedScene && matchedScene.location && !locInput.value.trim()) {
+        locInput.value = matchedScene.location;
+      }
+    });
+
+    /* 5. EXPORTAR REPORTE PDF / IMPRIMIR */
     const reportModal = document.getElementById('report-modal');
     document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
       closeProjectMenu();
       const all = await getAllTakesForProject(activeProjectId);
       if (all.length === 0) {
-        showToast('Aún no hay tomas para exportar');
+        showToast('Aún no hay registros para exportar');
         return;
       }
-      all.sort((a, b) => a.scene.localeCompare(b.scene) || (a.take - b.take));
+      all.sort((a, b) => String(a.scene).localeCompare(String(b.scene), undefined, { numeric: true }));
 
       document.getElementById('report-content').innerHTML = `
         <div style="border-bottom:1px solid #262d38; padding-bottom:12px; margin-bottom:14px;">
           <h3 style="margin:0; color:#f59e0b; font-size:18px; font-weight:800;">INFORME DE CONTINUIDAD — ${escapeHtml(activeProjectData ? activeProjectData.name : '')}</h3>
-          <p style="margin:4px 0 0 0; font-size:12px; color:#9ca3af;">Fecha: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+          <p style="margin:4px 0 0 0; font-size:13px; color:#9ca3af;">Fecha: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
         </div>
         ${all.map(t => `
           <div style="display:flex; gap:12px; background:#0d0f12; border:1px solid #262d38; padding:12px; border-radius:10px; margin-bottom:10px; page-break-inside:avoid;">
             ${t.photo ? `<img src="${t.photo}" style="width:84px; height:84px; object-fit:cover; border-radius:8px;">` : ''}
-            <div style="flex:1; font-size:13px;">
-              <strong style="color:#f59e0b; font-size:14px;">ESC ${escapeHtml(t.scene)} / TOMA ${escapeHtml(t.take)} (${escapeHtml(t.dept)})</strong>
-              ${t.character ? `<div style="margin-top:2px; font-weight:700;">🎭 ${escapeHtml(t.character)}</div>` : ''}
+            <div style="flex:1; font-size:14px;">
+              <strong style="color:#f59e0b; font-size:15px;">ESCENA ${escapeHtml(t.scene)} ${t.location ? '— ' + escapeHtml(t.location) : ''} (${escapeHtml(t.dept)})</strong>
+              ${t.character ? `<div style="margin-top:3px; font-weight:700;">🎭 ${escapeHtml(t.character)}</div>` : ''}
               <p style="margin:6px 0 0 0; color:#d1d5db; line-height:1.4;">${escapeHtml(t.notes)}</p>
             </div>
           </div>
@@ -1938,7 +2201,7 @@
     document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
     document.getElementById('btn-print-report').addEventListener('click', () => window.print());
 
-    /* 5. GUARDAR RESPALDO JSON */
+    /* 6. GUARDAR RESPALDO JSON */
     document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
       closeProjectMenu();
       const allTakes = await getAllTakesForProject(activeProjectId);
@@ -1967,7 +2230,7 @@
     });
 
     /* ==========================================================================
-       RENDERIZADO DE TOMAS EN SET
+       RENDERIZADO DE RACCORDS POR ESCENA
        ========================================================================== */
     const recordsGrid = document.getElementById('records-grid');
     const emptyState = document.getElementById('empty-state');
@@ -1989,14 +2252,14 @@
         const matchesDept = (activeFilterDept === 'ALL') || (item.dept === activeFilterDept);
         const q = searchQuery.toLowerCase().trim();
         const matchesSearch = !q || 
-          item.scene.toLowerCase().includes(q) ||
-          (item.shot && item.shot.toLowerCase().includes(q)) ||
+          String(item.scene || '').toLowerCase().includes(q) ||
+          (item.location && item.location.toLowerCase().includes(q)) ||
           (item.character && item.character.toLowerCase().includes(q)) ||
-          item.notes.toLowerCase().includes(q);
+          String(item.notes || '').toLowerCase().includes(q);
         return matchesDept && matchesSearch;
       });
 
-      badgeTotalItems.textContent = `${filtered.length} ${filtered.length === 1 ? 'toma' : 'tomas'}`;
+      badgeTotalItems.textContent = `${filtered.length} ${filtered.length === 1 ? 'raccord' : 'raccords'}`;
 
       if (filtered.length === 0) {
         recordsGrid.innerHTML = '';
@@ -2016,8 +2279,7 @@
               }
               <div class="slate-pill">
                 <span class="slate-scene">ESC ${escapeHtml(take.scene)}</span>
-                ${take.shot ? `<span class="slate-shot">PL ${escapeHtml(take.shot)}</span>` : ''}
-                <span class="slate-take">T${escapeHtml(take.take)}</span>
+                ${take.location ? `<span class="slate-location">• ${escapeHtml(take.location)}</span>` : ''}
               </div>
               <span class="status-pill status-${take.status}">${statusLabel}</span>
             </div>
@@ -2054,14 +2316,14 @@
         askConfirmation('¿Seguro que deseas eliminar este registro de continuidad?', async () => {
           await deleteTakeFromDB(id);
           await renderTakes();
-          showToast('Toma eliminada');
+          showToast('Registro eliminado');
         });
       } else if (action === 'view-photo') {
         openImageViewer(id);
       }
     });
 
-    /* FORMULARIO DE TOMA / RACCORD */
+    /* FORMULARIO DE RACCORD POR ESCENA */
     const entryModal = document.getElementById('entry-modal');
     const form = document.getElementById('raccord-form');
     const photoInput = document.getElementById('input-photo');
@@ -2124,7 +2386,7 @@
     });
 
     document.getElementById('btn-add-entry').addEventListener('click', () => {
-      document.getElementById('modal-title').textContent = 'NUEVO REGISTRO DE CONTINUIDAD';
+      document.getElementById('modal-title').textContent = 'NUEVO RACCORD DE ESCENA';
       form.reset();
       document.getElementById('entry-id').value = '';
       currentPhotoBase64 = null;
@@ -2140,8 +2402,7 @@
       e.preventDefault();
       const id = document.getElementById('entry-id').value || 'take_' + Date.now();
       const scene = document.getElementById('input-scene').value.trim();
-      const shot = document.getElementById('input-shot').value.trim();
-      const takeNumber = document.getElementById('input-take').value.trim();
+      const location = document.getElementById('input-location').value.trim();
       const dept = document.getElementById('input-dept').value;
       const character = document.getElementById('input-character').value.trim();
       const statusEl = document.querySelector('input[name="status"]:checked');
@@ -2152,8 +2413,7 @@
         id,
         projectId: activeProjectId,
         scene,
-        shot,
-        take: takeNumber,
+        location,
         dept,
         character,
         status,
@@ -2164,7 +2424,7 @@
 
       entryModal.classList.add('hidden');
       await renderTakes();
-      showToast(`Escena ${scene} - Toma ${takeNumber} guardada`);
+      showToast(`Continuidad de Escena ${scene} guardada`);
     });
 
     async function openEditTake(id) {
@@ -2172,11 +2432,10 @@
       const target = all.find(item => item.id === id);
       if (!target) return;
 
-      document.getElementById('modal-title').textContent = 'EDITAR REGISTRO DE CONTINUIDAD';
+      document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
       document.getElementById('entry-id').value = target.id;
       document.getElementById('input-scene').value = target.scene;
-      document.getElementById('input-shot').value = target.shot || '';
-      document.getElementById('input-take').value = target.take;
+      document.getElementById('input-location').value = target.location || '';
       document.getElementById('input-dept').value = target.dept;
       document.getElementById('input-character').value = target.character || '';
       document.getElementById('input-notes').value = target.notes;
@@ -2205,7 +2464,7 @@
       if (!item || !item.photo) return;
 
       document.getElementById('viewer-img').src = item.photo;
-      document.getElementById('viewer-title').textContent = `ESC ${item.scene} | TOMA ${item.take} — ${item.dept}`;
+      document.getElementById('viewer-title').textContent = `ESCENA ${item.scene} ${item.location ? '• ' + item.location : ''} — ${item.dept}`;
       document.getElementById('viewer-subtitle').textContent = item.character ? `Personaje: ${item.character}` : '';
       document.getElementById('viewer-notes').textContent = item.notes;
       imageViewerModal.classList.remove('hidden');
@@ -2240,14 +2499,13 @@
       t.textContent = msg;
       t.classList.remove('hidden');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => t.classList.add('hidden'), 2400);
+      toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
     }
 
     /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
     if ('serviceWorker' in navigator) {
       let refreshing = false;
 
-      // Recarga automática al detectar nuevo Service Worker activo
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (!refreshing) {
           refreshing = true;
@@ -2257,7 +2515,6 @@
 
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((registration) => {
-          // Chequear inmediatamente si hay versión nueva en el servidor
           registration.update();
         }).catch((err) => console.warn('SW error:', err));
       });
