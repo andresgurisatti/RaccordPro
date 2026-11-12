@@ -1,8 +1,10 @@
-const CACHE_NAME = 'raccordpro-v39';
+const CACHE_NAME = 'raccordpro-v41';
 const LOCAL_ASSETS = [
   './',
   './index.html',
-  './manifest.json',
+  './manifest.json'
+];
+const CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
@@ -11,7 +13,10 @@ const LOCAL_ASSETS = [
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(LOCAL_ASSETS))
+    caches.open(CACHE_NAME).then(async (cache) => {
+      await cache.addAll(LOCAL_ASSETS);
+      await Promise.allSettled(CDN_ASSETS.map((url) => cache.add(url)));
+    })
   );
 });
 
