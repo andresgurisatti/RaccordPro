@@ -402,7 +402,7 @@
       background: var(--bg-850);
       border: 1px solid var(--border-600);
       border-radius: 16px;
-      width: 300px;
+      width: 325px;
       padding: 8px;
       box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
       z-index: 50;
@@ -412,9 +412,9 @@
     }
 
     .dropdown-item {
-      padding: 16px 18px;
-      min-height: 54px;
-      font-size: 16px;
+      padding: 14px 16px;
+      min-height: 52px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--text-main);
       background: var(--bg-800);
@@ -422,7 +422,7 @@
       border-radius: var(--btn-radius);
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       text-align: left;
       transition: background 0.15s, transform 0.1s;
     }
@@ -438,9 +438,32 @@
       color: var(--amber);
     }
 
+    .dropdown-item.sub-option {
+      padding: 11px 16px;
+      min-height: 44px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(26, 31, 38, 0.6);
+    }
+
     .dropdown-item:active {
       transform: scale(0.97);
       background: rgba(245, 158, 11, 0.25);
+      color: var(--amber);
+    }
+
+    .dropdown-hint-box {
+      background: rgba(245, 158, 11, 0.07);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 11.5px;
+      line-height: 1.4;
+      color: var(--text-muted);
+    }
+
+    .dropdown-hint-box strong {
       color: var(--amber);
     }
 
@@ -589,7 +612,25 @@
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+    }
+
+    .actor-avatar-mini {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      flex-shrink: 0;
+    }
+
+    .actor-avatar-list {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      flex-shrink: 0;
     }
 
     .raccord-photo-chip {
@@ -759,6 +800,22 @@
       background: rgba(245, 158, 11, 0.16);
     }
 
+    .btn-actor-photo-pick {
+      flex: 1;
+      min-height: 48px;
+      background: var(--bg-800);
+      border: 1px dashed rgba(245, 158, 11, 0.45);
+      border-radius: var(--btn-radius);
+      padding: 10px 14px;
+      color: var(--amber);
+      font-size: 14px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
     .photo-note-item {
       background: var(--bg-900);
       border: 1px solid var(--border-700);
@@ -803,7 +860,7 @@
       margin-bottom: 16px;
     }
 
-    .viewer-photo-block img {
+    .viewer-photo-block img.main-photo {
       width: 100%;
       max-height: 440px;
       object-fit: contain;
@@ -846,7 +903,7 @@
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       border-radius: var(--btn-radius);
-      padding: 14px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -966,7 +1023,6 @@
         </div>
       </div>
 
-      <!-- ICONO DE IMPORTAR JSON (Recuadro abierto a la derecha con flecha entrando de derecha a izquierda) -->
       <div style="display:flex; align-items:center;">
         <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
         <button type="button" id="btn-import-json" class="btn-icon" title="Importar Proyecto desde JSON">
@@ -1051,8 +1107,19 @@
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          <span>Guardar Respaldo JSON</span>
+          <div style="min-width:0; flex:1;">
+            <div>Guardar Respaldo JSON</div>
+            <div id="backup-folder-status" style="font-size:11px; font-weight:600; color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Carpeta: Sin asignar (se pedirá)</div>
+          </div>
         </button>
+        <button type="button" class="dropdown-item sub-option hidden" id="menu-opt-change-json-folder">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+          <span>Cambiar carpeta de respaldo</span>
+        </button>
+        <!-- AVISO DE NAVEGADOR RECOMENDADO EN MAC/APPLE -->
+        <div class="dropdown-hint-box">
+          <strong>Nota Mac / Apple:</strong> Usa preferiblemente <strong>Chrome o Edge</strong>. Safari bloquea el acceso continuo a carpetas locales por políticas de seguridad de Apple, por lo que pedirá confirmar la ruta en cada guardado.
+        </div>
       </div>
     </header>
 
@@ -1117,7 +1184,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: CREAR / EDITAR PROYECTO (SOLO PRODUCTORA) -->
+  <!-- MODAL: CREAR / EDITAR PROYECTO             -->
   <!-- ========================================== -->
   <div id="project-modal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1183,7 +1250,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: GESTIÓN Y EDICIÓN DE PERSONAJES     -->
+  <!-- MODAL: GESTIÓN DE PERSONAJES (CON FOTO OPCIONAL DE ACTOR) -->
   <!-- ========================================== -->
   <div id="characters-modal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1196,16 +1263,35 @@
       <div class="modal-body">
         <form id="characters-form" style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
           <input type="hidden" id="edit-character-id" value="">
+          <input type="file" id="input-actor-photo" accept="image/*" class="hidden">
+
           <div style="display:flex; gap:10px;">
             <input type="text" id="new-character-name" placeholder="Personaje (Ej: Valeria)" required class="form-control" style="flex:1;">
             <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;">
           </div>
+
+          <!-- FOTO DEL ACTOR OPCIONAL -->
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div id="actor-photo-preview-box" class="hidden" style="display:flex; align-items:center; gap:10px; background:var(--bg-800); border:1px solid var(--border-700); padding:6px 10px; border-radius:var(--btn-radius); flex:1;">
+              <img id="actor-photo-preview-img" src="" alt="Actor" style="width:42px; height:42px; border-radius:8px; object-fit:cover;">
+              <span style="font-size:13px; font-weight:700; color:#e5e7eb; flex:1;">Foto del actor cargada</span>
+              <button type="button" id="btn-remove-actor-photo" class="btn-action-small delete" title="Quitar foto" style="min-width:36px; min-height:36px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+
+            <button type="button" id="btn-trigger-actor-photo" class="btn-actor-photo-pick">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              <span>Foto del Actor (Opcional)</span>
+            </button>
+          </div>
+
           <div style="display:flex; gap:8px;">
             <button type="submit" id="btn-save-character" class="btn-primary" style="flex:1;">+ Añadir Personaje</button>
             <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="characters-list" style="max-height:300px; overflow-y:auto;"></div>
+        <div id="characters-list" style="max-height:280px; overflow-y:auto;"></div>
       </div>
     </div>
   </div>
@@ -1355,26 +1441,27 @@
     const ICON_PHOTO_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`;
 
     const DB_NAME = 'RaccordProDB';
-    const DB_VERSION = 4;
+    const DB_VERSION = 5;
     const STORE_PROJECTS = 'projects';
     const STORE_TAKES = 'takes';
     const STORE_SCENES = 'scenes';
     const STORE_CHARACTERS = 'characters';
+    const STORE_DIR_HANDLES = 'dir_handles';
 
-    const REQUIRED_STORES = [STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS];
+    const REQUIRED_STORES = [STORE_PROJECTS, STORE_TAKES, STORE_SCENES, STORE_CHARACTERS, STORE_DIR_HANDLES];
 
     let dbInstance = null;
     let useFallbackStorage = false;
     let activeProjectId = null;
     let activeProjectData = null;
     let currentPhotoItems = [];
+    let currentActorPhotoBase64 = null;
     let searchQuery = '';
     let pendingConfirmAction = null;
     let cachedScenesForProject = [];
     let cachedCharactersForProject = [];
     let activeViewerTakeId = null;
 
-    // Función de ordenamiento numérico exacto para escenas (ej: 3 < 53 < 116, 14A < 14B)
     function compareSceneNumbers(a, b) {
       const strA = String(a || '').trim();
       const strB = String(b || '').trim();
@@ -1417,6 +1504,9 @@
             const c = db.createObjectStore(STORE_CHARACTERS, { keyPath: 'id' });
             c.createIndex('projectId', 'projectId', { unique: false });
           }
+          if (!db.objectStoreNames.contains(STORE_DIR_HANDLES)) {
+            db.createObjectStore(STORE_DIR_HANDLES, { keyPath: 'id' });
+          }
         };
 
         request.onblocked = () => reject(new Error('DB_BLOCKED'));
@@ -1448,6 +1538,63 @@
         }
       } catch (err) {
         useFallbackStorage = true;
+      }
+    }
+
+    function saveDirectoryHandleToDB(projId, dirHandle) {
+      if (!dbInstance || !dbInstance.objectStoreNames.contains(STORE_DIR_HANDLES)) {
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        try {
+          const tx = dbInstance.transaction([STORE_DIR_HANDLES], 'readwrite');
+          tx.objectStore(STORE_DIR_HANDLES).put({
+            id: 'dir_' + projId,
+            handle: dirHandle,
+            folderName: dirHandle.name
+          });
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => resolve();
+        } catch (e) {
+          resolve();
+        }
+      });
+    }
+
+    function getDirectoryHandleFromDB(projId) {
+      if (!dbInstance || !dbInstance.objectStoreNames.contains(STORE_DIR_HANDLES)) {
+        return Promise.resolve(null);
+      }
+      return new Promise((resolve) => {
+        try {
+          const tx = dbInstance.transaction([STORE_DIR_HANDLES], 'readonly');
+          const req = tx.objectStore(STORE_DIR_HANDLES).get('dir_' + projId);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        } catch (e) {
+          resolve(null);
+        }
+      });
+    }
+
+    async function refreshBackupFolderLabel() {
+      const statusEl = document.getElementById('backup-folder-status');
+      const changeBtn = document.getElementById('menu-opt-change-json-folder');
+      if (!activeProjectId) return;
+
+      if (!('showDirectoryPicker' in window)) {
+        statusEl.textContent = 'Se abrirá selector al guardar';
+        changeBtn.classList.add('hidden');
+        return;
+      }
+
+      const savedRecord = await getDirectoryHandleFromDB(activeProjectId);
+      if (savedRecord && savedRecord.folderName) {
+        statusEl.textContent = `Carpeta: 📁 ${savedRecord.folderName}`;
+        changeBtn.classList.remove('hidden');
+      } else {
+        statusEl.textContent = 'Carpeta: Sin asignar (se pedirá 1 vez)';
+        changeBtn.classList.add('hidden');
       }
     }
 
@@ -1584,6 +1731,9 @@
           const tx = dbInstance.transaction(validStores, 'readwrite');
           if (dbInstance.objectStoreNames.contains(STORE_PROJECTS)) {
             tx.objectStore(STORE_PROJECTS).delete(projId);
+          }
+          if (dbInstance.objectStoreNames.contains(STORE_DIR_HANDLES)) {
+            tx.objectStore(STORE_DIR_HANDLES).delete('dir_' + projId);
           }
 
           [STORE_TAKES, STORE_SCENES, STORE_CHARACTERS].forEach(sName => {
@@ -1741,6 +1891,7 @@
       document.getElementById('search-input').value = '';
 
       await updateCatalogCaches();
+      await refreshBackupFolderLabel();
       renderTakes();
     }
 
@@ -2089,7 +2240,8 @@
                     id: 'char_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
                     projectId: activeProjectId,
                     name: formattedName,
-                    actor: ''
+                    actor: '',
+                    photo: null
                   });
                   addedCharactersCount++;
                 }
@@ -2206,13 +2358,17 @@
     };
 
     /* ==========================================================================
-       GESTIÓN Y EDICIÓN DE PERSONAJES
+       GESTIÓN Y EDICIÓN DE PERSONAJES (CON FOTO OPCIONAL DEL ACTOR)
        ========================================================================== */
     const charactersModal = document.getElementById('characters-modal');
     const charactersForm = document.getElementById('characters-form');
     const editCharacterId = document.getElementById('edit-character-id');
     const btnSaveCharacter = document.getElementById('btn-save-character');
     const btnCancelEditCharacter = document.getElementById('btn-cancel-edit-character');
+    const inputActorPhoto = document.getElementById('input-actor-photo');
+    const actorPhotoPreviewBox = document.getElementById('actor-photo-preview-box');
+    const actorPhotoPreviewImg = document.getElementById('actor-photo-preview-img');
+    const btnTriggerActorPhoto = document.getElementById('btn-trigger-actor-photo');
 
     document.getElementById('menu-opt-characters').addEventListener('click', () => {
       closeProjectMenu();
@@ -2221,13 +2377,49 @@
     });
     document.getElementById('btn-close-characters-modal').addEventListener('click', () => charactersModal.classList.add('hidden'));
 
+    function setActorPhotoPreview(base64) {
+      currentActorPhotoBase64 = base64;
+      if (base64) {
+        actorPhotoPreviewImg.src = base64;
+        actorPhotoPreviewBox.classList.remove('hidden');
+        btnTriggerActorPhoto.classList.add('hidden');
+      } else {
+        actorPhotoPreviewImg.src = '';
+        actorPhotoPreviewBox.classList.add('hidden');
+        btnTriggerActorPhoto.classList.remove('hidden');
+      }
+    }
+
     function resetCharacterForm() {
       editCharacterId.value = '';
       document.getElementById('new-character-name').value = '';
       document.getElementById('new-actor-name').value = '';
+      inputActorPhoto.value = '';
+      setActorPhotoPreview(null);
       btnSaveCharacter.textContent = '+ Añadir Personaje';
       btnCancelEditCharacter.classList.add('hidden');
     }
+
+    btnTriggerActorPhoto.addEventListener('click', () => {
+      inputActorPhoto.value = '';
+      inputActorPhoto.click();
+    });
+
+    inputActorPhoto.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      showToast('Procesando foto del actor...');
+      try {
+        const compressed = await compressImageFile(file, 600, 600, 0.8);
+        setActorPhotoPreview(compressed);
+      } catch (err) {
+        showToast('Error al cargar foto del actor');
+      }
+    });
+
+    document.getElementById('btn-remove-actor-photo').addEventListener('click', () => {
+      setActorPhotoPreview(null);
+    });
 
     btnCancelEditCharacter.addEventListener('click', resetCharacterForm);
 
@@ -2247,9 +2439,15 @@
       }
       container.innerHTML = chars.map(c => `
         <div class="manager-item">
-          <div style="min-width:0; flex:1;">
-            <strong style="color:#fff; font-size:15px; margin-right:8px;">${escapeHtml(c.name)}</strong>
-            ${c.actor ? `<span style="color:var(--text-muted); font-size:13px;">(${escapeHtml(c.actor)})</span>` : ''}
+          <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+            ${c.photo 
+              ? `<img src="${c.photo}" alt="${escapeHtml(c.name)}" class="actor-avatar-list">` 
+              : `<div style="width:42px; height:42px; border-radius:10px; background:var(--bg-850); border:1px solid var(--border-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;">${ICON_USER_SVG}</div>`
+            }
+            <div style="min-width:0; flex:1;">
+              <strong style="color:#fff; font-size:15px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.name)}</strong>
+              ${c.actor ? `<span style="color:var(--text-muted); font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.actor)}</span>` : ''}
+            </div>
           </div>
           <div style="display:flex; gap:6px;">
             <button type="button" class="btn-action-small edit" onclick="startEditCharacter('${c.id}')" title="Editar">${ICON_EDIT_SVG}</button>
@@ -2271,12 +2469,14 @@
         id: existingId || ('char_' + Date.now()),
         projectId: activeProjectId,
         name,
-        actor
+        actor,
+        photo: currentActorPhotoBase64 || null
       });
 
       resetCharacterForm();
       await renderCharactersList();
       await updateCatalogCaches();
+      await renderTakes();
       showToast(existingId ? `Personaje "${name}" actualizado` : `Personaje "${name}" añadido`);
     });
 
@@ -2288,6 +2488,7 @@
       editCharacterId.value = target.id;
       document.getElementById('new-character-name').value = target.name;
       document.getElementById('new-actor-name').value = target.actor || '';
+      setActorPhotoPreview(target.photo || null);
       btnSaveCharacter.textContent = 'Guardar Cambios';
       btnCancelEditCharacter.classList.remove('hidden');
       document.getElementById('new-character-name').focus();
@@ -2297,6 +2498,7 @@
       await deleteEntityFromDB(STORE_CHARACTERS, id);
       await renderCharactersList();
       await updateCatalogCaches();
+      await renderTakes();
       showToast('Personaje eliminado');
     };
 
@@ -2323,8 +2525,16 @@
         }).join('');
     }
 
+    function getCharacterAvatarHtml(charName, isMini = true) {
+      const found = cachedCharactersForProject.find(c => c.name === charName);
+      if (found && found.photo) {
+        return `<img src="${found.photo}" alt="${escapeHtml(charName)}" class="${isMini ? 'actor-avatar-mini' : 'actor-avatar-list'}">`;
+      }
+      return ICON_USER_SVG;
+    }
+
     /* ==========================================================================
-       EXPORTAR REPORTE PDF PROFESIONAL (LOGO EXACTO DE LA APP + PIE DE PÁGINA)
+       EXPORTAR REPORTE PDF PROFESIONAL (LOGO 30% MÁS PEQUEÑO + PIE DE PÁGINA)
        ========================================================================== */
     const reportModal = document.getElementById('report-modal');
     const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
@@ -2340,7 +2550,6 @@
         return;
       }
 
-      // Ordenar numéricamente las escenas
       cachedTakesForPdf.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
       pdfScenesChecklist.innerHTML = cachedTakesForPdf.map(t => {
@@ -2379,7 +2588,6 @@
       });
     }
 
-    // Convierte el SVG exacto de la claqueta de la app a PNG de alta resolución para incrustarlo en el PDF
     function getExactAppClapperboardPng() {
       return new Promise((resolve) => {
         const svgMarkup = `
@@ -2413,17 +2621,17 @@
       });
     }
 
-    // Dibuja el logo idéntico de RaccordPRO más compacto arriba a la derecha
+    // Logo RaccordPRO 30% más pequeño (font 7.4pt e icono 4.3mm)
     function drawExactRaccordProLogo(doc, clapperPng, rightX, topY) {
       const textRaccord = 'Raccord';
       const textPro = 'PRO';
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10.5);
+      doc.setFontSize(7.4);
 
       const wRaccord = doc.getTextWidth(textRaccord);
       const wPro = doc.getTextWidth(textPro);
-      const iconSize = 6.2;
-      const gap = 2.0;
+      const iconSize = 4.3;
+      const gap = 1.4;
       const totalWidth = iconSize + gap + wRaccord + wPro;
       const startX = rightX - totalWidth;
 
@@ -2431,7 +2639,7 @@
         doc.addImage(clapperPng, 'PNG', startX, topY, iconSize, iconSize);
       }
 
-      const textY = topY + 4.4;
+      const textY = topY + 3.1;
       doc.setTextColor(255, 255, 255);
       doc.text(textRaccord, startX + iconSize + gap, textY);
 
@@ -2490,27 +2698,23 @@
         const contentWidth = pageWidth - (margin * 2);
         let y = 16;
 
-        // Encabezado compacto
         doc.setFillColor(19, 23, 29);
         doc.rect(0, 0, pageWidth, 32, 'F');
 
-        // Logo idéntico de RaccordPRO más pequeño arriba a la derecha
-        drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 7.5);
+        // Logo idéntico 30% más pequeño arriba a la derecha
+        drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 8.2);
 
-        // Título más pequeño y estilizado
         doc.setTextColor(245, 158, 11);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(13.5);
         doc.text(i18n.reportTitle, margin, 12.5);
 
-        // Nombre del Proyecto
         const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
         const prodName = activeProjectData ? (activeProjectData.producer || activeProjectData.director || '') : '';
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10.5);
         doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 19.5);
 
-        // Productora y fecha
         doc.setTextColor(180, 185, 195);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8.5);
@@ -2525,7 +2729,6 @@
             y = 16;
           }
 
-          // Banda de Escena
           doc.setFillColor(242, 244, 247);
           doc.setDrawColor(210, 215, 222);
           doc.roundedRect(margin, y, contentWidth, 14, 2, 2, 'FD');
@@ -2623,7 +2826,6 @@
           y += 6;
         }
 
-        // PIE DE PÁGINA EN TODAS LAS PÁGINAS: Nombre del proyecto a la izquierda y número de página a la derecha
         const totalPages = doc.internal.getNumberOfPages();
         for (let pageIdx = 1; pageIdx <= totalPages; pageIdx++) {
           doc.setPage(pageIdx);
@@ -2673,10 +2875,9 @@
     });
 
     /* ==========================================================================
-       GUARDAR RESPALDO JSON CON SELECTOR DE CARPETA / DIRECTORIO
+       GUARDADO AUTOMÁTICO DE RESPALDO JSON EN CARPETA MEMORIZADA
        ========================================================================== */
-    document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
-      closeProjectMenu();
+    async function buildBackupJsonPayload() {
       const allTakes = await getAllTakesForProject(activeProjectId);
       const allScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
       const allChars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
@@ -2695,8 +2896,62 @@
         .replace(/[^A-Z0-9]+/g, '_')
         .replace(/^_+|_+$/g, '');
       const fileName = `RACCORD_${safeName}_${new Date().toISOString().slice(0,10)}.json`;
-      const blob = new Blob([jsonString], { type: 'application/json' });
+      return { jsonString, fileName };
+    }
 
+    async function writeJsonToDirectoryHandle(dirHandle, fileName, jsonString) {
+      let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
+      if (perm !== 'granted') {
+        perm = await dirHandle.requestPermission({ mode: 'readwrite' });
+      }
+      if (perm !== 'granted') {
+        throw new Error('PERMISSION_DENIED');
+      }
+
+      const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(jsonString);
+      await writable.close();
+    }
+
+    async function promptAndSaveDirectoryHandle() {
+      const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+      await saveDirectoryHandleToDB(activeProjectId, dirHandle);
+      await refreshBackupFolderLabel();
+      return dirHandle;
+    }
+
+    document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
+      closeProjectMenu();
+      const { jsonString, fileName } = await buildBackupJsonPayload();
+
+      if ('showDirectoryPicker' in window) {
+        try {
+          const savedRecord = await getDirectoryHandleFromDB(activeProjectId);
+          let dirHandle = savedRecord ? savedRecord.handle : null;
+
+          if (!dirHandle) {
+            dirHandle = await promptAndSaveDirectoryHandle();
+          }
+
+          try {
+            await writeJsonToDirectoryHandle(dirHandle, fileName, jsonString);
+            showToast(`Respaldo guardado en 📁 ${dirHandle.name}`);
+            return;
+          } catch (writeErr) {
+            if (writeErr.name === 'AbortError') return;
+            dirHandle = await promptAndSaveDirectoryHandle();
+            await writeJsonToDirectoryHandle(dirHandle, fileName, jsonString);
+            showToast(`Respaldo guardado en 📁 ${dirHandle.name}`);
+            return;
+          }
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+          console.warn('Fallback en guardado JSON:', err);
+        }
+      }
+
+      const blob = new Blob([jsonString], { type: 'application/json' });
       await saveFileToUserDirectory(
         blob,
         fileName,
@@ -2704,6 +2959,21 @@
         'Respaldo RaccordPro (JSON)',
         '.json'
       );
+    });
+
+    document.getElementById('menu-opt-change-json-folder').addEventListener('click', async () => {
+      closeProjectMenu();
+      if (!('showDirectoryPicker' in window)) return;
+
+      try {
+        const dirHandle = await promptAndSaveDirectoryHandle();
+        const { jsonString, fileName } = await buildBackupJsonPayload();
+        await writeJsonToDirectoryHandle(dirHandle, fileName, jsonString);
+        showToast(`Nueva carpeta asignada y guardada: 📁 ${dirHandle.name}`);
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        showToast('No se pudo asignar la carpeta');
+      }
     });
 
     /* ==========================================================================
@@ -2724,7 +2994,6 @@
       if (!activeProjectId) return;
       const takes = await getAllTakesForProject(activeProjectId);
 
-      // Ordenar numéricamente de menor a mayor por número de escena (3, 53, 116...)
       takes.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
       const filtered = takes.filter(item => {
@@ -2773,7 +3042,7 @@
               <div class="raccord-char-row">
                 <div class="raccord-char-top">
                   <div class="raccord-char-name">
-                    ${ICON_USER_SVG}
+                    ${getCharacterAvatarHtml(charName, true)}
                     <span>${escapeHtml(charName)}</span>
                   </div>
                   <span class="raccord-photo-chip">
@@ -2790,7 +3059,7 @@
             <div class="raccord-char-row">
               <div class="raccord-char-top">
                 <div class="raccord-char-name">
-                  ${ICON_USER_SVG}
+                  ${getCharacterAvatarHtml(take.character, true)}
                   <span>${escapeHtml(take.character)}</span>
                 </div>
                 <span class="raccord-photo-chip">Sin fotos</span>
@@ -3068,13 +3337,13 @@
         htmlContent += photos.map((p, idx) => `
           <div class="viewer-photo-block">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
-              <div style="display:flex; align-items:center; gap:6px; font-weight:800; font-size:15px; color:#fff;">
-                ${ICON_USER_SVG}
+              <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; color:#fff;">
+                ${getCharacterAvatarHtml(p.character, true)}
                 <span>${escapeHtml(p.character || 'Sin personaje')}</span>
               </div>
               <span class="photo-note-badge">FOTO #${idx + 1}</span>
             </div>
-            <img src="${p.photo}" alt="Foto ${idx + 1}">
+            <img src="${p.photo}" alt="Foto ${idx + 1}" class="main-photo">
             ${p.note ? `<div style="color:#e5e7eb; font-size:15px; line-height:1.45; background:var(--bg-850); padding:10px 12px; border-radius:10px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : ''}
           </div>
         `).join('');
