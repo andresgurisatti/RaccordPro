@@ -550,7 +550,6 @@
       margin-bottom: 12px;
     }
 
-    /* COLUMNA DERECHA DE CABECERA: BOTONES + HORA DEBAJO */
     .raccord-header-right-col {
       display: flex;
       flex-direction: column;
@@ -789,14 +788,14 @@
       background: rgba(245, 158, 11, 0.08);
       border: 2px dashed rgba(245, 158, 11, 0.45);
       border-radius: var(--btn-radius);
-      padding: 18px 16px;
-      min-height: 76px;
+      padding: 16px;
+      min-height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       color: var(--amber);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       cursor: pointer;
       transition: transform 0.1s, background 0.15s;
@@ -823,21 +822,88 @@
       gap: 8px;
     }
 
-    .photo-note-item {
+    /* TARJETAS COMPACTAS DE ENTRADA DENTRO DEL MODAL DE RACCORD */
+    .subentry-compact-card {
       background: var(--bg-900);
       border: 1px solid var(--border-700);
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 14px;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 12px;
     }
 
-    .photo-note-header {
+    .subentry-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border-700);
+      flex-shrink: 0;
+    }
+
+    .subentry-no-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .subentry-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .subentry-char-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subentry-note-snippet {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.35;
+    }
+
+    .subentry-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .subentry-preview-box {
+      position: relative;
+      background: var(--bg-900);
+      border: 1px solid var(--border-700);
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .subentry-preview-box img {
+      max-height: 220px;
+      max-width: 100%;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto 10px auto;
     }
 
     .photo-note-badge {
@@ -848,15 +914,6 @@
       border: 1px solid rgba(245, 158, 11, 0.3);
       padding: 5px 10px;
       border-radius: 8px;
-    }
-
-    .photo-note-img {
-      width: 100%;
-      max-height: 240px;
-      object-fit: cover;
-      border-radius: var(--btn-radius);
-      border: 1px solid var(--border-700);
-      display: block;
     }
 
     .viewer-photo-block {
@@ -1314,7 +1371,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: REGISTRO DE RACCORD                 -->
+  <!-- MODAL PRINCIPAL: REGISTRO DE RACCORD       -->
   <!-- ========================================== -->
   <div id="entry-modal" class="modal-backdrop hidden">
     <div class="modal-card">
@@ -1336,14 +1393,15 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Fotos de Continuidad por Personaje</label>
-          <input type="file" id="input-gallery-file" accept="image/*" multiple class="hidden">
+          <label class="form-label">Entradas de Continuidad por Personaje</label>
 
-          <button type="button" id="btn-trigger-gallery" class="btn-photo-single">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-            <span>+ Cargar Fotos de Fototeca</span>
+          <!-- Botón para abrir la sub-ventana dedicada -->
+          <button type="button" id="btn-open-subentry-modal" class="btn-photo-single">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            <span>Añadir Entrada (Personaje / Foto / Nota)</span>
           </button>
 
+          <!-- Tarjetas compactas generadas por cada entrada -->
           <div id="photos-entries-list"></div>
         </div>
 
@@ -1355,6 +1413,58 @@
         <div class="modal-actions">
           <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
           <button type="submit" class="btn-submit">Guardar Raccord</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SUB-VENTANA DEDICADA (#subentry-modal)     -->
+  <!-- ========================================== -->
+  <div id="subentry-modal" class="modal-backdrop hidden" style="z-index: 60;">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <h2 id="subentry-modal-title" class="modal-title" style="color:var(--amber);">NUEVA ENTRADA DE RACCORD</h2>
+        <button type="button" id="btn-close-subentry-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <form id="subentry-form" class="modal-body">
+        <input type="hidden" id="subentry-id" value="">
+        <input type="file" id="input-subentry-photo" accept="image/*" class="hidden">
+
+        <div class="form-group">
+          <label class="form-label">Personaje *</label>
+          <select id="subentry-character" required class="form-control">
+            <option value="">Selecciona un personaje...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Foto de Continuidad</label>
+
+          <button type="button" id="btn-trigger-subentry-photo" class="btn-photo-single">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <span>Seleccionar Foto de Fototeca</span>
+          </button>
+
+          <div id="subentry-photo-preview-box" class="subentry-preview-box hidden">
+            <img id="subentry-photo-preview-img" src="" alt="Previsualización">
+            <button type="button" id="btn-remove-subentry-photo" class="btn-secondary" style="width:100%; min-height:44px; padding:10px; font-size:14px; color:#f87171;">
+              Quitar o Cambiar Foto
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nota de Continuidad</label>
+          <textarea id="subentry-note" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, estado..." class="form-control" style="font-size:15px; line-height:1.4; min-height:86px;"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="btn-cancel-subentry" class="btn-secondary">Cancelar</button>
+          <button type="submit" id="btn-save-subentry" class="btn-submit">Guardar Entrada</button>
         </div>
       </form>
     </div>
@@ -1472,6 +1582,7 @@
     let activeProjectId = null;
     let activeProjectData = null;
     let currentPhotoItems = [];
+    let currentSubentryPhotoBase64 = null;
     let currentActorPhotoBase64 = null;
     let searchQuery = '';
     let pendingConfirmAction = null;
@@ -1705,7 +1816,6 @@
       });
     }
 
-    // Borrar todos los registros de una entidad pertenecientes al proyecto activo
     function deleteAllEntitiesForProject(storeName, projId) {
       setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.projectId !== projId));
 
@@ -1811,7 +1921,7 @@
       if (Array.isArray(take.photos) && take.photos.length > 0) {
         return take.photos.map(p => ({
           id: p.id || ('ph_' + Math.random().toString(36).slice(2, 7)),
-          photo: p.photo,
+          photo: p.photo || null,
           character: p.character || take.character || '',
           note: p.note || ''
         }));
@@ -2304,7 +2414,7 @@
     });
 
     /* ==========================================================================
-       GESTIÓN Y EDICIÓN DE ESCENAS (CON CONFIRMACIÓN NOMBRADA Y ELIMINAR TODO)
+       GESTIÓN Y EDICIÓN DE ESCENAS
        ========================================================================== */
     const scenesModal = document.getElementById('scenes-modal');
     const scenesForm = document.getElementById('scenes-form');
@@ -2421,7 +2531,7 @@
     });
 
     /* ==========================================================================
-       GESTIÓN DE PERSONAJES (CON CONFIRMACIÓN NOMBRADA Y ELIMINAR TODO)
+       GESTIÓN DE PERSONAJES
        ========================================================================== */
     const charactersModal = document.getElementById('characters-modal');
     const charactersForm = document.getElementById('characters-form');
@@ -2639,7 +2749,7 @@
       cachedTakesForPdf.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
       pdfScenesChecklist.innerHTML = cachedTakesForPdf.map(t => {
-        const photosCount = getNormalizedPhotos(t).length;
+        const photosCount = getNormalizedPhotos(t).filter(p => p.photo).length;
         return `
           <label class="pdf-scene-check-item">
             <input type="checkbox" class="pdf-scene-checkbox" value="${t.id}" checked>
@@ -2758,7 +2868,7 @@
         sceneLabel: isEN ? 'SCENE' : 'ESCENA',
         timeLabel: isEN ? 'Logged' : 'Hora registro',
         generalNotesLabel: isEN ? 'General notes' : 'Notas generales',
-        photoLabel: isEN ? 'PHOTO' : 'FOTO',
+        entryLabel: isEN ? 'ENTRY' : 'ENTRADA',
         noCharLabel: isEN ? 'Unassigned character' : 'Sin personaje',
         pageWord: isEN ? 'Page' : 'Página',
         ofWord: isEN ? 'of' : 'de'
@@ -2850,19 +2960,25 @@
             y += (noteLines.length * 4.8) + 4;
           }
 
-          const photos = getNormalizedPhotos(take);
+          const entries = getNormalizedPhotos(take);
 
-          for (let i = 0; i < photos.length; i++) {
-            const p = photos[i];
-            const dims = await getImageDimensions(p.photo);
-            const maxImgW = 88;
-            const maxImgH = 70;
-            const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
-            const drawW = dims.width * ratio;
-            const drawH = dims.height * ratio;
+          for (let i = 0; i < entries.length; i++) {
+            const p = entries[i];
+            const hasPhoto = Boolean(p.photo);
+            let drawW = 0;
+            let drawH = 0;
 
-            const textColX = margin + maxImgW + 6;
-            const textColW = contentWidth - maxImgW - 8;
+            if (hasPhoto) {
+              const dims = await getImageDimensions(p.photo);
+              const maxImgW = 88;
+              const maxImgH = 70;
+              const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
+              drawW = dims.width * ratio;
+              drawH = dims.height * ratio;
+            }
+
+            const textColX = hasPhoto ? (margin + 88 + 6) : (margin + 4);
+            const textColW = hasPhoto ? (contentWidth - 88 - 8) : (contentWidth - 8);
 
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9.5);
@@ -2870,7 +2986,7 @@
             const pNoteLines = hasNote ? doc.splitTextToSize(p.note.trim(), textColW) : [];
 
             const textContentHeight = hasNote ? (pNoteLines.length * 4.8) + 18 : 18;
-            const blockHeight = Math.max(drawH + 6, textContentHeight);
+            const blockHeight = hasPhoto ? Math.max(drawH + 6, textContentHeight) : textContentHeight;
 
             if (y + blockHeight > bottomSafeY) {
               doc.addPage();
@@ -2881,16 +2997,18 @@
             doc.setFillColor(255, 255, 255);
             doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, 'FD');
 
-            try {
-              doc.addImage(p.photo, 'JPEG', margin + 3, y + 3, drawW, drawH);
-            } catch (imgErr) {
-              console.warn('Error insertando imagen en PDF:', imgErr);
+            if (hasPhoto) {
+              try {
+                doc.addImage(p.photo, 'JPEG', margin + 3, y + 3, drawW, drawH);
+              } catch (imgErr) {
+                console.warn('Error insertando imagen en PDF:', imgErr);
+              }
             }
 
             doc.setTextColor(180, 95, 6);
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(9);
-            doc.text(`${i18n.photoLabel} #${i + 1}`, textColX, y + 7.5);
+            doc.text(`${i18n.entryLabel} #${i + 1}`, textColX, y + 7.5);
 
             doc.setTextColor(17, 24, 39);
             doc.setFont('helvetica', 'bold');
@@ -3105,16 +3223,16 @@
 
       emptyState.classList.add('hidden');
       recordsGrid.innerHTML = filtered.map(take => {
-        const photos = getNormalizedPhotos(take);
+        const entries = getNormalizedPhotos(take);
 
         const charGroupsMap = new Map();
-        photos.forEach(p => {
+        entries.forEach(p => {
           const cName = p.character || 'Sin personaje asignado';
           if (!charGroupsMap.has(cName)) {
             charGroupsMap.set(cName, { count: 0, notes: [] });
           }
           const grp = charGroupsMap.get(cName);
-          grp.count++;
+          if (p.photo) grp.count++;
           if (p.note && p.note.trim()) grp.notes.push(p.note.trim());
         });
 
@@ -3146,7 +3264,7 @@
                   ${getCharacterAvatarHtml(take.character, true)}
                   <span>${escapeHtml(take.character)}</span>
                 </div>
-                <span class="raccord-photo-chip">Sin fotos</span>
+                <span class="raccord-photo-chip">0 fotos</span>
               </div>
             </div>
           `;
@@ -3214,12 +3332,22 @@
     });
 
     /* ==========================================================================
-       MANEJO DE MÚLTIPLES FOTOS ANCLADAS A PERSONAJES EN FORMULARIO
+       MANEJO DE ENTRADAS DE RACCORD CON SUB-VENTANA DEDICADA (#subentry-modal)
        ========================================================================== */
     const entryModal = document.getElementById('entry-modal');
     const form = document.getElementById('raccord-form');
-    const galleryInput = document.getElementById('input-gallery-file');
     const photosEntriesList = document.getElementById('photos-entries-list');
+
+    const subentryModal = document.getElementById('subentry-modal');
+    const subentryForm = document.getElementById('subentry-form');
+    const subentryModalTitle = document.getElementById('subentry-modal-title');
+    const subentryIdInput = document.getElementById('subentry-id');
+    const subentryCharacterSelect = document.getElementById('subentry-character');
+    const subentryNoteTextarea = document.getElementById('subentry-note');
+    const inputSubentryPhoto = document.getElementById('input-subentry-photo');
+    const btnTriggerSubentryPhoto = document.getElementById('btn-trigger-subentry-photo');
+    const subentryPhotoPreviewBox = document.getElementById('subentry-photo-preview-box');
+    const subentryPhotoPreviewImg = document.getElementById('subentry-photo-preview-img');
 
     function compressImageFile(file, maxWidth = 1400, maxHeight = 1400, quality = 0.82) {
       return new Promise((resolve, reject) => {
@@ -3253,43 +3381,77 @@
       });
     }
 
+    function setSubentryPhotoUI(base64) {
+      currentSubentryPhotoBase64 = base64 || null;
+      if (currentSubentryPhotoBase64) {
+        subentryPhotoPreviewImg.src = currentSubentryPhotoBase64;
+        subentryPhotoPreviewBox.classList.remove('hidden');
+        btnTriggerSubentryPhoto.classList.add('hidden');
+      } else {
+        subentryPhotoPreviewImg.src = '';
+        subentryPhotoPreviewBox.classList.add('hidden');
+        btnTriggerSubentryPhoto.classList.remove('hidden');
+      }
+    }
+
+    // Renderizar las tarjetas compactas dentro del modal de Nuevo/Editar Raccord
     function renderFormPhotoItems() {
       if (currentPhotoItems.length === 0) {
         photosEntriesList.innerHTML = '';
         return;
       }
 
-      photosEntriesList.innerHTML = currentPhotoItems.map((item, idx) => `
-        <div class="photo-note-item">
-          <div class="photo-note-header">
-            <span class="photo-note-badge">FOTO #${idx + 1}</span>
-            <button type="button" class="btn-action-small delete" onclick="removeFormPhotoItem('${item.id}')" title="Quitar esta foto">
-              ${ICON_DELETE_SVG}
-            </button>
+      photosEntriesList.innerHTML = currentPhotoItems.map((item) => {
+        const thumbHtml = item.photo
+          ? `<img src="${item.photo}" alt="${escapeHtml(item.character)}" class="subentry-thumb">`
+          : `<div class="subentry-no-thumb">${getCharacterAvatarHtml(item.character, true)}</div>`;
+
+        return `
+          <div class="subentry-compact-card">
+            ${thumbHtml}
+            <div class="subentry-info">
+              <div class="subentry-char-title">${escapeHtml(item.character || 'Sin personaje')}</div>
+              <p class="subentry-note-snippet">${escapeHtml(item.note || (item.photo ? 'Con foto adjunta (sin nota)' : 'Sin nota adicional'))}</p>
+            </div>
+            <div class="subentry-actions">
+              <button type="button" class="btn-action-small edit" onclick="openEditSubentryModal('${item.id}')" title="Editar entrada">
+                ${ICON_EDIT_SVG}
+              </button>
+              <button type="button" class="btn-action-small delete" onclick="removeFormPhotoItem('${item.id}')" title="Eliminar entrada">
+                ${ICON_DELETE_SVG}
+              </button>
+            </div>
           </div>
-          <img src="${item.photo}" alt="Foto ${idx + 1}" class="photo-note-img">
-          <div>
-            <label class="form-label" style="font-size:12px;">Personaje de esta foto *</label>
-            <select required class="form-control" style="min-height:48px; font-size:15px;" onchange="updateFormPhotoCharacter('${item.id}', this.value)">
-              ${buildCharacterSelectOptions(item.character)}
-            </select>
-          </div>
-          <div>
-            <label class="form-label" style="font-size:12px;">Notas de esta foto</label>
-            <textarea rows="2" class="form-control" style="font-size:15px; min-height:74px;" placeholder="Detalles de vestuario, peinado, accesorios..." oninput="updateFormPhotoNote('${item.id}', this.value)">${escapeHtml(item.note)}</textarea>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    window.updateFormPhotoCharacter = function(photoId, charVal) {
-      const target = currentPhotoItems.find(p => p.id === photoId);
-      if (target) target.character = charVal;
-    };
+    // Abrir sub-ventana dedicada para NUEVA entrada
+    document.getElementById('btn-open-subentry-modal').addEventListener('click', () => {
+      if (cachedCharactersForProject.length === 0) {
+        showToast('Primero crea personajes en la llave inglesa');
+      }
+      subentryModalTitle.textContent = 'NUEVA ENTRADA DE RACCORD';
+      subentryIdInput.value = '';
+      subentryCharacterSelect.innerHTML = buildCharacterSelectOptions('');
+      subentryNoteTextarea.value = '';
+      inputSubentryPhoto.value = '';
+      setSubentryPhotoUI(null);
+      subentryModal.classList.remove('hidden');
+    });
 
-    window.updateFormPhotoNote = function(photoId, text) {
-      const target = currentPhotoItems.find(p => p.id === photoId);
-      if (target) target.note = text;
+    // Abrir sub-ventana dedicada para EDITAR una entrada existente
+    window.openEditSubentryModal = function(entryId) {
+      const target = currentPhotoItems.find(p => p.id === entryId);
+      if (!target) return;
+
+      subentryModalTitle.textContent = 'EDITAR ENTRADA DE RACCORD';
+      subentryIdInput.value = target.id;
+      subentryCharacterSelect.innerHTML = buildCharacterSelectOptions(target.character);
+      subentryNoteTextarea.value = target.note || '';
+      inputSubentryPhoto.value = '';
+      setSubentryPhotoUI(target.photo || null);
+      subentryModal.classList.remove('hidden');
     };
 
     window.removeFormPhotoItem = function(photoId) {
@@ -3297,33 +3459,63 @@
       renderFormPhotoItems();
     };
 
-    document.getElementById('btn-trigger-gallery').addEventListener('click', () => {
-      galleryInput.value = '';
-      galleryInput.click();
+    document.getElementById('btn-close-subentry-modal').addEventListener('click', () => subentryModal.classList.add('hidden'));
+    document.getElementById('btn-cancel-subentry').addEventListener('click', () => subentryModal.classList.add('hidden'));
+
+    btnTriggerSubentryPhoto.addEventListener('click', () => {
+      inputSubentryPhoto.value = '';
+      inputSubentryPhoto.click();
     });
 
-    galleryInput.addEventListener('change', async (e) => {
-      const files = Array.from(e.target.files || []);
-      if (files.length === 0) return;
+    inputSubentryPhoto.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      showToast('Procesando foto...');
+      try {
+        const base64 = await compressImageFile(file);
+        setSubentryPhotoUI(base64);
+      } catch (err) {
+        showToast('Error al cargar la foto');
+      }
+    });
 
-      showToast(`Procesando ${files.length} ${files.length === 1 ? 'foto' : 'fotos'}...`);
+    document.getElementById('btn-remove-subentry-photo').addEventListener('click', () => {
+      inputSubentryPhoto.value = '';
+      setSubentryPhotoUI(null);
+    });
 
-      const lastSelectedChar = currentPhotoItems.length > 0 ? currentPhotoItems[currentPhotoItems.length - 1].character : '';
+    // Guardar entrada desde la sub-ventana hacia la lista del raccord
+    subentryForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const charVal = subentryCharacterSelect.value.trim();
+      const noteVal = subentryNoteTextarea.value.trim();
+      const existingSubId = subentryIdInput.value;
 
-      for (const file of files) {
-        try {
-          const base64 = await compressImageFile(file);
-          currentPhotoItems.push({
-            id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-            photo: base64,
-            character: lastSelectedChar,
-            note: ''
-          });
-        } catch (err) {
-          console.warn('Error procesando una imagen:', err);
-        }
+      if (!charVal) {
+        showToast('Selecciona un personaje');
+        return;
       }
 
+      if (existingSubId) {
+        const idx = currentPhotoItems.findIndex(p => p.id === existingSubId);
+        if (idx !== -1) {
+          currentPhotoItems[idx] = {
+            ...currentPhotoItems[idx],
+            character: charVal,
+            photo: currentSubentryPhotoBase64,
+            note: noteVal
+          };
+        }
+      } else {
+        currentPhotoItems.push({
+          id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          character: charVal,
+          photo: currentSubentryPhotoBase64,
+          note: noteVal
+        });
+      }
+
+      subentryModal.classList.add('hidden');
       renderFormPhotoItems();
     });
 
@@ -3357,15 +3549,8 @@
         return;
       }
 
-      const missingCharPhoto = currentPhotoItems.find(p => !p.character || !p.character.trim());
-      if (missingCharPhoto) {
-        showToast('Selecciona el personaje para cada foto agregada');
-        return;
-      }
-
       const uniqueChars = Array.from(new Set(currentPhotoItems.map(p => p.character).filter(Boolean)));
 
-      // Actualiza timestamp tanto al crear como al editar
       await saveTakeToDB({
         id,
         projectId: activeProjectId,
@@ -3415,7 +3600,7 @@
       document.getElementById('viewer-title').textContent = `ESCENA ${item.scene}`;
       document.getElementById('viewer-subtitle').textContent = item.sceneDesc || '';
 
-      const photos = getNormalizedPhotos(item);
+      const entries = getNormalizedPhotos(item);
       let htmlContent = '';
 
       if (item.notes) {
@@ -3427,22 +3612,22 @@
         `;
       }
 
-      if (photos.length > 0) {
-        htmlContent += photos.map((p, idx) => `
+      if (entries.length > 0) {
+        htmlContent += entries.map((p, idx) => `
           <div class="viewer-photo-block">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
               <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; color:#fff;">
                 ${getCharacterAvatarHtml(p.character, true)}
                 <span>${escapeHtml(p.character || 'Sin personaje')}</span>
               </div>
-              <span class="photo-note-badge">FOTO #${idx + 1}</span>
+              <span class="photo-note-badge">ENTRADA #${idx + 1}</span>
             </div>
-            <img src="${p.photo}" alt="Foto ${idx + 1}" class="main-photo">
+            ${p.photo ? `<img src="${p.photo}" alt="Entrada ${idx + 1}" class="main-photo">` : ''}
             ${p.note ? `<div style="color:#e5e7eb; font-size:15px; line-height:1.45; background:var(--bg-850); padding:10px 12px; border-radius:10px; border:1px solid var(--border-700); white-space:pre-wrap;">${escapeHtml(p.note)}</div>` : ''}
           </div>
         `).join('');
       } else {
-        htmlContent += `<p style="color:var(--text-muted); text-align:center; padding:24px 0;">Este raccord no tiene fotografías adjuntas.</p>`;
+        htmlContent += `<p style="color:var(--text-muted); text-align:center; padding:24px 0;">Este raccord no tiene entradas de personajes registradas.</p>`;
       }
 
       document.getElementById('viewer-body').innerHTML = htmlContent;
