@@ -152,7 +152,7 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 16px 20px;
-      padding-bottom: calc(135px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); /* Aumentado por los botones dobles inferiores */
     }
 
     .container-narrow {
@@ -371,13 +371,23 @@
       padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       background: linear-gradient(180deg, rgba(13, 15, 18, 0) 0%, rgba(13, 15, 18, 0.95) 30%, #0d0f12 100%);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
       z-index: 25;
       pointer-events: none;
     }
 
-    .btn-bottom-action-center {
+    .bottom-bar-center-inner {
       pointer-events: auto;
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-bottom-action-center {
       background: linear-gradient(135deg, var(--amber), var(--amber-dark));
       color: #000;
       font-weight: 900;
@@ -389,15 +399,20 @@
       box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
       width: 100%;
-      max-width: 440px;
-      justify-content: center;
       transition: transform 0.1s;
     }
 
     .btn-bottom-action-center:active {
       transform: scale(0.96);
+    }
+
+    .bottom-buttons-row {
+      display: flex;
+      gap: 12px;
+      width: 100%;
     }
 
     .dropdown-menu {
@@ -964,6 +979,9 @@
       font-size: 15px;
       padding: 14px;
       border-radius: var(--btn-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn-submit {
@@ -975,6 +993,9 @@
       font-size: 16px;
       padding: 14px;
       border-radius: var(--btn-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .manager-item {
@@ -1100,18 +1121,20 @@
           <h1 class="brand-title">Raccord<span>PRO</span></h1>
         </div>
       </div>
+    </header>
 
-      <div style="display:flex; align-items:center;">
-        <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
-        <button type="button" id="btn-import-json" class="btn-icon" title="Importar Proyecto desde JSON">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4H7a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h9"/>
-            <line x1="21" y1="12" x2="10" y2="12"/>
-            <polyline points="14 8 10 12 14 16"/>
-          </svg>
+    <!-- BARRA DE BÚSQUEDA DE PROYECTOS (Oculta por defecto) -->
+    <section id="projects-search-bar" class="toolbar hidden">
+      <div class="toolbar-clean-row">
+        <div class="search-box">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search-projects-input" class="search-input" placeholder="Buscar proyecto o productora...">
+        </div>
+        <button type="button" id="btn-reset-project-search" class="btn-icon" title="Limpiar búsqueda">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
       </div>
-    </header>
+    </section>
 
     <main class="scroll-area">
       <div class="container-narrow">
@@ -1122,17 +1145,30 @@
           <div class="empty-icon">
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
           </div>
-          <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:18px; font-weight:800;">No hay proyectos creados</h3>
-          <p style="margin:0; font-size:15px;">Pulsa el botón <strong>NUEVO PROYECTO</strong> abajo para comenzar.</p>
+          <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:18px; font-weight:800;">No hay proyectos</h3>
+          <p style="margin:0; font-size:15px;">Pulsa <strong>NUEVO PROYECTO</strong> o importa un respaldo.</p>
         </div>
       </div>
     </main>
 
     <div class="bottom-bar-center">
-      <button type="button" id="btn-new-project" class="btn-bottom-action-center">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        <span>NUEVO PROYECTO</span>
-      </button>
+      <div class="bottom-bar-center-inner">
+        <button type="button" id="btn-new-project" class="btn-bottom-action-center" style="width:100%; margin:0;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <span>NUEVO PROYECTO</span>
+        </button>
+        <div class="bottom-buttons-row">
+          <button type="button" id="btn-toggle-project-search" class="btn-secondary" style="margin:0; display:flex; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Buscar</span>
+          </button>
+          <button type="button" id="btn-import-project-bottom" class="btn-secondary" style="margin:0; display:flex; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H7a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h9"/><line x1="21" y1="12" x2="10" y2="12"/><polyline points="14 8 10 12 14 16"/></svg>
+            <span>Importar</span>
+          </button>
+          <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1235,10 +1271,12 @@
     </main>
 
     <div class="bottom-bar-center">
-      <button type="button" id="btn-add-entry" class="btn-bottom-action-center">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-        <span>NUEVO RACCORD</span>
-      </button>
+      <div class="bottom-bar-center-inner">
+        <button type="button" id="btn-add-entry" class="btn-bottom-action-center" style="width:100%;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          <span>NUEVO RACCORD</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1606,6 +1644,7 @@
     let currentPhotoItems = [];
     let currentSubentryPhotoBase64 = null;
     let currentActorPhotoBase64 = null;
+    let searchProjectsQuery = '';
     let searchQuery = '';
     let pendingConfirmAction = null;
     let cachedScenesForProject = [];
@@ -2036,6 +2075,9 @@
       closeProjectMenu();
       viewTakes.classList.add('hidden');
       viewProjects.classList.remove('hidden');
+      searchProjectsQuery = '';
+      document.getElementById('search-projects-input').value = '';
+      document.getElementById('projects-search-bar').classList.add('hidden');
       await renderProjects();
     }
 
@@ -2068,13 +2110,44 @@
       renderTakes();
     }
 
+    // Buscador de proyectos
+    document.getElementById('btn-toggle-project-search').addEventListener('click', () => {
+      const bar = document.getElementById('projects-search-bar');
+      bar.classList.toggle('hidden');
+      if (!bar.classList.contains('hidden')) {
+        document.getElementById('search-projects-input').focus();
+      } else {
+        searchProjectsQuery = '';
+        document.getElementById('search-projects-input').value = '';
+        renderProjects();
+      }
+    });
+
+    document.getElementById('search-projects-input').addEventListener('input', (e) => {
+      searchProjectsQuery = e.target.value;
+      renderProjects();
+    });
+
+    document.getElementById('btn-reset-project-search').addEventListener('click', () => {
+      searchProjectsQuery = '';
+      document.getElementById('search-projects-input').value = '';
+      renderProjects();
+    });
+
     async function renderProjects() {
       const projects = await getAllProjectsFromDB();
       projects.sort((a, b) => b.createdAt - a.createdAt);
 
-      projectsTitleCounter.textContent = `PROYECTOS (${projects.length})`;
+      const q = searchProjectsQuery.toLowerCase().trim();
+      const filteredProjects = projects.filter(p => {
+        if (!q) return true;
+        const prod = p.producer || p.director || '';
+        return p.name.toLowerCase().includes(q) || prod.toLowerCase().includes(q);
+      });
 
-      if (projects.length === 0) {
+      projectsTitleCounter.textContent = `PROYECTOS (${filteredProjects.length})`;
+
+      if (filteredProjects.length === 0) {
         projectsList.innerHTML = '';
         emptyProjects.classList.remove('hidden');
         return;
@@ -2082,7 +2155,7 @@
 
       emptyProjects.classList.add('hidden');
 
-      projectsList.innerHTML = projects.map(proj => {
+      projectsList.innerHTML = filteredProjects.map(proj => {
         const prodValue = proj.producer || proj.director || '';
         return `
           <div class="project-card" data-action="open-project" data-id="${proj.id}">
@@ -2200,9 +2273,9 @@
 
     /* IMPORTACIÓN DE RESPALDO JSON */
     const inputImportJson = document.getElementById('input-import-json');
-    const btnImportJson = document.getElementById('btn-import-json');
+    const btnImportJsonBottom = document.getElementById('btn-import-project-bottom');
 
-    btnImportJson.addEventListener('click', () => {
+    btnImportJsonBottom.addEventListener('click', () => {
       inputImportJson.value = '';
       inputImportJson.click();
     });
@@ -2405,7 +2478,6 @@
                 if (nextIsNotHeader && nextIsDialogue && !knownCharNames.has(cleanCandidate.toUpperCase())) {
                   knownCharNames.add(cleanCandidate.toUpperCase());
 
-                  // Solución al Title Case con Tildes / Eñes (ej: DISEÑO -> Diseño)
                   const formattedName = cleanCandidate
                     .toLowerCase()
                     .split(/\s+/)
@@ -3257,26 +3329,6 @@
       openEditTake(targetId);
     });
 
-    document.getElementById('search-input').addEventListener('input', (e) => {
-      searchQuery = e.target.value;
-      renderTakes();
-    });
-
-    document.getElementById('btn-reset-filters').addEventListener('click', () => {
-      searchQuery = '';
-      document.getElementById('search-input').value = '';
-      renderTakes();
-    });
-
-    let toastTimer = null;
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.remove('hidden');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
-    }
-
     window.removeFormPhotoItem = function(photoId) {
       const target = currentPhotoItems.find(p => p.id === photoId);
       if (!target) return;
@@ -3288,6 +3340,15 @@
         showToast('Entrada eliminada');
       });
     };
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+    }
 
     /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
     if ('serviceWorker' in navigator) {
