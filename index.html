@@ -726,6 +726,14 @@
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75);
     }
 
+    /* CONTENEDOR FLEXIBLE PARA FORMULARIOS DENTRO DEL MODAL (Crea el footer estático) */
+    .modal-form-wrapper {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex: 1;
+    }
+
     .modal-header {
       background: var(--bg-800);
       border-bottom: 1px solid var(--border-700);
@@ -756,6 +764,16 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       flex: 1;
+    }
+
+    /* FOOTER ESTÁTICO PARA BOTONES */
+    .modal-footer {
+      background: var(--bg-800);
+      border-top: 1px solid var(--border-700);
+      padding: 14px 18px;
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
     }
 
     .form-group {
@@ -936,12 +954,6 @@
       background: #000;
       display: block;
       margin-bottom: 10px;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
     }
 
     .btn-secondary {
@@ -1245,6 +1257,8 @@
             Por favor <strong>revisa los datos extraídos</strong> en los apartados de <em>Escenas</em> y <em>Personajes</em>. Debido a las variaciones de formato o maquetación del guion, pudieron cometerse omisiones o pequeñas diferencias en los nombres.
           </p>
         </div>
+      </div>
+      <div class="modal-footer">
         <button type="button" id="btn-ok-review-modal" class="btn-primary" style="width:100%;">Entendido, revisar datos</button>
       </div>
     </div>
@@ -1261,28 +1275,29 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
-      <form id="project-form" class="modal-body">
-        <input type="hidden" id="proj-id" value="">
+      <form id="project-form" class="modal-form-wrapper">
+        <div class="modal-body">
+          <input type="hidden" id="proj-id" value="">
 
-        <div class="form-group">
-          <label class="form-label">Nombre del Proyecto *</label>
-          <input type="text" id="proj-name" required placeholder="Ej: 'El Despertar del Diablo'" class="form-control">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Productora (Opcional)</label>
-          <input type="text" id="proj-producer" placeholder="Ej: TIS Producciones" class="form-control">
-        </div>
+          <div class="form-group">
+            <label class="form-label">Nombre del Proyecto *</label>
+            <input type="text" id="proj-name" required placeholder="Ej: 'El Despertar del Diablo'" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Productora (Opcional)</label>
+            <input type="text" id="proj-producer" placeholder="Ej: TIS Producciones" class="form-control">
+          </div>
 
-        <div class="modal-actions">
+          <div id="delete-project-container" class="delete-project-box hidden">
+            <button type="button" id="btn-delete-project-modal" class="btn-delete-project-full">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              <span>Eliminar Proyecto</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
           <button type="button" id="btn-cancel-project" class="btn-secondary">Cancelar</button>
           <button type="submit" id="btn-submit-project" class="btn-submit">Crear Proyecto</button>
-        </div>
-
-        <div id="delete-project-container" class="delete-project-box hidden">
-          <button type="button" id="btn-delete-project-modal" class="btn-delete-project-full">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-            <span>Eliminar Proyecto</span>
-          </button>
         </div>
       </form>
     </div>
@@ -1311,7 +1326,7 @@
             <button type="button" id="btn-cancel-edit-scene" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="scenes-list" style="max-height:280px; overflow-y:auto;"></div>
+        <div id="scenes-list" style="max-height:300px; overflow-y:auto;"></div>
         <div id="delete-all-scenes-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-scenes" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1363,7 +1378,7 @@
             <button type="button" id="btn-cancel-edit-character" class="btn-secondary hidden" style="flex:1;">Cancelar Edición</button>
           </div>
         </form>
-        <div id="characters-list" style="max-height:260px; overflow-y:auto;"></div>
+        <div id="characters-list" style="max-height:300px; overflow-y:auto;"></div>
         <div id="delete-all-characters-box" class="delete-project-box hidden">
           <button type="button" id="btn-delete-all-characters" class="btn-delete-project-full">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1386,33 +1401,32 @@
         </button>
       </div>
 
-      <form id="raccord-form" class="modal-body">
-        <input type="hidden" id="entry-id" value="">
+      <form id="raccord-form" class="modal-form-wrapper">
+        <div class="modal-body">
+          <input type="hidden" id="entry-id" value="">
 
-        <div class="form-group">
-          <label class="form-label">Escena *</label>
-          <select id="select-scene" required class="form-control" style="font-weight:800; color:var(--amber);">
-            <option value="">Selecciona una escena...</option>
-          </select>
+          <div class="form-group">
+            <label class="form-label">Escena *</label>
+            <select id="select-scene" required class="form-control" style="font-weight:800; color:var(--amber);">
+              <option value="">Selecciona una escena...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Entradas de Continuidad por Personaje</label>
+            <button type="button" id="btn-open-subentry-modal" class="btn-photo-single">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              <span>Añadir Entrada (Personaje / Foto / Nota)</span>
+            </button>
+            <div id="photos-entries-list"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notas Generales de la Escena</label>
+            <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad para esta escena..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;"></textarea>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Entradas de Continuidad por Personaje</label>
-
-          <button type="button" id="btn-open-subentry-modal" class="btn-photo-single">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            <span>Añadir Entrada (Personaje / Foto / Nota)</span>
-          </button>
-
-          <div id="photos-entries-list"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Notas Generales de la Escena</label>
-          <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad para esta escena..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;"></textarea>
-        </div>
-
-        <div class="modal-actions">
+        <div class="modal-footer">
           <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
           <button type="submit" class="btn-submit">Guardar Raccord</button>
         </div>
@@ -1432,39 +1446,40 @@
         </button>
       </div>
 
-      <form id="subentry-form" class="modal-body">
-        <input type="hidden" id="subentry-id" value="">
-        <input type="file" id="input-subentry-photo" accept="image/*" class="hidden">
+      <form id="subentry-form" class="modal-form-wrapper">
+        <div class="modal-body">
+          <input type="hidden" id="subentry-id" value="">
+          <input type="file" id="input-subentry-photo" accept="image/*" class="hidden">
 
-        <div class="form-group">
-          <label class="form-label">Personaje *</label>
-          <select id="subentry-character" required class="form-control">
-            <option value="">Selecciona un personaje...</option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label class="form-label">Personaje *</label>
+            <select id="subentry-character" required class="form-control">
+              <option value="">Selecciona un personaje...</option>
+            </select>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Foto de Continuidad</label>
+          <div class="form-group">
+            <label class="form-label">Foto de Continuidad</label>
 
-          <button type="button" id="btn-trigger-subentry-photo" class="btn-photo-single">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-            <span>Seleccionar Foto de Fototeca</span>
-          </button>
-
-          <div id="subentry-photo-preview-box" class="subentry-preview-box hidden">
-            <img id="subentry-photo-preview-img" src="" alt="Previsualización">
-            <button type="button" id="btn-remove-subentry-photo" class="btn-secondary" style="width:100%; min-height:44px; padding:10px; font-size:14px; color:#f87171;">
-              Quitar o Cambiar Foto
+            <button type="button" id="btn-trigger-subentry-photo" class="btn-photo-single">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              <span>Seleccionar Foto de Fototeca</span>
             </button>
+
+            <div id="subentry-photo-preview-box" class="subentry-preview-box hidden">
+              <img id="subentry-photo-preview-img" src="" alt="Previsualización">
+              <button type="button" id="btn-remove-subentry-photo" class="btn-secondary" style="width:100%; min-height:44px; padding:10px; font-size:14px; color:#f87171;">
+                Quitar o Cambiar Foto
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nota de Continuidad</label>
+            <textarea id="subentry-note" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, estado..." class="form-control" style="font-size:15px; line-height:1.4; min-height:86px;"></textarea>
           </div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Nota de Continuidad</label>
-          <textarea id="subentry-note" rows="3" placeholder="Detalles de vestuario, peinado, accesorios, estado..." class="form-control" style="font-size:15px; line-height:1.4; min-height:86px;"></textarea>
-        </div>
-
-        <div class="modal-actions">
+        <div class="modal-footer">
           <button type="button" id="btn-cancel-subentry" class="btn-secondary">Cancelar</button>
           <button type="submit" id="btn-save-subentry" class="btn-submit">Guardar Entrada</button>
         </div>
@@ -1526,7 +1541,8 @@
         </div>
 
         <div id="pdf-scenes-checklist" style="max-height:260px; overflow-y:auto; margin-bottom:16px;"></div>
-
+      </div>
+      <div class="modal-footer">
         <button type="button" id="btn-generate-real-pdf" class="btn-primary" style="width:100%;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           <span>Generar y Guardar PDF</span>
@@ -1544,11 +1560,11 @@
         <h2 class="modal-title" style="color:#f87171;">CONFIRMAR ELIMINACIÓN</h2>
       </div>
       <div class="modal-body">
-        <p id="confirm-text" style="margin:0 0 18px 0; font-size:16px; color:#e5e7eb; line-height:1.45;"></p>
-        <div class="modal-actions">
-          <button type="button" id="btn-confirm-cancel" class="btn-secondary">Cancelar</button>
-          <button type="button" id="btn-confirm-ok" class="btn-submit" style="background:#ef4444; color:#fff;">Eliminar</button>
-        </div>
+        <p id="confirm-text" style="margin:0; font-size:16px; color:#e5e7eb; line-height:1.45;"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-confirm-cancel" class="btn-secondary">Cancelar</button>
+        <button type="button" id="btn-confirm-ok" class="btn-submit" style="background:#ef4444; color:#fff;">Eliminar</button>
       </div>
     </div>
   </div>
@@ -2316,7 +2332,7 @@
             let row = rows.find(r => Math.abs(r.y - y) <= 4);
             if (!row) {
               row = { y, items: [] };
-              rows.push(row);
+              row.push(row);
             }
             row.items.push({ x: item.transform[4], str: text });
           }
@@ -2710,13 +2726,11 @@
       cachedCharactersForProject = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       cachedCharactersForProject.sort((a, b) => a.name.localeCompare(b.name));
 
-      // Obtener las escenas que ya tienen un raccord guardado en este proyecto
       const existingTakes = await getAllTakesForProject(activeProjectId);
       const usedScenesSet = new Set(
         existingTakes.map(t => String(t.scene || '').trim().toUpperCase())
       );
 
-      // Si estamos editando un raccord existente, permitir su propia escena
       const allowedUpper = allowedSceneNum ? String(allowedSceneNum).trim().toUpperCase() : null;
 
       const selectScene = document.getElementById('select-scene');
@@ -3093,462 +3107,7 @@
       }
     });
 
-    /* ==========================================================================
-       GUARDADO AUTOMÁTICO DE RESPALDO JSON EN CARPETA MEMORIZADA
-       ========================================================================== */
-    async function buildBackupJsonPayload() {
-      const allTakes = await getAllTakesForProject(activeProjectId);
-      const allScenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-      const allChars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-
-      const backupBundle = {
-        project: activeProjectData,
-        takes: allTakes,
-        scenes: allScenes,
-        characters: allChars
-      };
-
-      const jsonString = JSON.stringify(backupBundle, null, 2);
-      const safeName = (activeProjectData ? activeProjectData.name : 'SET')
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .toUpperCase()
-        .replace(/[^A-Z0-9]+/g, '_')
-        .replace(/^_+|_+$/g, '');
-      const fileName = `RACCORD_${safeName}_${new Date().toISOString().slice(0,10)}.json`;
-      return { jsonString, fileName };
-    }
-
-    async function writeJsonToDirectoryHandle(dirHandle, fileName, jsonString) {
-      let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
-      if (perm !== 'granted') {
-        perm = await dirHandle.requestPermission({ mode: 'readwrite' });
-      }
-      if (perm !== 'granted') {
-        throw new Error('PERMISSION_DENIED');
-      }
-
-      const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
-      const writable = await fileHandle.createWritable();
-      await writable.write(jsonString);
-      await writable.close();
-    }
-
-    async function promptAndSaveDirectoryHandle() {
-      const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-      await saveDirectoryHandleToDB(activeProjectId, dirHandle);
-      await refreshBackupFolderLabel();
-      return dirHandle;
-    }
-
-    document.getElementById('menu-opt-export-json').addEventListener('click', async () => {
-      closeProjectMenu();
-      const { jsonString, fileName } = await buildBackupJsonPayload();
-
-      if ('showDirectoryPicker' in window) {
-        try {
-          const savedRecord = await getDirectoryHandleFromDB(activeProjectId);
-          let dirHandle = savedRecord ? savedRecord.handle : null;
-
-          if (!dirHandle) {
-            dirHandle = await promptAndSaveDirectoryHandle();
-          }
-
-          try {
-            await writeJsonToDirectoryHandle(dirHandle, fileName, jsonString);
-            showToast(`Respaldo guardado en 📁 ${dirHandle.name}`);
-            return;
-          } catch (writeErr) {
-            if (writeErr.name === 'AbortError') return;
-            dirHandle = await promptAndSaveDirectoryHandle();
-            await writeJsonToDirectoryHandle(dirHandle, fileName, jsonString);
-            showToast(`Respaldo guardado en 📁 ${dirHandle.name}`);
-            return;
-          }
-        } catch (err) {
-          if (err.name === 'AbortError') return;
-          console.warn('Fallback en guardado JSON:', err);
-        }
-      }
-
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      await saveFileToUserDirectory(
-        blob,
-        fileName,
-        'application/json',
-        'Respaldo RaccordPro (JSON)',
-        '.json'
-      );
-    });
-
-    document.getElementById('menu-opt-change-json-folder').addEventListener('click', async () => {
-      closeProjectMenu();
-      if (!('showDirectoryPicker' in window)) return;
-
-      try {
-        const dirHandle = await promptAndSaveDirectoryHandle();
-        const { jsonString, fileName } = await buildBackupJsonPayload();
-        await writeJsonToDirectoryHandle(dirHandle, fileName, jsonString);
-        showToast(`Nueva carpeta asignada y guardada: 📁 ${dirHandle.name}`);
-      } catch (err) {
-        if (err.name === 'AbortError') return;
-        showToast('No se pudo asignar la carpeta');
-      }
-    });
-
-    /* ==========================================================================
-       RENDERIZADO DE RACCORDS CON HORA DEBAJO DE BOTONES EDITAR / ELIMINAR
-       ========================================================================== */
-    const recordsGrid = document.getElementById('records-grid');
-    const emptyState = document.getElementById('empty-state');
-    const badgeTotalItems = document.getElementById('badge-total-items');
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>"']/g, s => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-      }[s]));
-    }
-
-    async function renderTakes() {
-      if (!activeProjectId) return;
-      const takes = await getAllTakesForProject(activeProjectId);
-
-      takes.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
-
-      const filtered = takes.filter(item => {
-        const q = searchQuery.toLowerCase().trim();
-        const photos = getNormalizedPhotos(item);
-        const photoMatch = photos.some(p =>
-          (p.character || '').toLowerCase().includes(q) ||
-          (p.note || '').toLowerCase().includes(q)
-        );
-        return !q || 
-          String(item.scene || '').toLowerCase().includes(q) ||
-          (item.sceneDesc && item.sceneDesc.toLowerCase().includes(q)) ||
-          (item.character && item.character.toLowerCase().includes(q)) ||
-          String(item.notes || '').toLowerCase().includes(q) ||
-          photoMatch;
-      });
-
-      badgeTotalItems.textContent = `${filtered.length} ${filtered.length === 1 ? 'raccord' : 'raccords'}`;
-
-      if (filtered.length === 0) {
-        recordsGrid.innerHTML = '';
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-      recordsGrid.innerHTML = filtered.map(take => {
-        const entries = getNormalizedPhotos(take);
-
-        const charGroupsMap = new Map();
-        entries.forEach(p => {
-          const cName = p.character || 'Sin personaje asignado';
-          if (!charGroupsMap.has(cName)) {
-            charGroupsMap.set(cName, { count: 0, notes: [] });
-          }
-          const grp = charGroupsMap.get(cName);
-          if (p.photo) grp.count++;
-          if (p.note && p.note.trim()) grp.notes.push(p.note.trim());
-        });
-
-        let charactersHtml = '';
-        if (charGroupsMap.size > 0) {
-          charactersHtml = Array.from(charGroupsMap.entries()).map(([charName, info]) => {
-            const combinedNote = info.notes.join(' • ');
-            return `
-              <div class="raccord-char-row">
-                <div class="raccord-char-top">
-                  <div class="raccord-char-name">
-                    ${getCharacterAvatarHtml(charName, true)}
-                    <span>${escapeHtml(charName)}</span>
-                  </div>
-                  <span class="raccord-photo-chip">
-                    ${ICON_PHOTO_SVG}
-                    <span>${info.count} ${info.count === 1 ? 'foto' : 'fotos'}</span>
-                  </span>
-                </div>
-                ${combinedNote ? `<p class="raccord-char-note-preview">${escapeHtml(combinedNote)}</p>` : ''}
-              </div>
-            `;
-          }).join('');
-        } else if (take.character) {
-          charactersHtml = `
-            <div class="raccord-char-row">
-              <div class="raccord-char-top">
-                <div class="raccord-char-name">
-                  ${getCharacterAvatarHtml(take.character, true)}
-                  <span>${escapeHtml(take.character)}</span>
-                </div>
-                <span class="raccord-photo-chip">0 fotos</span>
-              </div>
-            </div>
-          `;
-        }
-
-        const timeFormatted = new Date(take.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        return `
-          <article class="raccord-card" data-action="view-raccord" data-id="${take.id}">
-            <div>
-              <div class="raccord-scene-header">
-                <div style="min-width:0; flex:1;">
-                  <span class="raccord-scene-badge">ESCENA ${escapeHtml(take.scene)}</span>
-                  ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
-                </div>
-                <div class="raccord-header-right-col">
-                  <div class="raccord-header-actions">
-                    <button type="button" class="btn-edit-square" data-action="edit-take" data-id="${take.id}" title="Editar raccord">
-                      ${ICON_EDIT_SVG}
-                    </button>
-                    <button type="button" class="btn-delete-square" data-action="delete-take" data-id="${take.id}" title="Eliminar raccord">
-                      ${ICON_DELETE_SVG}
-                    </button>
-                  </div>
-                  <span class="raccord-time-compact">${timeFormatted}</span>
-                </div>
-              </div>
-
-              ${charactersHtml}
-
-              ${take.notes ? `<p class="raccord-general-note">${escapeHtml(take.notes)}</p>` : ''}
-            </div>
-          </article>
-        `;
-      }).join('');
-    }
-
-    recordsGrid.addEventListener('click', async (e) => {
-      const actionEl = e.target.closest('[data-action]');
-      if (!actionEl) return;
-      const action = actionEl.getAttribute('data-action');
-      const id = actionEl.getAttribute('data-id');
-
-      if (action === 'edit-take') {
-        e.stopPropagation();
-        openEditTake(id);
-      } else if (action === 'delete-take') {
-        e.stopPropagation();
-        const all = await getAllTakesForProject(activeProjectId);
-        const target = all.find(t => t.id === id);
-        if (!target) return;
-
-        const sceneLabel = target.sceneDesc
-          ? `ESCENA ${target.scene} — ${target.sceneDesc}`
-          : `ESCENA ${target.scene}`;
-
-        askConfirmation(`¿Eliminar definitivamente el raccord de "${sceneLabel}"?`, async () => {
-          await deleteTakeFromDB(id);
-          await renderTakes();
-          showToast(`Raccord de Escena ${target.scene} eliminado`);
-        });
-      } else if (action === 'view-raccord') {
-        openRaccordViewer(id);
-      }
-    });
-
-    /* ==========================================================================
-       MANEJO DE ENTRADAS DE RACCORD CON SUB-VENTANA DEDICADA (#subentry-modal)
-       ========================================================================== */
-    const entryModal = document.getElementById('entry-modal');
-    const form = document.getElementById('raccord-form');
-    const photosEntriesList = document.getElementById('photos-entries-list');
-
-    const subentryModal = document.getElementById('subentry-modal');
-    const subentryForm = document.getElementById('subentry-form');
-    const subentryModalTitle = document.getElementById('subentry-modal-title');
-    const subentryIdInput = document.getElementById('subentry-id');
-    const subentryCharacterSelect = document.getElementById('subentry-character');
-    const subentryNoteTextarea = document.getElementById('subentry-note');
-    const inputSubentryPhoto = document.getElementById('input-subentry-photo');
-    const btnTriggerSubentryPhoto = document.getElementById('btn-trigger-subentry-photo');
-    const subentryPhotoPreviewBox = document.getElementById('subentry-photo-preview-box');
-    const subentryPhotoPreviewImg = document.getElementById('subentry-photo-preview-img');
-
-    function compressImageFile(file, maxWidth = 1400, maxHeight = 1400, quality = 0.82) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-          const img = new Image();
-          img.src = event.target.result;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-
-            if (width > height && width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            } else if (height > maxHeight) {
-              width = Math.round((width * maxHeight) / height);
-              height = maxHeight;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', quality));
-          };
-          img.onerror = reject;
-        };
-        reader.onerror = reject;
-      });
-    }
-
-    function setSubentryPhotoUI(base64) {
-      currentSubentryPhotoBase64 = base64 || null;
-      if (currentSubentryPhotoBase64) {
-        subentryPhotoPreviewImg.src = currentSubentryPhotoBase64;
-        subentryPhotoPreviewBox.classList.remove('hidden');
-        btnTriggerSubentryPhoto.classList.add('hidden');
-      } else {
-        subentryPhotoPreviewImg.src = '';
-        subentryPhotoPreviewBox.classList.add('hidden');
-        btnTriggerSubentryPhoto.classList.remove('hidden');
-      }
-    }
-
-    function renderFormPhotoItems() {
-      if (currentPhotoItems.length === 0) {
-        photosEntriesList.innerHTML = '';
-        return;
-      }
-
-      photosEntriesList.innerHTML = currentPhotoItems.map((item) => {
-        const thumbHtml = item.photo
-          ? `<img src="${item.photo}" alt="${escapeHtml(item.character)}" class="subentry-thumb">`
-          : `<div class="subentry-no-thumb">${getCharacterAvatarHtml(item.character, true)}</div>`;
-
-        return `
-          <div class="subentry-compact-card">
-            ${thumbHtml}
-            <div class="subentry-info">
-              <div class="subentry-char-title">${escapeHtml(item.character || 'Sin personaje')}</div>
-              <p class="subentry-note-snippet">${escapeHtml(item.note || (item.photo ? 'Con foto adjunta (sin nota)' : 'Sin nota adicional'))}</p>
-            </div>
-            <div class="subentry-actions">
-              <button type="button" class="btn-action-small edit" onclick="openEditSubentryModal('${item.id}')" title="Editar entrada">
-                ${ICON_EDIT_SVG}
-              </button>
-              <button type="button" class="btn-action-small delete" onclick="removeFormPhotoItem('${item.id}')" title="Eliminar entrada">
-                ${ICON_DELETE_SVG}
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    document.getElementById('btn-open-subentry-modal').addEventListener('click', () => {
-      if (cachedCharactersForProject.length === 0) {
-        showToast('Primero crea personajes en la llave inglesa');
-      }
-      subentryModalTitle.textContent = 'NUEVA ENTRADA DE RACCORD';
-      subentryIdInput.value = '';
-      subentryCharacterSelect.innerHTML = buildCharacterSelectOptions('');
-      subentryNoteTextarea.value = '';
-      inputSubentryPhoto.value = '';
-      setSubentryPhotoUI(null);
-      subentryModal.classList.remove('hidden');
-    });
-
-    window.openEditSubentryModal = function(entryId) {
-      const target = currentPhotoItems.find(p => p.id === entryId);
-      if (!target) return;
-
-      subentryModalTitle.textContent = 'EDITAR ENTRADA DE RACCORD';
-      subentryIdInput.value = target.id;
-      subentryCharacterSelect.innerHTML = buildCharacterSelectOptions(target.character);
-      subentryNoteTextarea.value = target.note || '';
-      inputSubentryPhoto.value = '';
-      setSubentryPhotoUI(target.photo || null);
-      subentryModal.classList.remove('hidden');
-    };
-
-    window.removeFormPhotoItem = function(photoId) {
-      currentPhotoItems = currentPhotoItems.filter(p => p.id !== photoId);
-      renderFormPhotoItems();
-    };
-
-    document.getElementById('btn-close-subentry-modal').addEventListener('click', () => subentryModal.classList.add('hidden'));
-    document.getElementById('btn-cancel-subentry').addEventListener('click', () => subentryModal.classList.add('hidden'));
-
-    btnTriggerSubentryPhoto.addEventListener('click', () => {
-      inputSubentryPhoto.value = '';
-      inputSubentryPhoto.click();
-    });
-
-    inputSubentryPhoto.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      showToast('Procesando foto...');
-      try {
-        const base64 = await compressImageFile(file);
-        setSubentryPhotoUI(base64);
-      } catch (err) {
-        showToast('Error al cargar la foto');
-      }
-    });
-
-    document.getElementById('btn-remove-subentry-photo').addEventListener('click', () => {
-      inputSubentryPhoto.value = '';
-      setSubentryPhotoUI(null);
-    });
-
-    subentryForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const charVal = subentryCharacterSelect.value.trim();
-      const noteVal = subentryNoteTextarea.value.trim();
-      const existingSubId = subentryIdInput.value;
-
-      if (!charVal) {
-        showToast('Selecciona un personaje');
-        return;
-      }
-
-      if (existingSubId) {
-        const idx = currentPhotoItems.findIndex(p => p.id === existingSubId);
-        if (idx !== -1) {
-          currentPhotoItems[idx] = {
-            ...currentPhotoItems[idx],
-            character: charVal,
-            photo: currentSubentryPhotoBase64,
-            note: noteVal
-          };
-        }
-      } else {
-        currentPhotoItems.push({
-          id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-          character: charVal,
-          photo: currentSubentryPhotoBase64,
-          note: noteVal
-        });
-      }
-
-      subentryModal.classList.add('hidden');
-      renderFormPhotoItems();
-    });
-
-    document.getElementById('btn-add-entry').addEventListener('click', async () => {
-      await updateCatalogCaches(null);
-      if (cachedScenesForProject.length === 0) {
-        showToast('Primero importa tu guion o crea escenas en la llave inglesa');
-      }
-      document.getElementById('modal-title').textContent = 'NUEVO RACCORD DE ESCENA';
-      form.reset();
-      document.getElementById('entry-id').value = '';
-      currentPhotoItems = [];
-      renderFormPhotoItems();
-      entryModal.classList.remove('hidden');
-    });
-
-    document.getElementById('btn-close-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
-    document.getElementById('btn-cancel-modal').addEventListener('click', () => entryModal.classList.add('hidden'));
-
-    // VALIDACIÓN ESTRICTA ANTI-DUPLICADOS EN BASE DE DATOS AL GUARDAR
+    // Validar en base de datos para prohibir escenas duplicadas antes de guardar el Raccord
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const existingId = document.getElementById('entry-id').value;
@@ -3564,11 +3123,11 @@
         return;
       }
 
-      // Verificar en base de datos que ninguna otra ficha tenga esta escena
+      // Validación estricta en Base de Datos: Bloquear escena duplicada
       const allProjectTakes = await getAllTakesForProject(activeProjectId);
       const duplicateTake = allProjectTakes.find(t =>
         String(t.scene || '').trim().toUpperCase() === scene.toUpperCase() &&
-        t.id !== id
+        t.id !== id // Ignorar el mismo raccord que estamos editando
       );
 
       if (duplicateTake) {
@@ -3599,7 +3158,7 @@
       const target = all.find(item => item.id === id);
       if (!target) return;
 
-      // Pasar target.scene como permitida para poder editar el raccord de esa misma escena
+      // Habilitar la escena original que se está editando en el menú
       await updateCatalogCaches(target.scene);
 
       document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
