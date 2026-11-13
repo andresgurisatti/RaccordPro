@@ -2884,7 +2884,7 @@
       }
     }
 
-    async function writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, filesArray) {
+    async function writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, filesArray, onComplete) {
       let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
       if (perm !== 'granted') {
         perm = await dirHandle.requestPermission({ mode: 'readwrite' });
@@ -2905,6 +2905,9 @@
           const writable = await fileHandle.createWritable();
           await writable.write(item.blob);
           await writable.close();
+        }
+        if (typeof onComplete === 'function') {
+          await onComplete();
         }
         showToast(
           filesArray.length === 1
@@ -3029,9 +3032,11 @@
       btnQuickBackupDirty.addEventListener('click', () => openBatchProjectsModal('export-dirty'));
     }
 
-    function saveEntityToDB(storeName, item) {
-      const targetProjId = (storeName === STORE_PROJECTS) ? item.id : item.projectId;
-      markProjectModified(targetProjId);
+    function saveEntityToDB(storeName, item, options = {}) {
+      if (options.markDirty !== false) {
+        const targetProjId = (storeName === STORE_PROJECTS) ? item.id : item.projectId;
+        markProjectModified(targetProjId);
+      }
 
       const mirrorToFallback = () => {
         const list = getFallbackList('rp_' + storeName).filter(x => x.id !== item.id);
@@ -3132,8 +3137,8 @@
       });
     }
 
-    function saveProjectToDB(proj) {
-      return saveEntityToDB(STORE_PROJECTS, proj);
+    function saveProjectToDB(proj, options = {}) {
+      return saveEntityToDB(STORE_PROJECTS, proj, options);
     }
 
     function getAllProjectsFromDB() {
@@ -3244,10 +3249,11 @@
           const writable = await handle.createWritable();
           await writable.write(blob);
           await writable.close();
-          showToast('Archivo guardado en la carpeta seleccionada');
-          return;
+          showToast(`Respaldo "${fileName}" guardado`);
+          return true;
         } catch (err) {
-          if (err.name === 'AbortError') return;
+          if (err.name === 'AbortError') return false;
+          return false;
         }
       }
 
@@ -3258,9 +3264,10 @@
             await navigator.share({
               files: [file]
             });
-            return;
+            showToast(`Respaldo "${fileName}" guardado`);
+            return true;
           } catch (err) {
-            if (err.name === 'AbortError') return;
+            if (err.name === 'AbortError') return false;
           }
         }
       }
@@ -3272,8 +3279,9 @@
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
-      showToast('Archivo guardado correctamente');
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      showToast(`Respaldo "${fileName}" guardado`);
+      return true;
     }
 
     const confirmModal = document.getElementById('confirm-modal');
@@ -3530,12 +3538,17 @@
       const allProjects = await getAllProjectsFromDB();
       const map = new Map(allProjects.map(p => [p.id, p]));
 
-      for (let i = 0; i < orderedIds.length; i++) {
-        const p = map.get(orderedIds[i]);
-        if (p) {
-          p.customOrder = i;
-          await saveProjectToDB(p);
+      suppressBackupDirtyTracking = true;
+      try {
+        for (let i = 0; i < orderedIds.length; i++) {
+          const p = map.get(orderedIds[i]);
+          if (p) {
+            p.customOrder = i;
+            await saveProjectToDB(p, { markDirty: false });
+          }
         }
+      } finally {
+        suppressBackupDirtyTracking = false;
       }
 
       await renderProjects();
@@ -4102,7 +4115,11 @@
 
     projectMenuBackdrop.addEventListener('click', (e) => {
       e.stopPropagation();
-      e.preventDefault();
+      closeProjectMenu();
+    });
+    projectMenuBackdrop.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      closeProjectMenu();
     });
 
     /* ==========================================================================
@@ -4154,7 +4171,31 @@
 
     homeMenuBackdrop.addEventListener('click', (e) => {
       e.stopPropagation();
-      e.preventDefault();
+      closeHomeMenu();
+    });
+    homeMenuBackdrop.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      closeHomeMenu();
+    });
+
+    document.addEventListener('pointerdown', (e) => {
+      if (dropdownMenu && dropdownMenu.classList.contains('is-open')) {
+        if (!dropdownMenu.contains(e.target) && !btnMenuToggle.contains(e.target)) {
+          closeProjectMenu();
+        }
+      }
+      if (homeDropdownMenu && homeDropdownMenu.classList.contains('is-open')) {
+        if (!homeDropdownMenu.contains(e.target) && !btnHomeMenuToggle.contains(e.target)) {
+          closeHomeMenu();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (dropdownMenu && dropdownMenu.classList.contains('is-open')) closeProjectMenu();
+        if (homeDropdownMenu && homeDropdownMenu.classList.contains('is-open')) closeHomeMenu();
+      }
     });
 
     /* ==========================================================================
@@ -4394,12 +4435,17 @@
       if (!mode) return;
 
       if (mode === 'custom') {
-        const currentOrdered = sortProjectsArray(await getAllProjectsFromDB());
-        for (let i = 0; i < currentOrdered.length; i++) {
-          if (typeof currentOrdered[i].customOrder !== 'number') {
-            currentOrdered[i].customOrder = i;
-            await saveProjectToDB(currentOrdered[i]);
+        suppressBackupDirtyTracking = true;
+        try {
+          const currentOrdered = sortProjectsArray(await getAllProjectsFromDB());
+          for (let i = 0; i < currentOrdered.length; i++) {
+            if (typeof currentOrdered[i].customOrder !== 'number') {
+              currentOrdered[i].customOrder = i;
+              await saveProjectToDB(currentOrdered[i], { markDirty: false });
+            }
           }
+        } finally {
+          suppressBackupDirtyTracking = false;
         }
       }
 
@@ -4615,8 +4661,6 @@
         const selectedProjects = allProjects.filter(p => selectedIds.includes(p.id));
         if (selectedProjects.length === 0) return;
 
-        showToast(selectedProjects.length === 1 ? 'Empacando respaldo .setbible...' : `Empacando ${selectedProjects.length} respaldos .setbible...`);
-
         const usedFileNames = new Set();
         const preparedFiles = [];
 
@@ -4642,9 +4686,8 @@
 
           if (dirHandle) {
             try {
-              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, preparedFiles);
+              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, preparedFiles, markAllBackedUp);
               if (ok) {
-                await markAllBackedUp();
                 return;
               }
             } catch (dirErr) {
@@ -4654,14 +4697,16 @@
         }
 
         if (preparedFiles.length === 1) {
-          await saveFileToUserDirectory(
+          const saved = await saveFileToUserDirectory(
             preparedFiles[0].blob,
             preparedFiles[0].fileName,
             preparedFiles[0].mimeType,
             preparedFiles[0].desc,
             preparedFiles[0].ext
           );
-          await markAllBackedUp();
+          if (saved) {
+            await markAllBackedUp();
+          }
           return;
         }
 
