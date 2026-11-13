@@ -1460,43 +1460,104 @@
       background: rgba(245, 158, 11, 0.15);
     }
 
-    .pdf-tuning-panel {
+    .pdf-menu-panel {
       background: var(--bg-800);
       border: 1px solid var(--border-700);
       border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
-    .pdf-slider-row {
+    .pdf-menu-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      padding: 6px 12px;
+      min-height: 38px;
     }
 
-    .pdf-slider-label {
+    .pdf-menu-row + .pdf-menu-row {
+      border-top: 1px solid var(--border-700);
+    }
+
+    .pdf-menu-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #e5e7eb;
+    }
+
+    .pdf-menu-stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pdf-menu-selector-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--bg-850);
+      border: 1px solid var(--border-600);
+      color: var(--amber);
       font-size: 12.5px;
       font-weight: 800;
-      color: #d1d5db;
-      min-width: 112px;
     }
 
-    .pdf-slider-controls {
-      display: flex;
+    .pdf-menu-selector-btn:active {
+      background: rgba(245, 158, 11, 0.18);
+    }
+
+    .rp-switch {
+      position: relative;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      flex: 1;
+      width: 46px;
+      height: 26px;
+      flex-shrink: 0;
+      cursor: pointer;
     }
 
-    .pdf-slider-controls input[type="range"] {
-      flex: 1;
-      accent-color: var(--amber);
-      height: 6px;
-      cursor: pointer;
+    .rp-switch input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .rp-switch-track {
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--bg-850);
+      border: 1px solid var(--border-600);
+      position: relative;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .rp-switch-track::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #9ca3af;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .rp-switch input:checked + .rp-switch-track {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: var(--amber);
+    }
+
+    .rp-switch input:checked + .rp-switch-track::after {
+      transform: translateX(20px);
+      background: var(--amber);
     }
 
     .pdf-step-btn {
@@ -1542,63 +1603,26 @@
     }
 
     .pdf-preview-stage {
-      --pdf-preview-base-min: 140px;
-      --pdf-preview-zoom: 1;
       flex: 1;
       min-height: 0;
       overflow-y: auto;
       background: #0b0d10;
       border: 1px solid var(--border-700);
       border-radius: 10px;
-      padding: 10px;
+      padding: 8px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(calc(var(--pdf-preview-base-min) * var(--pdf-preview-zoom)), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
       grid-auto-rows: max-content;
       align-content: start;
-      gap: 10px;
+      gap: 8px;
     }
 
     @media (min-width: 640px) {
       .pdf-preview-stage {
-        --pdf-preview-base-min: 175px;
+        grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
         gap: 14px;
         padding: 14px;
       }
-    }
-
-    .pdf-zoom-bar {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--bg-850);
-      border: 1px solid var(--border-700);
-      border-radius: 9px;
-      padding: 2px 4px;
-      flex-shrink: 0;
-    }
-
-    .pdf-zoom-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      color: var(--amber);
-      font-size: 16px;
-      font-weight: 900;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pdf-zoom-btn:active {
-      background: rgba(245, 158, 11, 0.2);
-    }
-
-    .pdf-zoom-val {
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #e5e7eb;
-      min-width: 36px;
-      text-align: center;
     }
 
     .pdf-preview-page-card {
@@ -2269,60 +2293,55 @@
           <h2 class="modal-title" style="color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">EXPORTAR PDF</h2>
           <span id="pdf-preview-page-count" style="color:var(--amber); font-size:12px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px; flex-shrink:0;">1 pág</span>
         </div>
-        <div class="pdf-zoom-bar" title="Zoom de páginas">
-          <button type="button" id="btn-pdf-zoom-out" class="pdf-zoom-btn" aria-label="Reducir zoom">−</button>
-          <span id="pdf-preview-zoom-label" class="pdf-zoom-val">100%</span>
-          <button type="button" id="btn-pdf-zoom-in" class="pdf-zoom-btn" aria-label="Aumentar zoom">+</button>
-        </div>
         <button type="button" id="btn-close-pdf-preview" class="btn-close-touch" title="Cerrar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <div class="modal-body" style="padding:10px 12px; display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden;">
-        <div class="pdf-tuning-panel" style="margin-bottom:10px; padding:8px 10px; gap:7px; flex-shrink:0;">
-          <div style="display:flex; align-items:center; gap:8px;">
+        <div class="pdf-menu-panel">
+          <div class="pdf-menu-row">
+            <span class="pdf-menu-label">Idioma</span>
             <div class="lang-selector-grid" style="margin-bottom:0; gap:6px; flex:0 0 auto;">
               <label class="lang-option">
                 <input type="radio" name="pdf-lang" value="ES" checked>
-                <span class="lang-box" style="padding:7px 11px; font-size:12.5px;">ES</span>
+                <span class="lang-box" style="padding:5px 10px; font-size:12px;">Español</span>
               </label>
               <label class="lang-option">
                 <input type="radio" name="pdf-lang" value="EN">
-                <span class="lang-box" style="padding:7px 11px; font-size:12.5px;">EN</span>
+                <span class="lang-box" style="padding:5px 10px; font-size:12px;">English</span>
               </label>
             </div>
-            <button type="button" id="btn-open-pdf-scenes" class="btn-secondary" style="flex:1; padding:7px 10px; font-size:12.5px; font-weight:800; color:var(--amber); border-color:rgba(245,158,11,0.45); border-radius:10px; min-height:0;">
-              Escenas (Todas)
+          </div>
+          <div class="pdf-menu-row">
+            <span class="pdf-menu-label">Escenas</span>
+            <button type="button" id="btn-open-pdf-scenes" class="pdf-menu-selector-btn">
+              <span id="pdf-scenes-btn-label">Todas</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           </div>
-          <div class="lang-selector-grid" style="margin-bottom:2px; gap:8px;">
-            <label class="lang-option">
-              <input type="radio" name="pdf-layout-mode-preview" value="flow" checked>
-              <span class="lang-box" style="padding:7px 8px; font-size:12.5px;">De corrido</span>
-            </label>
-            <label class="lang-option">
-              <input type="radio" name="pdf-layout-mode-preview" value="per-raccord">
-              <span class="lang-box" style="padding:7px 8px; font-size:12.5px;">Separar por página</span>
-            </label>
-          </div>
-          <div class="pdf-slider-row">
-            <span class="pdf-slider-label" style="font-size:12px; min-width:100px;">Tamaño Fuentes</span>
-            <div class="pdf-slider-controls">
+          <div class="pdf-menu-row">
+            <span class="pdf-menu-label">Tamaño de Fuentes</span>
+            <div class="pdf-menu-stepper">
               <button type="button" class="pdf-step-btn" data-pdf-step="font" data-dir="-5">−</button>
-              <input type="range" id="pdf-font-scale-preview" min="75" max="150" step="5" value="100">
+              <span id="pdf-font-scale-preview-label" class="pdf-scale-val" style="min-width:40px; text-align:center;">100%</span>
               <button type="button" class="pdf-step-btn" data-pdf-step="font" data-dir="5">+</button>
-              <span id="pdf-font-scale-preview-label" class="pdf-scale-val">100%</span>
             </div>
           </div>
-          <div class="pdf-slider-row">
-            <span class="pdf-slider-label" style="font-size:12px; min-width:100px;">Tamaño Fotos</span>
-            <div class="pdf-slider-controls">
+          <div class="pdf-menu-row">
+            <span class="pdf-menu-label">Tamaño de Fotos</span>
+            <div class="pdf-menu-stepper">
               <button type="button" class="pdf-step-btn" data-pdf-step="photo" data-dir="-5">−</button>
-              <input type="range" id="pdf-photo-scale-preview" min="60" max="140" step="5" value="100">
+              <span id="pdf-photo-scale-preview-label" class="pdf-scale-val" style="min-width:40px; text-align:center;">100%</span>
               <button type="button" class="pdf-step-btn" data-pdf-step="photo" data-dir="5">+</button>
-              <span id="pdf-photo-scale-preview-label" class="pdf-scale-val">100%</span>
             </div>
           </div>
+          <label class="pdf-menu-row" style="cursor:pointer; user-select:none;">
+            <span class="pdf-menu-label">Separar Raccords por página</span>
+            <span class="rp-switch">
+              <input type="checkbox" id="pdf-per-raccord-checkbox">
+              <span class="rp-switch-track"></span>
+            </span>
+          </label>
         </div>
 
         <div id="pdf-preview-stage" class="pdf-preview-stage"></div>
@@ -2331,7 +2350,7 @@
         <button type="button" id="btn-back-from-pdf-preview" class="btn-secondary" style="flex:1;">Cancelar</button>
         <button type="button" id="btn-save-from-pdf-preview" class="btn-primary" style="flex:1.5; padding:14px 12px; font-size:15px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>Generar y Guardar PDF</span>
+          <span>Generar PDF</span>
         </button>
       </div>
     </div>
@@ -4310,14 +4329,15 @@
     const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
     const btnToggleAllPdfScenes = document.getElementById('btn-toggle-all-pdf-scenes');
     const btnOpenPdfScenes = document.getElementById('btn-open-pdf-scenes');
+    const pdfScenesBtnLabel = document.getElementById('pdf-scenes-btn-label');
     let cachedTakesForPdf = [];
 
     function updatePdfScenesButtonLabel() {
       const total = cachedTakesForPdf.length;
       const selected = document.querySelectorAll('.pdf-scene-checkbox:checked').length;
-      btnOpenPdfScenes.textContent = (selected === total)
-        ? `Escenas (Todas · ${total})`
-        : `Escenas (${selected}/${total})`;
+      pdfScenesBtnLabel.textContent = (selected === total)
+        ? `Todas (${total})`
+        : `${selected} de ${total}`;
     }
 
     document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
@@ -4471,46 +4491,21 @@
     const pdfPreviewModal = document.getElementById('pdf-preview-modal');
     const pdfPreviewStage = document.getElementById('pdf-preview-stage');
     const pdfPreviewPageCount = document.getElementById('pdf-preview-page-count');
-    const pdfPreviewZoomLabel = document.getElementById('pdf-preview-zoom-label');
-    const pdfFontScalePreview = document.getElementById('pdf-font-scale-preview');
-    const pdfPhotoScalePreview = document.getElementById('pdf-photo-scale-preview');
+    const pdfPerRaccordCheckbox = document.getElementById('pdf-per-raccord-checkbox');
     const pdfFontScalePreviewLabel = document.getElementById('pdf-font-scale-preview-label');
     const pdfPhotoScalePreviewLabel = document.getElementById('pdf-photo-scale-preview-label');
 
     const storedFontScale = parseInt(localStorage.getItem('rp_pdf_font_scale') || '100', 10);
     const storedPhotoScale = parseInt(localStorage.getItem('rp_pdf_photo_scale') || '100', 10);
-    const storedPreviewZoom = parseInt(localStorage.getItem('rp_pdf_preview_zoom') || '100', 10);
     let pdfFontScalePct = Number.isFinite(storedFontScale) ? Math.max(75, Math.min(150, storedFontScale)) : 100;
     let pdfPhotoScalePct = Number.isFinite(storedPhotoScale) ? Math.max(60, Math.min(140, storedPhotoScale)) : 100;
-    let pdfPreviewZoomPct = Number.isFinite(storedPreviewZoom) ? Math.max(80, Math.min(140, storedPreviewZoom)) : 100;
     let pdfLayoutMode = localStorage.getItem('rp_pdf_layout_mode') === 'per-raccord' ? 'per-raccord' : 'flow';
     let pdfLang = localStorage.getItem('rp_pdf_lang') === 'EN' ? 'EN' : 'ES';
 
-    function applyPdfPreviewZoomUI() {
-      pdfPreviewStage.style.setProperty('--pdf-preview-zoom', String(pdfPreviewZoomPct / 100));
-      pdfPreviewZoomLabel.textContent = `${pdfPreviewZoomPct}%`;
-    }
-
-    function setPdfPreviewZoom(val) {
-      pdfPreviewZoomPct = Math.max(80, Math.min(140, Math.round(val / 10) * 10));
-      localStorage.setItem('rp_pdf_preview_zoom', String(pdfPreviewZoomPct));
-      applyPdfPreviewZoomUI();
-    }
-
-    document.getElementById('btn-pdf-zoom-out').addEventListener('click', () => setPdfPreviewZoom(pdfPreviewZoomPct - 10));
-    document.getElementById('btn-pdf-zoom-in').addEventListener('click', () => setPdfPreviewZoom(pdfPreviewZoomPct + 10));
-
     function syncPdfTuningControlsUI() {
-      applyPdfPreviewZoomUI();
-      pdfFontScalePreview.value = pdfFontScalePct;
       pdfFontScalePreviewLabel.textContent = `${pdfFontScalePct}%`;
-
-      pdfPhotoScalePreview.value = pdfPhotoScalePct;
       pdfPhotoScalePreviewLabel.textContent = `${pdfPhotoScalePct}%`;
-
-      document.querySelectorAll('input[name="pdf-layout-mode-preview"]').forEach(r => {
-        r.checked = (r.value === pdfLayoutMode);
-      });
+      pdfPerRaccordCheckbox.checked = (pdfLayoutMode === 'per-raccord');
       document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
         r.checked = (r.value === pdfLang);
       });
@@ -4540,33 +4535,26 @@
       scheduleLivePdfPreviewUpdate();
     }
 
-    function setPdfLayoutMode(mode) {
-      pdfLayoutMode = (mode === 'per-raccord') ? 'per-raccord' : 'flow';
-      localStorage.setItem('rp_pdf_layout_mode', pdfLayoutMode);
-      syncPdfTuningControlsUI();
-      scheduleLivePdfPreviewUpdate();
-    }
-
-    pdfFontScalePreview.addEventListener('input', (e) => setPdfFontScale(parseInt(e.target.value, 10)));
-    pdfPhotoScalePreview.addEventListener('input', (e) => setPdfPhotoScale(parseInt(e.target.value, 10)));
-
-    document.querySelectorAll('input[name="pdf-layout-mode-preview"]').forEach(r => {
-      r.addEventListener('change', (e) => setPdfLayoutMode(e.target.value));
-    });
-    document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
-      r.addEventListener('change', (e) => {
-        pdfLang = (e.target.value === 'EN') ? 'EN' : 'ES';
-        localStorage.setItem('rp_pdf_lang', pdfLang);
-        scheduleLivePdfPreviewUpdate();
-      });
-    });
-
     document.querySelectorAll('[data-pdf-step]').forEach(btn => {
       btn.addEventListener('click', () => {
         const kind = btn.getAttribute('data-pdf-step');
         const dir = parseInt(btn.getAttribute('data-dir'), 10);
         if (kind === 'font') setPdfFontScale(pdfFontScalePct + dir);
         else if (kind === 'photo') setPdfPhotoScale(pdfPhotoScalePct + dir);
+      });
+    });
+
+    pdfPerRaccordCheckbox.addEventListener('change', () => {
+      pdfLayoutMode = pdfPerRaccordCheckbox.checked ? 'per-raccord' : 'flow';
+      localStorage.setItem('rp_pdf_layout_mode', pdfLayoutMode);
+      scheduleLivePdfPreviewUpdate();
+    });
+
+    document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
+      r.addEventListener('change', (e) => {
+        pdfLang = (e.target.value === 'EN') ? 'EN' : 'ES';
+        localStorage.setItem('rp_pdf_lang', pdfLang);
+        scheduleLivePdfPreviewUpdate();
       });
     });
 
