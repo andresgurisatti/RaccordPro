@@ -466,7 +466,7 @@
       background: rgba(5, 7, 10, 0.76);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      z-index: 40;
+      z-index: 49;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -4113,15 +4113,6 @@
       toggleProjectMenu();
     });
 
-    projectMenuBackdrop.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeProjectMenu();
-    });
-    projectMenuBackdrop.addEventListener('pointerdown', (e) => {
-      e.stopPropagation();
-      closeProjectMenu();
-    });
-
     /* ==========================================================================
        CONTROL DEL MENÚ EN PÁGINA DE INICIO (PROYECTOS)
        ========================================================================== */
@@ -4169,26 +4160,46 @@
       toggleHomeMenu();
     });
 
-    homeMenuBackdrop.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeHomeMenu();
-    });
-    homeMenuBackdrop.addEventListener('pointerdown', (e) => {
-      e.stopPropagation();
-      closeHomeMenu();
-    });
+    /* Interceptador global en fase de captura para cerrar menús al tocar fuera sin disparar botones inferiores */
+    let menuClosedByOutsideTouch = false;
 
-    document.addEventListener('pointerdown', (e) => {
-      if (dropdownMenu && dropdownMenu.classList.contains('is-open')) {
-        if (!dropdownMenu.contains(e.target) && !btnMenuToggle.contains(e.target)) {
-          closeProjectMenu();
+    function handleOutsideMenuInteraction(e) {
+      const isProjectOpen = dropdownMenu && dropdownMenu.classList.contains('is-open');
+      const isHomeOpen = homeDropdownMenu && homeDropdownMenu.classList.contains('is-open');
+
+      if (!isProjectOpen && !isHomeOpen) {
+        if (menuClosedByOutsideTouch) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
         }
+        return;
       }
-      if (homeDropdownMenu && homeDropdownMenu.classList.contains('is-open')) {
-        if (!homeDropdownMenu.contains(e.target) && !btnHomeMenuToggle.contains(e.target)) {
-          closeHomeMenu();
-        }
+
+      // Si el toque fue dentro del menú o sobre el botón de menú correspondiente, permitir interacción normal
+      if (
+        (isProjectOpen && (dropdownMenu.contains(e.target) || btnMenuToggle.contains(e.target))) ||
+        (isHomeOpen && (homeDropdownMenu.contains(e.target) || btnHomeMenuToggle.contains(e.target)))
+      ) {
+        return;
       }
+
+      // El usuario tocó fuera: anular el evento por completo para que ningún botón debajo se active
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
+      if (isProjectOpen) closeProjectMenu();
+      if (isHomeOpen) closeHomeMenu();
+
+      menuClosedByOutsideTouch = true;
+      setTimeout(() => {
+        menuClosedByOutsideTouch = false;
+      }, 400);
+    }
+
+    ['pointerdown', 'touchstart', 'touchend', 'click'].forEach(evtType => {
+      window.addEventListener(evtType, handleOutsideMenuInteraction, { capture: true, passive: false });
     });
 
     document.addEventListener('keydown', (e) => {
@@ -6007,7 +6018,6 @@
       if (!activeProjectId || !activeProjectData) return;
 
       try {
-        showToast('Empacando respaldo .setbible...');
         const pkg = await buildSetBibleBackupFile(activeProjectData, null);
 
         if ('showDirectoryPicker' in window) {
@@ -6023,25 +6033,28 @@
 
           if (dirHandle) {
             try {
-              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, [{ fileName: pkg.fileName, blob: pkg.blob }]);
-              if (ok) {
-                markProjectBackedUp(activeProjectId);
-                return;
-              }
+              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(
+                dirHandle,
+                [{ fileName: pkg.fileName, blob: pkg.blob }],
+                () => markProjectBackedUp(activeProjectId)
+              );
+              if (ok) return;
             } catch (dirErr) {
               console.warn('No se pudo escribir directamente en la carpeta asignada:', dirErr);
             }
           }
         }
 
-        await saveFileToUserDirectory(
+        const saved = await saveFileToUserDirectory(
           pkg.blob,
           pkg.fileName,
           pkg.mimeType,
           pkg.desc,
           pkg.ext
         );
-        markProjectBackedUp(activeProjectId);
+        if (saved) {
+          markProjectBackedUp(activeProjectId);
+        }
       } catch (err) {
         console.error('Error exportando respaldo:', err);
         showToast('Error al exportar el respaldo');
