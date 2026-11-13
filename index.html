@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>RaccordPro — Sistema de Continuidad en Set</title>
+  <title>SetBible — Sistema de Continuidad en Set</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#13171d">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="RaccordPro">
+  <meta name="apple-mobile-web-app-title" content="SetBible">
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%2313171d'/><rect x='40' y='40' width='432' height='432' rx='80' fill='%230d0f12' stroke='%23f59e0b' stroke-width='14' stroke-opacity='0.35'/><g transform='translate(96, 96) scale(13.33)' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z'/><path d='m6.2 5.3 3.1 3.9'/><path d='m12.4 3.4 3.1 4'/><path d='M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z'/></g></svg>">
@@ -1654,6 +1654,226 @@
       pointer-events: none;
     }
 
+    .help-tour-visual {
+      background: #0b0d10;
+      border: 1px solid var(--border-700);
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 185px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .help-tour-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--amber);
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .help-tour-desc {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: #d1d5db;
+    }
+
+    .help-tour-desc strong {
+      color: #fff;
+    }
+
+    .help-tour-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .help-tour-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--border-600);
+      transition: width 0.2s ease, background 0.2s ease;
+    }
+
+    .help-tour-dot.active {
+      width: 22px;
+      background: var(--amber);
+    }
+
+    .help-mock-card {
+      width: 100%;
+      max-width: 310px;
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: 11px;
+      padding: 10px 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .help-mock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.14);
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .unsaved-backups-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.42);
+      border-radius: 12px;
+      padding: 9px 12px;
+      margin-bottom: 14px;
+    }
+
+    .unsaved-backups-banner.hidden {
+      display: none;
+    }
+
+    .unsaved-backups-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #fde68a;
+      min-width: 0;
+    }
+
+    .unsaved-backups-btn {
+      padding: 6px 12px;
+      border-radius: 9px;
+      background: var(--amber);
+      color: #000;
+      font-size: 12px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .unsaved-backups-btn:active {
+      transform: scale(0.95);
+    }
+
+    .project-dirty-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 900;
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      padding: 2px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+
+    #btn-home-menu-toggle,
+    #btn-project-menu-toggle {
+      position: relative;
+    }
+
+    .menu-dirty-dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ef4444;
+      border: 2px solid var(--bg-850);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.85);
+      pointer-events: none;
+    }
+
+    @keyframes helpCardSwapUp {
+      0%, 20% { transform: translateY(0); border-color: var(--border-700); }
+      45%, 75% { transform: translateY(-4px); border-color: rgba(245, 158, 11, 0.7); box-shadow: 0 10px 22px rgba(245, 158, 11, 0.18); }
+      100% { transform: translateY(0); border-color: var(--border-700); }
+    }
+
+    @keyframes helpCompleteFade {
+      0%, 25% { opacity: 1; }
+      55%, 85% { opacity: 0.55; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes helpAvatarPop {
+      0%, 15% { transform: scale(0.88); opacity: 0.45; }
+      35%, 80% { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(0.88); opacity: 0.45; }
+    }
+
+    @keyframes helpPhotoZoom {
+      0%, 25% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.45); }
+      50%, 75% { transform: scale(1.22); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    @keyframes helpTypeSearch {
+      0%, 15% { width: 0ch; }
+      45%, 85% { width: 8ch; }
+      100% { width: 0ch; }
+    }
+
+    @keyframes helpFilterFade {
+      0%, 25% { opacity: 1; transform: scale(1); }
+      50%, 85% { opacity: 0.25; transform: scale(0.97); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes helpPdfReflow {
+      0%, 25% { height: 18px; }
+      50%, 80% { height: 27px; }
+      100% { height: 18px; }
+    }
+
+    @keyframes helpPdfChipPulse {
+      0%, 30% { background: rgba(245, 158, 11, 0.14); transform: scale(1); }
+      50%, 70% { background: rgba(245, 158, 11, 0.32); transform: scale(1.06); }
+      100% { background: rgba(245, 158, 11, 0.14); transform: scale(1); }
+    }
+
+    @keyframes helpJsonFly {
+      0% { transform: translateX(-34px) scale(0.85); opacity: 0; }
+      25% { opacity: 1; }
+      75% { transform: translateX(34px) scale(1); opacity: 1; }
+      100% { transform: translateX(42px) scale(0.85); opacity: 0; }
+    }
+
+    .help-anim-swap { animation: helpCardSwapUp 3.2s ease-in-out infinite; }
+    .help-anim-complete { animation: helpCompleteFade 3.2s ease-in-out infinite; }
+    .help-anim-avatar-1 { animation: helpAvatarPop 2.8s ease-in-out infinite; }
+    .help-anim-avatar-2 { animation: helpAvatarPop 2.8s ease-in-out 0.45s infinite; }
+    .help-anim-photo-zoom { animation: helpPhotoZoom 2.8s ease-in-out infinite; }
+    .help-anim-type {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--amber);
+      animation: helpTypeSearch 3.4s steps(8, end) infinite;
+    }
+    .help-anim-filter-dim { animation: helpFilterFade 3.4s ease-in-out infinite; }
+    .help-anim-pdf-block { animation: helpPdfReflow 3s ease-in-out infinite; }
+    .help-anim-pdf-chip { animation: helpPdfChipPulse 3s ease-in-out infinite; }
+    .help-anim-json-fly { animation: helpJsonFly 2.4s ease-in-out infinite; }
+
     .toast-bar {
       position: fixed;
       bottom: calc(95px + env(safe-area-inset-bottom, 0px));
@@ -1687,7 +1907,7 @@
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
         </div>
         <div>
-          <h1 class="brand-title">Raccord<span>PRO</span></h1>
+          <h1 class="brand-title">Set<span>Bible</span></h1>
         </div>
       </div>
 
@@ -1704,6 +1924,7 @@
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </span>
+          <span id="home-menu-dirty-dot" class="menu-dirty-dot hidden" title="Proyectos sin respaldar"></span>
         </button>
       </div>
 
@@ -1754,6 +1975,11 @@
           <span>Guardar Respaldos</span>
         </button>
 
+        <button type="button" class="dropdown-item" id="home-menu-opt-help">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Ayuda</span>
+        </button>
+
         <div class="dropdown-divider"></div>
 
         <button type="button" class="dropdown-item" id="home-menu-opt-delete-projects" style="color:#f87171; border-color:rgba(239,68,68,0.35);">
@@ -1778,6 +2004,13 @@
 
     <main class="scroll-area">
       <div class="container-narrow">
+        <div id="unsaved-backups-banner" class="unsaved-backups-banner hidden">
+          <div class="unsaved-backups-text">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span id="unsaved-backups-label">1 proyecto modificado sin respaldar</span>
+          </div>
+          <button type="button" id="btn-quick-backup-dirty" class="unsaved-backups-btn">Respaldar</button>
+        </div>
         <h2 id="projects-title-counter" class="section-label-center">PROYECTOS (0)</h2>
         <div id="projects-list"></div>
 
@@ -1802,7 +2035,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H7a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h9"/><line x1="21" y1="12" x2="10" y2="12"/><polyline points="14 8 10 12 14 16"/></svg>
             <span>Importar Proyecto</span>
           </button>
-          <input type="file" id="input-import-json" accept=".json,application/json" multiple class="hidden">
+          <input type="file" id="input-import-json" accept=".setbible,.zip,.json,application/json,application/zip" multiple class="hidden">
         </div>
       </div>
     </div>
@@ -1836,6 +2069,7 @@
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </span>
+          <span id="project-menu-dirty-dot" class="menu-dirty-dot hidden" title="Cambios sin respaldar"></span>
         </button>
       </div>
 
@@ -1871,7 +2105,10 @@
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          <span>Guardar Respaldo</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1; gap:8px;">
+            <span>Guardar Respaldo</span>
+            <span id="menu-dirty-backup-badge" class="project-dirty-badge hidden">SIN RESPALDAR</span>
+          </div>
         </button>
         <button type="button" class="dropdown-item sub-option hidden" id="menu-opt-change-json-folder">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
@@ -2357,6 +2594,33 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- MODAL: GUÍA VISUAL / AYUDA DE SETBIBLE     -->
+  <!-- ========================================== -->
+  <div id="help-tour-modal" class="modal-backdrop hidden" style="z-index: 80;">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <h2 class="modal-title" style="color:var(--amber);">GUÍA DE SETBIBLE</h2>
+          <span id="help-tour-step-badge" style="color:var(--amber); font-size:12px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">1 / 6</span>
+        </div>
+        <button type="button" id="btn-close-help-tour" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="help-tour-swipe-area">
+        <div id="help-tour-visual" class="help-tour-visual"></div>
+        <h3 id="help-tour-title" class="help-tour-title"></h3>
+        <p id="help-tour-desc" class="help-tour-desc"></p>
+        <div id="help-tour-dots" class="help-tour-dots"></div>
+      </div>
+      <div class="modal-footer" style="gap:10px;">
+        <button type="button" id="btn-help-prev" class="btn-secondary" style="flex:1;">Anterior</button>
+        <button type="button" id="btn-help-next" class="btn-primary" style="flex:1.3;">Siguiente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL: SELECTOR MÚLTIPLE DE PROYECTOS      -->
   <!-- ========================================== -->
   <div id="batch-projects-modal" class="modal-backdrop hidden" style="z-index: 65;">
@@ -2644,7 +2908,101 @@
       } catch (e) {}
     }
 
+    const BACKUP_STATE_KEY = 'rp_project_backup_state';
+    let suppressBackupDirtyTracking = false;
+
+    function getBackupStateMap() {
+      try {
+        const raw = localStorage.getItem(BACKUP_STATE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return (parsed && typeof parsed === 'object') ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveBackupStateMap(map) {
+      try {
+        localStorage.setItem(BACKUP_STATE_KEY, JSON.stringify(map));
+      } catch (e) {}
+    }
+
+    function refreshProjectMenuBackupIndicator() {
+      const dot = document.getElementById('project-menu-dirty-dot');
+      const badge = document.getElementById('menu-dirty-backup-badge');
+      const isDirty = Boolean(activeProjectId && isProjectModifiedSinceBackup({ id: activeProjectId }));
+      if (dot) dot.classList.toggle('hidden', !isDirty);
+      if (badge) badge.classList.toggle('hidden', !isDirty);
+    }
+
+    function markProjectModified(projId) {
+      if (!projId || suppressBackupDirtyTracking) return;
+      const map = getBackupStateMap();
+      const prev = map[projId] || {};
+      map[projId] = {
+        lastModifiedAt: Date.now(),
+        lastBackupAt: prev.lastBackupAt || 0
+      };
+      saveBackupStateMap(map);
+      if (projId === activeProjectId) refreshProjectMenuBackupIndicator();
+    }
+
+    function markProjectBackedUp(projId) {
+      if (!projId) return;
+      const map = getBackupStateMap();
+      const now = Date.now();
+      map[projId] = {
+        lastModifiedAt: (map[projId] && map[projId].lastModifiedAt) ? map[projId].lastModifiedAt : now,
+        lastBackupAt: now
+      };
+      saveBackupStateMap(map);
+      if (projId === activeProjectId) refreshProjectMenuBackupIndicator();
+    }
+
+    function removeProjectBackupState(projId) {
+      if (!projId) return;
+      const map = getBackupStateMap();
+      if (projId in map) {
+        delete map[projId];
+        saveBackupStateMap(map);
+      }
+    }
+
+    function isProjectModifiedSinceBackup(proj) {
+      if (!proj || !proj.id) return false;
+      const map = getBackupStateMap();
+      const st = map[proj.id];
+      if (!st) return false;
+      return (st.lastModifiedAt || 0) > (st.lastBackupAt || 0);
+    }
+
+    const unsavedBackupsBanner = document.getElementById('unsaved-backups-banner');
+    const unsavedBackupsLabel = document.getElementById('unsaved-backups-label');
+    const btnQuickBackupDirty = document.getElementById('btn-quick-backup-dirty');
+
+    function refreshUnsavedBackupsBanner(projects) {
+      const homeDot = document.getElementById('home-menu-dirty-dot');
+      const dirtyCount = (projects || []).filter(p => isProjectModifiedSinceBackup(p)).length;
+      if (homeDot) homeDot.classList.toggle('hidden', dirtyCount === 0);
+      if (!unsavedBackupsBanner || !unsavedBackupsLabel) return;
+      if (dirtyCount === 0) {
+        unsavedBackupsBanner.classList.add('hidden');
+      } else {
+        unsavedBackupsLabel.textContent = dirtyCount === 1
+          ? '1 proyecto modificado sin respaldar'
+          : `${dirtyCount} proyectos modificados sin respaldar`;
+        unsavedBackupsBanner.classList.remove('hidden');
+      }
+    }
+
+    if (btnQuickBackupDirty) {
+      btnQuickBackupDirty.addEventListener('click', () => openBatchProjectsModal('export'));
+    }
+
     function saveEntityToDB(storeName, item) {
+      const targetProjId = (storeName === STORE_PROJECTS) ? item.id : item.projectId;
+      markProjectModified(targetProjId);
+
       const mirrorToFallback = () => {
         const list = getFallbackList('rp_' + storeName).filter(x => x.id !== item.id);
         list.push(item);
@@ -2702,6 +3060,7 @@
     }
 
     function deleteEntityFromDB(storeName, id) {
+      if (activeProjectId) markProjectModified(activeProjectId);
       setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.id !== id));
 
       if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
@@ -2771,6 +3130,7 @@
     }
 
     function deleteProjectFromDB(projId) {
+      removeProjectBackupState(projId);
       setFallbackList('rp_projects', getFallbackList('rp_projects').filter(p => p.id !== projId));
       setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
       setFallbackList('rp_scenes', getFallbackList('rp_scenes').filter(s => s.projectId !== projId));
@@ -2951,6 +3311,7 @@
 
       await updateCatalogCaches();
       await refreshBackupFolderLabel();
+      refreshProjectMenuBackupIndicator();
       renderTakes();
     }
 
@@ -3004,6 +3365,7 @@
 
     async function renderProjects() {
       const rawProjects = await getAllProjectsFromDB();
+      refreshUnsavedBackupsBanner(rawProjects);
       const projects = sortProjectsArray(rawProjects);
 
       const q = searchProjectsQuery.toLowerCase().trim();
@@ -3043,6 +3405,7 @@
                 ${proj.pinned ? `<span class="project-pin-icon" title="Proyecto fijado">${ICON_PIN_SVG}</span>` : ''}
                 <span>${escapeHtml(proj.name)}</span>
                 ${proj.completed ? `<span class="project-completed-badge" title="Proyecto terminado">${ICON_COMPLETED_SVG}<span>TERMINADO</span></span>` : ''}
+                ${isProjectModifiedSinceBackup(proj) ? `<span class="project-dirty-badge" title="Cambios sin respaldar">SIN RESPALDAR</span>` : ''}
               </div>
               <p class="project-card-meta">
                 ${prodValue ? escapeHtml(prodValue) + ' • ' : ''}Creado: ${new Date(proj.createdAt).toLocaleDateString()}
@@ -3268,7 +3631,314 @@
       });
     });
 
-    /* IMPORTACIÓN DE RESPALDO JSON */
+    /* EMPACADO Y DESEMPACADO .SETBIBLE (ZIP EN MODO STORE NATIVO) + JSON */
+    const ZIP_CRC32_TABLE = (() => {
+      const table = new Uint32Array(256);
+      for (let i = 0; i < 256; i++) {
+        let c = i;
+        for (let k = 0; k < 8; k++) {
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[i] = c >>> 0;
+      }
+      return table;
+    })();
+
+    function zipCrc32(bytes) {
+      let crc = 0xFFFFFFFF;
+      for (let i = 0; i < bytes.length; i++) {
+        crc = ZIP_CRC32_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+      }
+      return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    function createStoreZipBlob(fileMap) {
+      const encoder = new TextEncoder();
+      const now = new Date();
+      const dosTime = ((now.getHours() & 0x1F) << 11) | ((now.getMinutes() & 0x3F) << 5) | ((now.getSeconds() >> 1) & 0x1F);
+      const dosDate = (((Math.max(1980, now.getFullYear()) - 1980) & 0x7F) << 9) | (((now.getMonth() + 1) & 0x0F) << 5) | (now.getDate() & 0x1F);
+
+      const parts = [];
+      const centralDir = [];
+      let offset = 0;
+      let count = 0;
+
+      for (const [name, data] of Object.entries(fileMap)) {
+        const nameBytes = encoder.encode(name);
+        const crc = zipCrc32(data);
+        const size = data.length;
+
+        const lfh = new Uint8Array(30 + nameBytes.length);
+        const lfhView = new DataView(lfh.buffer);
+        lfhView.setUint32(0, 0x04034B50, true);
+        lfhView.setUint16(4, 20, true);
+        lfhView.setUint16(6, 0x0800, true);
+        lfhView.setUint16(8, 0, true); // STORE
+        lfhView.setUint16(10, dosTime, true);
+        lfhView.setUint16(12, dosDate, true);
+        lfhView.setUint32(14, crc, true);
+        lfhView.setUint32(18, size, true);
+        lfhView.setUint32(22, size, true);
+        lfhView.setUint16(26, nameBytes.length, true);
+        lfhView.setUint16(28, 0, true);
+        lfh.set(nameBytes, 30);
+
+        parts.push(lfh, data);
+
+        const cdh = new Uint8Array(46 + nameBytes.length);
+        const cdhView = new DataView(cdh.buffer);
+        cdhView.setUint32(0, 0x02014B50, true);
+        cdhView.setUint16(4, 20, true);
+        cdhView.setUint16(6, 20, true);
+        cdhView.setUint16(8, 0x0800, true);
+        cdhView.setUint16(10, 0, true); // STORE
+        cdhView.setUint16(12, dosTime, true);
+        cdhView.setUint16(14, dosDate, true);
+        cdhView.setUint32(16, crc, true);
+        cdhView.setUint32(20, size, true);
+        cdhView.setUint32(24, size, true);
+        cdhView.setUint16(28, nameBytes.length, true);
+        cdhView.setUint16(30, 0, true);
+        cdhView.setUint16(32, 0, true);
+        cdhView.setUint16(34, 0, true);
+        cdhView.setUint16(36, 0, true);
+        cdhView.setUint32(38, 0, true);
+        cdhView.setUint32(42, offset, true);
+        cdh.set(nameBytes, 46);
+
+        centralDir.push(cdh);
+        offset += lfh.length + size;
+        count++;
+      }
+
+      let cdSize = 0;
+      for (const cd of centralDir) {
+        parts.push(cd);
+        cdSize += cd.length;
+      }
+
+      const eocd = new Uint8Array(22);
+      const eocdView = new DataView(eocd.buffer);
+      eocdView.setUint32(0, 0x06054B50, true);
+      eocdView.setUint16(4, 0, true);
+      eocdView.setUint16(6, 0, true);
+      eocdView.setUint16(8, count, true);
+      eocdView.setUint16(10, count, true);
+      eocdView.setUint32(12, cdSize, true);
+      eocdView.setUint32(16, offset, true);
+      eocdView.setUint16(20, 0, true);
+      parts.push(eocd);
+
+      return new Blob(parts, { type: 'application/octet-stream' });
+    }
+
+    async function readZipEntries(buf) {
+      const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+      const decoder = new TextDecoder('utf-8');
+      let eocdOffset = -1;
+      for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65558); i--) {
+        if (view.getUint32(i, true) === 0x06054B50) {
+          eocdOffset = i;
+          break;
+        }
+      }
+      if (eocdOffset === -1) throw new Error('Archivo .setbible/.zip inválido');
+
+      const totalEntries = view.getUint16(eocdOffset + 10, true);
+      let cdPtr = view.getUint32(eocdOffset + 16, true);
+      const entries = {};
+
+      for (let idx = 0; idx < totalEntries; idx++) {
+        if (view.getUint32(cdPtr, true) !== 0x02014B50) break;
+        const method = view.getUint16(cdPtr + 10, true);
+        const compSize = view.getUint32(cdPtr + 20, true);
+        const nameLen = view.getUint16(cdPtr + 28, true);
+        const extraLen = view.getUint16(cdPtr + 30, true);
+        const commentLen = view.getUint16(cdPtr + 32, true);
+        const lfhOffset = view.getUint32(cdPtr + 42, true);
+        const name = decoder.decode(buf.subarray(cdPtr + 46, cdPtr + 46 + nameLen));
+        cdPtr += 46 + nameLen + extraLen + commentLen;
+
+        const lfhNameLen = view.getUint16(lfhOffset + 26, true);
+        const lfhExtraLen = view.getUint16(lfhOffset + 28, true);
+        const dataStart = lfhOffset + 30 + lfhNameLen + lfhExtraLen;
+        const rawSlice = buf.subarray(dataStart, dataStart + compSize);
+
+        if (method === 0) {
+          entries[name] = rawSlice;
+        } else if (method === 8 && typeof DecompressionStream !== 'undefined') {
+          const ds = new DecompressionStream('deflate-raw');
+          const ab = await new Response(new Blob([rawSlice]).stream().pipeThrough(ds)).arrayBuffer();
+          entries[name] = new Uint8Array(ab);
+        } else {
+          throw new Error('Método de compresión ZIP no soportado');
+        }
+      }
+      return entries;
+    }
+
+    function dataUrlToBinary(dataUrl) {
+      if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:')) return null;
+      const commaIdx = dataUrl.indexOf(',');
+      if (commaIdx === -1) return null;
+      const header = dataUrl.slice(5, commaIdx);
+      const mime = header.split(';')[0] || 'image/jpeg';
+      const base64 = dataUrl.slice(commaIdx + 1);
+      const binStr = atob(base64);
+      const bytes = new Uint8Array(binStr.length);
+      for (let i = 0; i < binStr.length; i++) {
+        bytes[i] = binStr.charCodeAt(i);
+      }
+      let ext = 'jpg';
+      if (mime.includes('png')) ext = 'png';
+      else if (mime.includes('webp')) ext = 'webp';
+      return { bytes, mime, ext };
+    }
+
+    function uint8ArrayToDataUrl(bytes, mime = 'image/jpeg') {
+      return new Promise((resolve) => {
+        const blob = new Blob([bytes], { type: mime });
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result || null);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function buildSetBibleBackupFile(proj, datePart, usedFileNames) {
+      const takes = await getAllTakesForProject(proj.id);
+      const scenes = await getEntitiesForProject(STORE_SCENES, proj.id);
+      const characters = await getEntitiesForProject(STORE_CHARACTERS, proj.id);
+
+      const rawProjName = (proj.name || 'PROYECTO')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'SETBIBLE';
+
+      let fileName = `${rawProjName}_BACKUP_${datePart}.setbible`;
+      let suffix = 2;
+      while (usedFileNames && usedFileNames.has(fileName)) {
+        fileName = `${rawProjName}_${suffix}_BACKUP_${datePart}.setbible`;
+        suffix++;
+      }
+      if (usedFileNames) usedFileNames.add(fileName);
+
+      const zipMap = {};
+      let photoCounter = 0;
+
+      const cleanTakes = takes.map(t => {
+        const copy = { ...t };
+        if (Array.isArray(t.photos)) {
+          copy.photos = t.photos.map(entry => {
+            const eCopy = { ...entry };
+            const bin = dataUrlToBinary(entry.photo);
+            if (bin) {
+              photoCounter++;
+              const relPath = `photos/raccord_${photoCounter}.${bin.ext}`;
+              zipMap[relPath] = bin.bytes;
+              eCopy.photo = `@setbible:${relPath}`;
+            }
+            return eCopy;
+          });
+        }
+        if (t.photo && typeof t.photo === 'string' && t.photo.startsWith('data:')) {
+          const bin = dataUrlToBinary(t.photo);
+          if (bin) {
+            photoCounter++;
+            const relPath = `photos/raccord_${photoCounter}.${bin.ext}`;
+            zipMap[relPath] = bin.bytes;
+            copy.photo = `@setbible:${relPath}`;
+          }
+        }
+        return copy;
+      });
+
+      const cleanCharacters = characters.map(c => {
+        const cCopy = { ...c };
+        const bin = dataUrlToBinary(c.photo);
+        if (bin) {
+          photoCounter++;
+          const relPath = `photos/actor_${photoCounter}.${bin.ext}`;
+          zipMap[relPath] = bin.bytes;
+          cCopy.photo = `@setbible:${relPath}`;
+        }
+        return cCopy;
+      });
+
+      const cleanPayload = {
+        format: 'setbible-package',
+        version: 3,
+        exportedAt: new Date().toISOString(),
+        project: proj,
+        takes: cleanTakes,
+        scenes,
+        characters: cleanCharacters
+      };
+
+      zipMap['project.json'] = new TextEncoder().encode(JSON.stringify(cleanPayload, null, 2));
+      const blob = createStoreZipBlob(zipMap);
+      return {
+        fileName,
+        mimeType: 'application/octet-stream',
+        ext: '.setbible',
+        desc: 'Respaldo de Proyecto SetBible (.setbible)',
+        blob
+      };
+    }
+
+    async function resolveSetBiblePhotoRef(val, zipMap) {
+      if (typeof val !== 'string' || !val.startsWith('@setbible:')) return val;
+      const relPath = val.slice(10);
+      const bytes = zipMap[relPath];
+      if (!bytes) return null;
+      const lower = relPath.toLowerCase();
+      let mime = 'image/jpeg';
+      if (lower.endsWith('.png')) mime = 'image/png';
+      else if (lower.endsWith('.webp')) mime = 'image/webp';
+      return await uint8ArrayToDataUrl(bytes, mime);
+    }
+
+    async function parseBackupFile(file) {
+      const lowerName = (file.name || '').toLowerCase();
+      const buf = new Uint8Array(await file.arrayBuffer());
+      const isZipSignature = buf.length >= 2 && buf[0] === 0x50 && buf[1] === 0x4B;
+
+      if (lowerName.endsWith('.setbible') || lowerName.endsWith('.zip') || isZipSignature) {
+        const unzipped = await readZipEntries(buf);
+        const jsonBytes = unzipped['project.json'];
+        if (!jsonBytes) {
+          throw new Error('El paquete .setbible no contiene project.json');
+        }
+        const data = JSON.parse(new TextDecoder('utf-8').decode(jsonBytes));
+
+        if (Array.isArray(data.takes)) {
+          for (const t of data.takes) {
+            if (Array.isArray(t.photos)) {
+              for (const p of t.photos) {
+                p.photo = await resolveSetBiblePhotoRef(p.photo, unzipped);
+              }
+            }
+            if (t.photo) {
+              t.photo = await resolveSetBiblePhotoRef(t.photo, unzipped);
+            }
+          }
+        }
+        if (Array.isArray(data.characters)) {
+          for (const c of data.characters) {
+            if (c.photo) {
+              c.photo = await resolveSetBiblePhotoRef(c.photo, unzipped);
+            }
+          }
+        }
+        return data;
+      }
+
+      const text = new TextDecoder('utf-8').decode(buf);
+      return JSON.parse(text);
+    }
+
+    /* IMPORTACIÓN DE RESPALDO (.SETBIBLE / .ZIP / .JSON) */
     const inputImportJson = document.getElementById('input-import-json');
     const btnImportJsonBottom = document.getElementById('btn-import-project-bottom');
 
@@ -3288,10 +3958,10 @@
         let lastImportedProjectName = '';
         let importedLegacyRecords = false;
 
+        suppressBackupDirtyTracking = true;
         try {
           for (const file of files) {
-            const text = await file.text();
-            const data = JSON.parse(text);
+            const data = await parseBackupFile(file);
 
             if (data.multiProjectBackup && Array.isArray(data.projects)) {
               for (const bundle of data.projects) {
@@ -3306,6 +3976,7 @@
                   if (Array.isArray(bundle.characters)) {
                     for (const c of bundle.characters) await saveEntityToDB(STORE_CHARACTERS, c);
                   }
+                  markProjectBackedUp(bundle.project.id);
                   importedProjectsCount++;
                   lastImportedProjectName = bundle.project.name || '';
                 }
@@ -3321,6 +3992,7 @@
               if (Array.isArray(data.characters)) {
                 for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
               }
+              markProjectBackedUp(data.project.id);
               importedProjectsCount++;
               lastImportedProjectName = data.project.name || '';
             } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
@@ -3338,12 +4010,13 @@
           } else if (importedLegacyRecords) {
             showToast('Registros restaurados con éxito');
           } else {
-            showToast('Formato JSON no compatible');
+            showToast('Formato de respaldo no compatible');
           }
         } catch (err) {
-          console.error('Error importando JSON:', err);
-          showToast('Error de formato en el archivo');
+          console.error('Error importando respaldo:', err);
+          showToast(err && err.message ? err.message : 'Error de formato en el archivo');
         } finally {
+          suppressBackupDirtyTracking = false;
           e.target.value = '';
         }
       });
@@ -3432,6 +4105,227 @@
       e.stopPropagation();
       e.preventDefault();
     });
+
+    /* ==========================================================================
+       TOUR GUIADO / AYUDA VISUAL DE SETBIBLE
+       ========================================================================== */
+    const helpTourModal = document.getElementById('help-tour-modal');
+    const helpTourVisual = document.getElementById('help-tour-visual');
+    const helpTourTitle = document.getElementById('help-tour-title');
+    const helpTourDesc = document.getElementById('help-tour-desc');
+    const helpTourDots = document.getElementById('help-tour-dots');
+    const helpTourStepBadge = document.getElementById('help-tour-step-badge');
+    const btnHelpPrev = document.getElementById('btn-help-prev');
+    const btnHelpNext = document.getElementById('btn-help-next');
+
+    const HELP_TOUR_STEPS = [
+      {
+        title: '1. Organiza tus Proyectos',
+        desc: 'Crea producciones con el botón <strong>+</strong>. Desde el menú principal puedes <strong>Fijar</strong> tus proyectos activos arriba, marcarlos como <strong>Terminado</strong> u <strong>Ordenar</strong> (incluso arrastrando en modo <em>Personalizado</em>).',
+        visual: `
+          <div style="display:flex; flex-direction:column; gap:8px; width:100%; max-width:300px;">
+            <div class="help-mock-card help-anim-swap" style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="color:var(--amber); font-weight:900; font-size:14px; letter-spacing:1px;">⋮⋮</span>
+                <div>
+                  <div style="font-size:13px; font-weight:900; color:#fff;">SERIE NOCTURNA T1</div>
+                  <div style="font-size:11px; color:#9ca3af;">18 raccords · Fijado</div>
+                </div>
+              </div>
+              <span class="help-mock-pill">Fijado</span>
+            </div>
+            <div class="help-mock-card help-anim-complete" style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div style="font-size:13px; font-weight:900; color:#d1d5db;">CORTOMETRAJE SOL</div>
+                <div style="font-size:11px; color:#9ca3af;">12 raccords · Terminado</div>
+              </div>
+              <span class="help-mock-pill" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.35);">✓ Listo</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: '2. Catálogo de Escenas y Personajes',
+        desc: 'Dentro de un proyecto, abre el menú superior derecho para registrar <strong>Escenas</strong> y <strong>Personajes</strong> (con foto del actor). Así los seleccionas con un toque al capturar continuidad.',
+        visual: `
+          <div class="help-mock-card" style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span class="help-mock-pill help-anim-pdf-chip">ESCENA 12A</span>
+              <span style="font-size:11px; color:#9ca3af; font-weight:700;">INT. CAFÉ — DÍA</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; padding-top:6px; border-top:1px solid var(--border-700);">
+              <div class="help-anim-avatar-1" style="display:flex; align-items:center; gap:6px; flex:1;">
+                <div style="width:30px; height:30px; border-radius:50%; background:rgba(245,158,11,0.2); border:1.5px solid var(--amber); display:flex; align-items:center; justify-content:center; color:var(--amber); font-weight:900; font-size:12px; flex-shrink:0;">EL</div>
+                <div>
+                  <div style="font-size:12px; font-weight:800; color:#fff;">ELENA</div>
+                  <div style="font-size:10.5px; color:#9ca3af;">Sofía M.</div>
+                </div>
+              </div>
+              <div class="help-anim-avatar-2" style="display:flex; align-items:center; gap:6px; flex:1;">
+                <div style="width:30px; height:30px; border-radius:50%; background:rgba(245,158,11,0.2); border:1.5px solid var(--amber); display:flex; align-items:center; justify-content:center; color:var(--amber); font-weight:900; font-size:12px; flex-shrink:0;">MC</div>
+                <div>
+                  <div style="font-size:12px; font-weight:800; color:#fff;">MARCOS</div>
+                  <div style="font-size:10.5px; color:#9ca3af;">Luis R.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: '3. Raccords, Fotos y Zoom',
+        desc: 'Toca <strong>+</strong> para registrar una escena con notas generales y múltiples <strong>entradas</strong> (vestuario, utilería, maquillaje). Toca cualquier foto para abrirla en grande con zoom.',
+        visual: `
+          <div class="help-mock-card" style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:13px; font-weight:900; color:var(--amber);">ESCENA 4</span>
+              <span style="font-size:10.5px; color:#9ca3af; font-weight:700;">2 entradas</span>
+            </div>
+            <div style="background:var(--bg-850); border:1px solid var(--border-700); border-radius:7px; padding:5px 8px; font-size:11px; color:#d1d5db;">
+              Chaqueta abierta, taza en mano izquierda.
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <div class="help-anim-photo-zoom" style="width:48px; height:48px; border-radius:7px; background:linear-gradient(135deg,#2e261a,#13171d); border:1.5px solid rgba(245,158,11,0.65); display:flex; align-items:center; justify-content:center; color:var(--amber); flex-shrink:0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:11.5px; font-weight:800; color:#fff;">ELENA · Vestuario</div>
+                <div style="font-size:10.5px; color:#9ca3af;">Reloj dorado en muñeca izq.</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: '4. Buscador Rápido en Set',
+        desc: 'Encuentra cualquier detalle al instante usando la barra de búsqueda y los filtros de <strong>Escena</strong> o <strong>Personaje</strong> sin perder tiempo durante el rodaje.',
+        visual: `
+          <div class="help-mock-card" style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; background:var(--bg-850); border:1px solid var(--amber); border-radius:8px; padding:7px 10px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <span class="help-anim-type" style="font-size:12px; color:#fff; font-weight:800; font-family:monospace;">chaqueta</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:5px;">
+              <div style="background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.45); border-radius:7px; padding:5px 8px; font-size:11px; color:#fff; font-weight:700;">
+                ✓ Escena 4 · Chaqueta abierta
+              </div>
+              <div class="help-anim-filter-dim" style="background:var(--bg-850); border:1px solid var(--border-700); border-radius:7px; padding:5px 8px; font-size:11px; color:#9ca3af;">
+                Escena 9 · Sombrero negro
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: '5. Reporte PDF en Directo',
+        desc: 'Elige <strong>Exportar Reporte PDF</strong> en el menú del proyecto. Verás un mosaico en vivo donde ajustas idioma, escenas, tamaño de fuentes/fotos y si separar cada raccord por página.',
+        visual: `
+          <div style="display:flex; gap:10px; align-items:center; justify-content:center; width:100%;">
+            <div style="width:62px; height:82px; background:#fff; border-radius:5px; padding:6px; box-shadow:0 6px 16px rgba(0,0,0,0.5); display:flex; flex-direction:column; gap:4px; overflow:hidden;">
+              <div style="height:8px; background:#111827; border-radius:2px; flex-shrink:0;"></div>
+              <div class="help-anim-pdf-block" style="background:#fef3c7; border:1px solid #f59e0b; border-radius:2px; flex-shrink:0;"></div>
+              <div style="height:18px; background:#e5e7eb; border-radius:2px; flex-shrink:0;"></div>
+            </div>
+            <div style="width:62px; height:82px; background:#fff; border-radius:5px; padding:6px; box-shadow:0 6px 16px rgba(0,0,0,0.5); display:flex; flex-direction:column; gap:4px; overflow:hidden;">
+              <div style="height:8px; background:#111827; border-radius:2px; flex-shrink:0;"></div>
+              <div style="height:18px; background:#e5e7eb; border-radius:2px; flex-shrink:0;"></div>
+              <div class="help-anim-pdf-block" style="background:#fef3c7; border:1px solid #f59e0b; border-radius:2px; flex-shrink:0;"></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:5px;">
+              <span class="help-mock-pill">ES / EN</span>
+              <span class="help-mock-pill help-anim-pdf-chip">Fuentes ±</span>
+              <span class="help-mock-pill">Fotos ±</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: '6. 100% Offline y Respaldos JSON',
+        desc: 'SetBible funciona <strong>sin señal en set</strong> guardando todo en tu dispositivo. Usa <strong>Guardar Respaldos</strong> en el menú principal para exportar tus proyectos en JSON e importarlos cuando los necesites.',
+        visual: `
+          <div class="help-mock-card" style="display:flex; align-items:center; justify-content:space-between; padding:14px 12px; position:relative;">
+            <div style="text-align:center; z-index:2;">
+              <div style="width:44px; height:44px; margin:0 auto 5px; border-radius:12px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); display:flex; align-items:center; justify-content:center; color:#34d399;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </div>
+              <div style="font-size:11px; font-weight:800; color:#e5e7eb;">Modo Offline</div>
+            </div>
+            <div style="position:relative; flex:1; display:flex; align-items:center; justify-content:center;">
+              <div style="width:100%; border-top:2px dashed rgba(245,158,11,0.35);"></div>
+              <span class="help-mock-pill help-anim-json-fly" style="position:absolute; background:#1f242c;">.JSON</span>
+            </div>
+            <div style="text-align:center; z-index:2;">
+              <div style="width:44px; height:44px; margin:0 auto 5px; border-radius:12px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); display:flex; align-items:center; justify-content:center; color:var(--amber);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </div>
+              <div style="font-size:11px; font-weight:800; color:var(--amber);">Respaldo</div>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    let helpTourIndex = 0;
+
+    function renderHelpTourStep(idx) {
+      helpTourIndex = Math.max(0, Math.min(HELP_TOUR_STEPS.length - 1, idx));
+      const step = HELP_TOUR_STEPS[helpTourIndex];
+      helpTourStepBadge.textContent = `${helpTourIndex + 1} / ${HELP_TOUR_STEPS.length}`;
+      helpTourVisual.innerHTML = step.visual;
+      helpTourTitle.textContent = step.title;
+      helpTourDesc.innerHTML = step.desc;
+
+      helpTourDots.innerHTML = HELP_TOUR_STEPS.map((_, i) =>
+        `<button type="button" class="help-tour-dot ${i === helpTourIndex ? 'active' : ''}" data-tour-idx="${i}" aria-label="Ir al paso ${i + 1}"></button>`
+      ).join('');
+
+      btnHelpPrev.disabled = (helpTourIndex === 0);
+      btnHelpPrev.style.opacity = (helpTourIndex === 0) ? '0.45' : '1';
+      btnHelpNext.textContent = (helpTourIndex === HELP_TOUR_STEPS.length - 1) ? '¡Entendido!' : 'Siguiente';
+    }
+
+    document.getElementById('home-menu-opt-help').addEventListener('click', () => {
+      closeHomeMenu();
+      renderHelpTourStep(0);
+      helpTourModal.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-close-help-tour').addEventListener('click', () => {
+      helpTourModal.classList.add('hidden');
+    });
+
+    btnHelpPrev.addEventListener('click', () => {
+      if (helpTourIndex > 0) renderHelpTourStep(helpTourIndex - 1);
+    });
+
+    btnHelpNext.addEventListener('click', () => {
+      if (helpTourIndex < HELP_TOUR_STEPS.length - 1) {
+        renderHelpTourStep(helpTourIndex + 1);
+      } else {
+        helpTourModal.classList.add('hidden');
+      }
+    });
+
+    helpTourDots.addEventListener('click', (e) => {
+      const dot = e.target.closest('[data-tour-idx]');
+      if (!dot) return;
+      renderHelpTourStep(parseInt(dot.getAttribute('data-tour-idx'), 10));
+    });
+
+    let helpTouchStartX = 0;
+    const helpSwipeArea = document.getElementById('help-tour-swipe-area');
+    helpSwipeArea.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) helpTouchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    helpSwipeArea.addEventListener('touchend', (e) => {
+      if (e.changedTouches.length !== 1) return;
+      const dx = e.changedTouches[0].clientX - helpTouchStartX;
+      if (dx < -45 && helpTourIndex < HELP_TOUR_STEPS.length - 1) {
+        renderHelpTourStep(helpTourIndex + 1);
+      } else if (dx > 45 && helpTourIndex > 0) {
+        renderHelpTourStep(helpTourIndex - 1);
+      }
+    }, { passive: true });
 
     document.getElementById('home-menu-opt-sort').addEventListener('click', (e) => {
       e.stopPropagation();
@@ -3533,10 +4427,13 @@
         btnConfirmBatchProjects.style.color = '#000';
       }
 
+      const hasAnyDirty = projects.some(p => isProjectModifiedSinceBackup(p));
+
       batchProjectsChecklist.innerHTML = projects.map(proj => {
         const prodValue = proj.producer || proj.director || '';
+        const isDirty = isProjectModifiedSinceBackup(proj);
         let isChecked = false;
-        if (mode === 'export') isChecked = true;
+        if (mode === 'export') isChecked = hasAnyDirty ? isDirty : true;
         else if (mode === 'pin') isChecked = Boolean(proj.pinned);
         else if (mode === 'complete') isChecked = Boolean(proj.completed);
 
@@ -3548,6 +4445,7 @@
                 ${proj.pinned ? `<span class="project-pin-icon">${ICON_PIN_SVG}</span>` : ''}
                 <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(proj.name)}</span>
                 ${proj.completed ? `<span class="project-completed-badge">${ICON_COMPLETED_SVG}<span>TERMINADO</span></span>` : ''}
+                ${mode === 'export' && isDirty ? `<span class="project-dirty-badge">SIN RESPALDAR</span>` : ''}
               </strong>
               <span style="color:var(--text-muted); font-size:12.5px; display:block;">${prodValue ? escapeHtml(prodValue) + ' • ' : ''}${new Date(proj.createdAt).toLocaleDateString()}</span>
             </div>
@@ -3625,11 +4523,13 @@
         return;
       }
 
-      // Modo Guardar Respaldos (un archivo .json individual por cada proyecto)
+      // Modo Guardar Respaldos (un archivo .setbible individual por cada proyecto en modo STORE)
       try {
         const allProjects = await getAllProjectsFromDB();
         const selectedProjects = allProjects.filter(p => selectedIds.includes(p.id));
         if (selectedProjects.length === 0) return;
+
+        showToast(selectedProjects.length === 1 ? 'Empacando respaldo .setbible...' : `Empacando ${selectedProjects.length} respaldos .setbible...`);
 
         const now = new Date();
         const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
@@ -3638,36 +4538,16 @@
         const preparedFiles = [];
 
         for (const proj of selectedProjects) {
-          const takes = await getAllTakesForProject(proj.id);
-          const scenes = await getEntitiesForProject(STORE_SCENES, proj.id);
-          const characters = await getEntitiesForProject(STORE_CHARACTERS, proj.id);
-          const backupPayload = {
-            version: 2,
-            exportedAt: new Date().toISOString(),
-            project: proj,
-            takes,
-            scenes,
-            characters
-          };
-          const rawProjName = (proj.name || 'PROYECTO')
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .toUpperCase()
-            .replace(/[^A-Z0-9]+/g, '_')
-            .replace(/^_+|_+$/g, '') || 'RACCORDPRO';
-
-          let fileName = `${rawProjName}_BACKUP_${datePart}.json`;
-          let suffix = 2;
-          while (usedFileNames.has(fileName)) {
-            fileName = `${rawProjName}_${suffix}_BACKUP_${datePart}.json`;
-            suffix++;
-          }
-          usedFileNames.add(fileName);
-
-          const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: 'application/json' });
-          preparedFiles.push({ fileName, blob });
+          const pkg = await buildSetBibleBackupFile(proj, datePart, usedFileNames);
+          preparedFiles.push(pkg);
         }
 
         batchProjectsModal.classList.add('hidden');
+
+        const markAllBackedUp = async () => {
+          for (const proj of selectedProjects) markProjectBackedUp(proj.id);
+          await renderProjects();
+        };
 
         if ('showDirectoryPicker' in window) {
           let savedRecord = await getDirectoryHandleFromDB(GLOBAL_BACKUP_DIR_KEY);
@@ -3680,7 +4560,10 @@
           if (dirHandle) {
             try {
               const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, preparedFiles);
-              if (ok) return;
+              if (ok) {
+                await markAllBackedUp();
+                return;
+              }
             } catch (dirErr) {
               console.warn('No se pudo escribir directamente en la carpeta asignada:', dirErr);
             }
@@ -3691,18 +4574,20 @@
           await saveFileToUserDirectory(
             preparedFiles[0].blob,
             preparedFiles[0].fileName,
-            'application/json',
-            'Respaldo de Proyecto RaccordPro (JSON)',
-            '.json'
+            preparedFiles[0].mimeType,
+            preparedFiles[0].desc,
+            preparedFiles[0].ext
           );
+          await markAllBackedUp();
           return;
         }
 
         if (isMobileTouchDevice()) {
-          const shareFiles = preparedFiles.map(item => new File([item.blob], item.fileName, { type: 'application/json' }));
+          const shareFiles = preparedFiles.map(item => new File([item.blob], item.fileName, { type: item.mimeType }));
           if (navigator.canShare && navigator.canShare({ files: shareFiles })) {
             try {
               await navigator.share({ files: shareFiles });
+              await markAllBackedUp();
               return;
             } catch (err) {
               if (err.name === 'AbortError') return;
@@ -3720,6 +4605,7 @@
           a.remove();
           setTimeout(() => URL.revokeObjectURL(url), 1500);
         }
+        await markAllBackedUp();
         showToast(`${preparedFiles.length} respaldos guardados correctamente`);
       } catch (err) {
         console.error('Error exportando proyectos:', err);
@@ -4463,17 +5349,17 @@
       });
     }
 
-    function drawExactRaccordProLogo(doc, clapperPng, rightX, topY) {
-      const textRaccord = 'Raccord';
-      const textPro = 'PRO';
+    function drawExactSetBibleLogo(doc, clapperPng, rightX, topY) {
+      const textSet = 'Set';
+      const textBible = 'Bible';
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(7.4);
 
-      const wRaccord = doc.getTextWidth(textRaccord);
-      const wPro = doc.getTextWidth(textPro);
+      const wSet = doc.getTextWidth(textSet);
+      const wBible = doc.getTextWidth(textBible);
       const iconSize = 4.3;
       const gap = 1.4;
-      const totalWidth = iconSize + gap + wRaccord + wPro;
+      const totalWidth = iconSize + gap + wSet + wBible;
       const startX = rightX - totalWidth;
 
       if (clapperPng) {
@@ -4482,10 +5368,10 @@
 
       const textY = topY + 3.1;
       doc.setTextColor(255, 255, 255);
-      doc.text(textRaccord, startX + iconSize + gap, textY);
+      doc.text(textSet, startX + iconSize + gap, textY);
 
       doc.setTextColor(245, 158, 11);
-      doc.text(textPro, startX + iconSize + gap + wRaccord, textY);
+      doc.text(textBible, startX + iconSize + gap + wSet, textY);
     }
 
     const pdfPreviewModal = document.getElementById('pdf-preview-modal');
@@ -4611,7 +5497,7 @@
       doc.setFillColor(19, 23, 29);
       doc.rect(0, 0, pageWidth, 28, 'F');
 
-      drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 6.8);
+      drawExactSetBibleLogo(doc, clapperPng, pageWidth - margin, 6.8);
 
       doc.setTextColor(245, 158, 11);
       doc.setFont('helvetica', 'bold');
@@ -4896,7 +5782,7 @@
         const now = new Date();
         const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
 
-        const pdfFileName = `${rawProjName || 'RACCORDPRO'}_${datePart}.pdf`;
+        const pdfFileName = `${rawProjName || 'SETBIBLE'}_${datePart}.pdf`;
         const pdfBlob = doc.output('blob');
 
         await saveFileToUserDirectory(
@@ -4988,29 +5874,10 @@
       if (!activeProjectId || !activeProjectData) return;
 
       try {
-        const takes = await getAllTakesForProject(activeProjectId);
-        const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
-        const characters = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-
-        const backupData = {
-          version: 2,
-          exportedAt: new Date().toISOString(),
-          project: activeProjectData,
-          takes,
-          scenes,
-          characters
-        };
-
-        const rawProjName = (activeProjectData.name || 'PROYECTO')
-          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          .toUpperCase()
-          .replace(/[^A-Z0-9]+/g, '_')
-          .replace(/^_+|_+$/g, '');
-
+        showToast('Empacando respaldo .setbible...');
         const now = new Date();
         const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-        const fileName = `${rawProjName || 'RACCORDPRO'}_BACKUP_${datePart}.json`;
-        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+        const pkg = await buildSetBibleBackupFile(activeProjectData, datePart, null);
 
         if ('showDirectoryPicker' in window) {
           let savedRecord = await getDirectoryHandleFromDB(GLOBAL_BACKUP_DIR_KEY);
@@ -5025,8 +5892,11 @@
 
           if (dirHandle) {
             try {
-              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, [{ fileName, blob }]);
-              if (ok) return;
+              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, [{ fileName: pkg.fileName, blob: pkg.blob }]);
+              if (ok) {
+                markProjectBackedUp(activeProjectId);
+                return;
+              }
             } catch (dirErr) {
               console.warn('No se pudo escribir directamente en la carpeta asignada:', dirErr);
             }
@@ -5034,15 +5904,16 @@
         }
 
         await saveFileToUserDirectory(
-          blob,
-          fileName,
-          'application/json',
-          'Respaldo de Proyecto RaccordPro (JSON)',
-          '.json'
+          pkg.blob,
+          pkg.fileName,
+          pkg.mimeType,
+          pkg.desc,
+          pkg.ext
         );
+        markProjectBackedUp(activeProjectId);
       } catch (err) {
-        console.error('Error exportando respaldo JSON:', err);
-        showToast('Error al exportar el respaldo JSON');
+        console.error('Error exportando respaldo:', err);
+        showToast('Error al exportar el respaldo');
       }
     });
 
