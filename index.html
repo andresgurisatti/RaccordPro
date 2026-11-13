@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#13171d">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="SetBible">
   <meta name="application-name" content="SetBible">
 
@@ -892,10 +892,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-left: 16px;
-      padding-right: 16px;
-      padding-top: max(12px, env(safe-area-inset-top, 12px));
-      padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: max(8px, env(safe-area-inset-top, 8px));
+      padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
     }
 
     .sort-suboptions-box {
@@ -1666,8 +1666,123 @@
 
     #scenes-modal .modal-card,
     #characters-modal .modal-card {
-      height: 86dvh;
+      height: 100%;
       max-height: 100%;
+    }
+
+    .header-title-clickable {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+      padding: 4px 6px;
+      margin: -4px -6px;
+      border-radius: 10px;
+      transition: background 0.15s;
+    }
+
+    .header-title-clickable:active {
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .summary-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .summary-kpi-card {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: left;
+    }
+
+    .summary-kpi-card.is-clickable {
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.1s;
+    }
+
+    .summary-kpi-card.is-clickable:active {
+      transform: scale(0.98);
+      border-color: var(--amber);
+    }
+
+    .summary-kpi-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .summary-kpi-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .summary-section-card {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: 12px;
+      padding: 13px 14px;
+      margin-bottom: 12px;
+    }
+
+    .summary-section-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin: 0 0 8px 0;
+    }
+
+    .summary-progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-900);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .summary-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--amber), var(--emerald));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .summary-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13.5px;
+    }
+
+    .summary-top-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
     }
 
     #scenes-modal .modal-body,
@@ -2169,7 +2284,7 @@
         <div class="bottom-buttons-row">
           <button type="button" id="btn-import-project-bottom" class="btn-secondary" style="width:100%; margin:0; display:flex; gap:8px;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H7a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h9"/><line x1="21" y1="12" x2="10" y2="12"/><polyline points="14 8 10 12 14 16"/></svg>
-            <span data-i18n="btn_import_project">Importar Proyecto</span>
+            <span data-i18n="btn_import_project">Importar Proyectos</span>
           </button>
           <input type="file" id="input-import-json" accept=".setbible,.zip,.json,application/json,application/zip" multiple class="hidden">
         </div>
@@ -2186,10 +2301,13 @@
         <button type="button" id="btn-back-to-projects" class="btn-icon" title="Volver a proyectos" data-i18n-title="back_to_projects_title">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
         </button>
-        <div style="flex:1; min-width:0;">
-          <h1 id="active-project-title" class="brand-title">Proyecto</h1>
+        <button type="button" id="btn-open-project-summary" class="header-title-clickable" title="Resumen del proyecto" data-i18n-title="project_summary_title">
+          <div class="header-title-row">
+            <h1 id="active-project-title" class="brand-title">Proyecto</h1>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; opacity:0.85;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </div>
           <p id="active-project-producer" class="brand-subtitle hidden"></p>
-        </div>
+        </button>
       </div>
 
       <div id="project-menu-backdrop" class="menu-backdrop"></div>
@@ -2379,6 +2497,77 @@
           <button type="submit" id="btn-submit-project" class="btn-submit" data-i18n="btn_create_project">Crear Proyecto</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: RESUMEN DEL PROYECTO                -->
+  <!-- ========================================== -->
+  <div id="project-summary-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="min-width:0; flex:1;">
+          <h2 id="summary-modal-project-name" class="modal-title" style="color:var(--amber);">Proyecto</h2>
+          <p id="summary-modal-producer" style="margin:2px 0 0 0; font-size:12px; font-weight:700; color:var(--text-muted);" class="hidden"></p>
+        </div>
+        <button type="button" id="btn-close-project-summary" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="summary-kpi-grid">
+          <div class="summary-kpi-card">
+            <span class="summary-kpi-value" id="summary-count-takes" style="color:var(--amber);">0</span>
+            <span class="summary-kpi-label" data-i18n="summary_continuities">Continuidades</span>
+          </div>
+          <div class="summary-kpi-card">
+            <span class="summary-kpi-value" id="summary-count-photos">0</span>
+            <span class="summary-kpi-label" data-i18n="summary_photos">Fotos totales</span>
+          </div>
+          <button type="button" id="summary-btn-open-scenes" class="summary-kpi-card is-clickable">
+            <span class="summary-kpi-value" id="summary-count-scenes">0</span>
+            <span class="summary-kpi-label">
+              <span data-i18n="summary_scenes">Escenas</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </span>
+          </button>
+          <button type="button" id="summary-btn-open-characters" class="summary-kpi-card is-clickable">
+            <span class="summary-kpi-value" id="summary-count-characters">0</span>
+            <span class="summary-kpi-label">
+              <span data-i18n="summary_characters">Personajes</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="summary-section-card">
+          <h3 class="summary-section-title" data-i18n="summary_coverage_title">Cobertura de escenas</h3>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;">
+            <span id="summary-coverage-text" style="font-size:14px; font-weight:800; color:#fff;">0 / 0</span>
+            <span id="summary-coverage-pct" style="font-size:14px; font-weight:900; color:var(--amber);">0%</span>
+          </div>
+          <div class="summary-progress-track">
+            <div id="summary-coverage-bar" class="summary-progress-fill" style="width:0%;"></div>
+          </div>
+        </div>
+
+        <div id="summary-top-chars-card" class="summary-section-card hidden">
+          <h3 class="summary-section-title" data-i18n="summary_top_chars_title">Personajes con más fotos</h3>
+          <div id="summary-top-chars-list"></div>
+        </div>
+
+        <div class="summary-section-card" style="margin-bottom:0;">
+          <h3 class="summary-section-title" data-i18n="summary_status_title">Estado y respaldo</h3>
+          <div class="summary-top-row">
+            <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_backup_label">Respaldo</span>
+            <span id="summary-backup-status" style="font-weight:800;"></span>
+          </div>
+          <div class="summary-top-row">
+            <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_updated_label">Última modificación</span>
+            <span id="summary-updated-at" style="font-weight:700; color:#e5e7eb;">-</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3028,7 +3217,21 @@
         empty_projects_title: 'No hay proyectos',
         empty_projects_desc: 'Pulsa <strong>NUEVO PROYECTO</strong> o importa un respaldo.',
         btn_new_project: 'NUEVO PROYECTO',
-        btn_import_project: 'Importar Proyecto',
+        btn_import_project: 'Importar Proyectos',
+        project_summary_title: 'Resumen del proyecto',
+        summary_continuities: 'Continuidades',
+        summary_photos: 'Fotos totales',
+        summary_scenes: 'Escenas',
+        summary_characters: 'Personajes',
+        summary_coverage_title: 'Cobertura de escenas',
+        summary_coverage_sub: '{covered} de {total} escenas con continuidad',
+        summary_top_chars_title: 'Personajes con más fotos',
+        summary_status_title: 'Estado y respaldo',
+        summary_backup_label: 'Respaldo',
+        summary_updated_label: 'Última modificación',
+        summary_backup_synced: 'Al día',
+        summary_backup_pending: 'Cambios sin respaldar',
+        summary_photos_count: '{n} fotos',
         drag_to_sort_title: 'Arrastrar para ordenar',
         pinned_project_title: 'Proyecto fijado',
         completed_project_title: 'Proyecto terminado',
@@ -3266,7 +3469,21 @@
         empty_projects_title: 'No projects yet',
         empty_projects_desc: 'Tap <strong>NEW PROJECT</strong> or import a backup.',
         btn_new_project: 'NEW PROJECT',
-        btn_import_project: 'Import Project',
+        btn_import_project: 'Import Projects',
+        project_summary_title: 'Project Summary',
+        summary_continuities: 'Continuities',
+        summary_photos: 'Total Photos',
+        summary_scenes: 'Scenes',
+        summary_characters: 'Characters',
+        summary_coverage_title: 'Scene Coverage',
+        summary_coverage_sub: '{covered} of {total} scenes with continuity',
+        summary_top_chars_title: 'Most Photographed Characters',
+        summary_status_title: 'Status & Backup',
+        summary_backup_label: 'Backup',
+        summary_updated_label: 'Last Modified',
+        summary_backup_synced: 'Up to date',
+        summary_backup_pending: 'Unsaved changes',
+        summary_photos_count: '{n} photos',
         drag_to_sort_title: 'Drag to reorder',
         pinned_project_title: 'Pinned project',
         completed_project_title: 'Completed project',
@@ -3504,7 +3721,21 @@
         empty_projects_title: 'Nenhum projeto ainda',
         empty_projects_desc: 'Toque em <strong>NOVO PROJETO</strong> ou importe um backup.',
         btn_new_project: 'NOVO PROJETO',
-        btn_import_project: 'Importar Projeto',
+        btn_import_project: 'Importar Projetos',
+        project_summary_title: 'Resumo do Projeto',
+        summary_continuities: 'Continuidades',
+        summary_photos: 'Total de fotos',
+        summary_scenes: 'Cenas',
+        summary_characters: 'Personagens',
+        summary_coverage_title: 'Cobertura de cenas',
+        summary_coverage_sub: '{covered} de {total} cenas com continuidade',
+        summary_top_chars_title: 'Personagens com mais fotos',
+        summary_status_title: 'Status e backup',
+        summary_backup_label: 'Backup',
+        summary_updated_label: 'Última modificação',
+        summary_backup_synced: 'Em dia',
+        summary_backup_pending: 'Alterações sem backup',
+        summary_photos_count: '{n} fotos',
         drag_to_sort_title: 'Arrastar para ordenar',
         pinned_project_title: 'Projeto fixado',
         completed_project_title: 'Projeto concluído',
@@ -3742,7 +3973,21 @@
         empty_projects_title: 'Nessun progetto ancora',
         empty_projects_desc: 'Tocca <strong>NUOVO PROGETTO</strong> o importa un backup.',
         btn_new_project: 'NUOVO PROGETTO',
-        btn_import_project: 'Importa Progetto',
+        btn_import_project: 'Importa Progetti',
+        project_summary_title: 'Riepilogo Progetto',
+        summary_continuities: 'Continuità',
+        summary_photos: 'Foto totali',
+        summary_scenes: 'Scene',
+        summary_characters: 'Personaggi',
+        summary_coverage_title: 'Copertura scene',
+        summary_coverage_sub: '{covered} di {total} scene con continuità',
+        summary_top_chars_title: 'Personaggi con più foto',
+        summary_status_title: 'Stato e backup',
+        summary_backup_label: 'Backup',
+        summary_updated_label: 'Ultima modifica',
+        summary_backup_synced: 'Aggiornato',
+        summary_backup_pending: 'Modifiche non salvate',
+        summary_photos_count: '{n} foto',
         drag_to_sort_title: 'Trascina per ordinare',
         pinned_project_title: 'Progetto fissato',
         completed_project_title: 'Progetto completato',
@@ -3980,7 +4225,21 @@
         empty_projects_title: 'Noch keine Projekte',
         empty_projects_desc: 'Tippe auf <strong>NEUES PROJEKT</strong> oder importiere ein Backup.',
         btn_new_project: 'NEUES PROJEKT',
-        btn_import_project: 'Projekt importieren',
+        btn_import_project: 'Projekte importieren',
+        project_summary_title: 'Projektübersicht',
+        summary_continuities: 'Anschlüsse',
+        summary_photos: 'Fotos gesamt',
+        summary_scenes: 'Szenen',
+        summary_characters: 'Figuren',
+        summary_coverage_title: 'Szenenabdeckung',
+        summary_coverage_sub: '{covered} von {total} Szenen mit Anschluss',
+        summary_top_chars_title: 'Meistfotografierte Figuren',
+        summary_status_title: 'Status & Backup',
+        summary_backup_label: 'Backup',
+        summary_updated_label: 'Zuletzt geändert',
+        summary_backup_synced: 'Aktuell',
+        summary_backup_pending: 'Ungesicherte Änderungen',
+        summary_photos_count: '{n} Fotos',
         drag_to_sort_title: 'Ziehen zum Sortieren',
         pinned_project_title: 'Angeheftetes Projekt',
         completed_project_title: 'Abgeschlossenes Projekt',
@@ -4218,7 +4477,21 @@
         empty_projects_title: 'Aucun projet pour le moment',
         empty_projects_desc: 'Appuyez sur <strong>NOUVEAU PROJET</strong> ou importez une sauvegarde.',
         btn_new_project: 'NOUVEAU PROJET',
-        btn_import_project: 'Importer le projet',
+        btn_import_project: 'Importer des projets',
+        project_summary_title: 'Résumé du projet',
+        summary_continuities: 'Continuités',
+        summary_photos: 'Total des photos',
+        summary_scenes: 'Scènes',
+        summary_characters: 'Personnages',
+        summary_coverage_title: 'Couverture des scènes',
+        summary_coverage_sub: '{covered} sur {total} scènes avec continuité',
+        summary_top_chars_title: 'Personnages les plus photographiés',
+        summary_status_title: 'Statut et sauvegarde',
+        summary_backup_label: 'Sauvegarde',
+        summary_updated_label: 'Dernière modification',
+        summary_backup_synced: 'À jour',
+        summary_backup_pending: 'Modifications non sauvegardées',
+        summary_photos_count: '{n} photos',
         drag_to_sort_title: 'Glisser pour réorganiser',
         pinned_project_title: 'Projet épinglé',
         completed_project_title: 'Projet terminé',
@@ -6717,6 +6990,121 @@
     }
 
     btnCancelEditScene.addEventListener('click', resetSceneForm);
+
+    const projectSummaryModal = document.getElementById('project-summary-modal');
+    const btnOpenProjectSummary = document.getElementById('btn-open-project-summary');
+    const btnCloseProjectSummary = document.getElementById('btn-close-project-summary');
+    const summaryBtnOpenScenes = document.getElementById('summary-btn-open-scenes');
+    const summaryBtnOpenCharacters = document.getElementById('summary-btn-open-characters');
+
+    async function openProjectSummaryModal() {
+      if (!activeProjectId || !activeProjectData || !projectSummaryModal) return;
+      const [takes, scenes, chars] = await Promise.all([
+        getAllTakesForProject(activeProjectId),
+        getEntitiesForProject(STORE_SCENES, activeProjectId),
+        getEntitiesForProject(STORE_CHARACTERS, activeProjectId)
+      ]);
+
+      document.getElementById('summary-modal-project-name').textContent = activeProjectData.name || '';
+      const prodEl = document.getElementById('summary-modal-producer');
+      const prodVal = (activeProjectData.producer || activeProjectData.director || '').trim();
+      if (prodVal) {
+        prodEl.textContent = prodVal;
+        prodEl.classList.remove('hidden');
+      } else {
+        prodEl.textContent = '';
+        prodEl.classList.add('hidden');
+      }
+
+      let totalPhotos = 0;
+      const coveredSceneSet = new Set();
+      const charPhotoCounts = new Map();
+
+      takes.forEach(take => {
+        const sceneKey = String(take.scene || '').trim().toUpperCase();
+        if (sceneKey) coveredSceneSet.add(sceneKey);
+        const entries = getNormalizedPhotos(take);
+        entries.forEach(entry => {
+          if (entry && entry.photo) {
+            totalPhotos++;
+            const chName = String(entry.character || '').trim();
+            if (chName) {
+              charPhotoCounts.set(chName, (charPhotoCounts.get(chName) || 0) + 1);
+            }
+          }
+        });
+      });
+
+      document.getElementById('summary-count-takes').textContent = takes.length;
+      document.getElementById('summary-count-photos').textContent = totalPhotos;
+      document.getElementById('summary-count-scenes').textContent = scenes.length;
+      document.getElementById('summary-count-characters').textContent = chars.length;
+
+      const totalScenesForCoverage = Math.max(scenes.length, coveredSceneSet.size);
+      const coveredCount = coveredSceneSet.size;
+      const pct = totalScenesForCoverage > 0 ? Math.min(100, Math.round((coveredCount / totalScenesForCoverage) * 100)) : 0;
+      document.getElementById('summary-coverage-text').textContent = t('summary_coverage_sub')
+        .replace('{covered}', coveredCount)
+        .replace('{total}', totalScenesForCoverage);
+      document.getElementById('summary-coverage-pct').textContent = `${pct}%`;
+      document.getElementById('summary-coverage-bar').style.width = `${pct}%`;
+
+      const topCharsCard = document.getElementById('summary-top-chars-card');
+      const topCharsList = document.getElementById('summary-top-chars-list');
+      const sortedTopChars = Array.from(charPhotoCounts.entries())
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+      if (sortedTopChars.length > 0) {
+        topCharsCard.classList.remove('hidden');
+        topCharsList.innerHTML = sortedTopChars.map(([name, count]) => `
+          <div class="summary-top-row">
+            <span style="font-weight:700; color:#f9fafb; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-right:8px;">${escapeHTML(name)}</span>
+            <span style="font-weight:800; color:var(--amber); white-space:nowrap;">${escapeHTML(t('summary_photos_count').replace('{n}', count))}</span>
+          </div>
+        `).join('');
+      } else {
+        topCharsCard.classList.add('hidden');
+        topCharsList.innerHTML = '';
+      }
+
+      const backupStatusEl = document.getElementById('summary-backup-status');
+      if (activeProjectData.dirty) {
+        backupStatusEl.textContent = t('summary_backup_pending');
+        backupStatusEl.style.color = '#f87171';
+      } else {
+        backupStatusEl.textContent = t('summary_backup_synced');
+        backupStatusEl.style.color = '#34d399';
+      }
+
+      const ts = activeProjectData.updatedAt || activeProjectData.createdAt;
+      document.getElementById('summary-updated-at').textContent = ts ? new Date(ts).toLocaleString() : '-';
+
+      projectSummaryModal.classList.remove('hidden');
+    }
+
+    if (btnOpenProjectSummary) {
+      btnOpenProjectSummary.addEventListener('click', openProjectSummaryModal);
+    }
+    if (btnCloseProjectSummary) {
+      btnCloseProjectSummary.addEventListener('click', () => projectSummaryModal.classList.add('hidden'));
+    }
+    if (projectSummaryModal) {
+      projectSummaryModal.addEventListener('click', (e) => {
+        if (e.target === projectSummaryModal) projectSummaryModal.classList.add('hidden');
+      });
+    }
+    if (summaryBtnOpenScenes) {
+      summaryBtnOpenScenes.addEventListener('click', async () => {
+        projectSummaryModal.classList.add('hidden');
+        await openScenesManager();
+      });
+    }
+    if (summaryBtnOpenCharacters) {
+      summaryBtnOpenCharacters.addEventListener('click', async () => {
+        projectSummaryModal.classList.add('hidden');
+        await openCharactersManager();
+      });
+    }
 
     async function openScenesManager() {
       scenesModal.classList.remove('hidden');
