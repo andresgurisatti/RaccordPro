@@ -24,11 +24,11 @@
 
   <style>
     :root {
-      --bg-900: #0d0f12;
-      --bg-850: #13171d;
-      --bg-800: #1a1f26;
-      --border-700: #262d38;
-      --border-600: #343e4c;
+      --bg-900: #07090c;
+      --bg-850: #141922;
+      --bg-800: #1e2634;
+      --border-700: #313c4e;
+      --border-600: #475569;
       --amber: #f59e0b;
       --amber-dark: #d97706;
       --emerald: #10b981;
@@ -732,7 +732,7 @@
 
     .raccord-card {
       background: var(--bg-850);
-      border: 1px solid rgba(245, 158, 11, 0.45);
+      border: 1px solid rgba(245, 158, 11, 0.5);
       border-radius: 12px;
       padding: 0;
       overflow: hidden;
@@ -740,7 +740,7 @@
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
       transition: border-color 0.15s;
     }
 
@@ -782,7 +782,7 @@
     }
 
     .raccord-char-row {
-      background: var(--bg-900);
+      background: #0c1017;
       border: 1px solid var(--border-700);
       border-radius: 9px;
       padding: 7px 10px;
@@ -2113,11 +2113,39 @@
     .help-anim-pdf-chip { animation: helpPdfChipPulse 3s ease-in-out infinite; }
     .help-anim-json-fly { animation: helpJsonFly 2.4s ease-in-out infinite; }
 
+    .floating-edit-banner {
+      background: rgba(245, 158, 11, 0.16);
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      color: var(--amber);
+      font-size: 13px;
+      font-weight: 900;
+      padding: 7px 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .manager-item.is-pinned-char {
+      border-color: rgba(245, 158, 11, 0.55);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), var(--bg-800));
+    }
+
+    .btn-pin-char.is-pinned {
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.6);
+      background: rgba(245, 158, 11, 0.16);
+    }
+
     .toast-bar {
       position: fixed;
       bottom: calc(95px + env(safe-area-inset-bottom, 0px));
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(18px) scale(0.95);
+      opacity: 0;
+      visibility: hidden;
       background: var(--bg-800);
       color: #fff;
       border: 1px solid var(--amber);
@@ -2126,11 +2154,17 @@
       font-size: 15px;
       font-weight: 800;
       z-index: 100;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.78);
       pointer-events: none;
-      transition: opacity 0.25s, transform 0.25s;
+      transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1), transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.26s;
       text-align: center;
       max-width: 90%;
+    }
+
+    .toast-bar.toast-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
     }
   </style>
 </head>
@@ -2551,11 +2585,6 @@
           </div>
         </div>
 
-        <div id="summary-top-chars-card" class="summary-section-card hidden">
-          <h3 class="summary-section-title" data-i18n="summary_top_chars_title">Personajes con más fotos</h3>
-          <div id="summary-top-chars-list"></div>
-        </div>
-
         <div class="summary-section-card" style="margin-bottom:0;">
           <h3 class="summary-section-title" data-i18n="summary_status_title">Estado y respaldo</h3>
           <div class="summary-top-row">
@@ -2589,6 +2618,7 @@
         <div id="scenes-list" style="max-height:340px; overflow-y:auto; margin-bottom:14px;"></div>
         <div style="padding-top:14px; border-top:1px solid var(--border-700);">
           <button type="button" id="btn-show-add-scene" class="btn-primary" style="width:100%;" data-i18n="btn_add_scene_plus">+ Añadir Escena</button>
+          <div id="scene-edit-floating-title" class="floating-edit-banner hidden"></div>
           <form id="scenes-form" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
             <input type="hidden" id="edit-scene-id" value="">
             <div style="display:flex; gap:10px;">
@@ -2629,6 +2659,7 @@
         <div id="characters-list" style="max-height:320px; overflow-y:auto; margin-bottom:14px;"></div>
         <div style="padding-top:14px; border-top:1px solid var(--border-700);">
           <button type="button" id="btn-show-add-character" class="btn-primary" style="width:100%;" data-i18n="btn_add_character_plus">+ Añadir Personaje</button>
+          <div id="character-edit-floating-title" class="floating-edit-banner hidden"></div>
           <form id="characters-form" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
             <input type="hidden" id="edit-character-id" value="">
             <input type="file" id="input-actor-photo" accept="image/*" class="hidden">
@@ -3032,7 +3063,7 @@
   </div>
 
   <!-- TOAST ABAJO -->
-  <div id="toast" class="toast-bar hidden"></div>
+  <div id="toast" class="toast-bar"></div>
 
   <!-- ========================================== -->
   <!-- LÓGICA JAVASCRIPT                          -->
@@ -3252,7 +3283,7 @@
         btn_create_project: 'Crear Proyecto',
         btn_delete_project: 'Eliminar Proyecto',
         modal_new_continuity: 'NUEVA CONTINUIDAD DE ESCENA',
-        modal_edit_continuity: 'EDITAR CONTINUIDAD DE ESCENA',
+        modal_edit_continuity: 'EDITAR CONTINUIDAD',
         form_scene: 'Escena *',
         form_select_scene: 'Selecciona una escena...',
         form_entries_label: 'ENTRADAS',
@@ -3262,7 +3293,13 @@
         btn_delete_continuity: 'Eliminar Continuidad',
         btn_save_continuity: 'Guardar Continuidad',
         modal_new_entry: 'NUEVA ENTRADA DE CONTINUIDAD',
-        modal_edit_entry: 'EDITAR ENTRADA DE CONTINUIDAD',
+        modal_edit_entry: 'EDITAR ENTRADA',
+        floating_edit_scene: 'Editar escena ({num})',
+        floating_edit_char: 'Editar personaje ({name})',
+        pin_char_title: 'Anclar personaje arriba',
+        unpin_char_title: 'Desanclar personaje',
+        toast_char_pinned: 'Personaje "{name}" anclado arriba',
+        toast_char_unpinned: 'Personaje "{name}" desanclado',
         form_character: 'Personaje *',
         form_select_character: 'Selecciona un personaje...',
         form_continuity_photo: 'Foto de Continuidad',
@@ -3504,7 +3541,7 @@
         btn_create_project: 'Create Project',
         btn_delete_project: 'Delete Project',
         modal_new_continuity: 'NEW SCENE CONTINUITY',
-        modal_edit_continuity: 'EDIT SCENE CONTINUITY',
+        modal_edit_continuity: 'EDIT CONTINUITY',
         form_scene: 'Scene *',
         form_select_scene: 'Select a scene...',
         form_entries_label: 'ENTRIES',
@@ -3514,7 +3551,13 @@
         btn_delete_continuity: 'Delete Continuity',
         btn_save_continuity: 'Save Continuity',
         modal_new_entry: 'NEW CONTINUITY ENTRY',
-        modal_edit_entry: 'EDIT CONTINUITY ENTRY',
+        modal_edit_entry: 'EDIT ENTRY',
+        floating_edit_scene: 'Edit scene ({num})',
+        floating_edit_char: 'Edit character ({name})',
+        pin_char_title: 'Pin character to top',
+        unpin_char_title: 'Unpin character',
+        toast_char_pinned: 'Character "{name}" pinned to top',
+        toast_char_unpinned: 'Character "{name}" unpinned',
         form_character: 'Character *',
         form_select_character: 'Select a character...',
         form_continuity_photo: 'Continuity Photo',
@@ -3756,7 +3799,7 @@
         btn_create_project: 'Criar Projeto',
         btn_delete_project: 'Excluir Projeto',
         modal_new_continuity: 'NOVA CONTINUIDADE DE CENA',
-        modal_edit_continuity: 'EDITAR CONTINUIDADE DE CENA',
+        modal_edit_continuity: 'EDITAR CONTINUIDADE',
         form_scene: 'Cena *',
         form_select_scene: 'Selecione uma cena...',
         form_entries_label: 'ENTRADAS',
@@ -3766,7 +3809,13 @@
         btn_delete_continuity: 'Excluir Continuidade',
         btn_save_continuity: 'Salvar Continuidade',
         modal_new_entry: 'NOVA ENTRADA DE CONTINUIDADE',
-        modal_edit_entry: 'EDITAR ENTRADA DE CONTINUIDADE',
+        modal_edit_entry: 'EDITAR ENTRADA',
+        floating_edit_scene: 'Editar cena ({num})',
+        floating_edit_char: 'Editar personagem ({name})',
+        pin_char_title: 'Fixar personagem no topo',
+        unpin_char_title: 'Desafixar personagem',
+        toast_char_pinned: 'Personagem "{name}" fixado no topo',
+        toast_char_unpinned: 'Personagem "{name}" desafixado',
         form_character: 'Personagem *',
         form_select_character: 'Selecione um personagem...',
         form_continuity_photo: 'Foto de Continuidade',
@@ -4008,7 +4057,7 @@
         btn_create_project: 'Crea Progetto',
         btn_delete_project: 'Elimina Progetto',
         modal_new_continuity: 'NUOVA CONTINUITÀ DI SCENA',
-        modal_edit_continuity: 'MODIFICA CONTINUITÀ DI SCENA',
+        modal_edit_continuity: 'MODIFICA CONTINUITÀ',
         form_scene: 'Scena *',
         form_select_scene: 'Seleziona una scena...',
         form_entries_label: 'VOCI',
@@ -4018,7 +4067,13 @@
         btn_delete_continuity: 'Elimina Continuità',
         btn_save_continuity: 'Salva Continuità',
         modal_new_entry: 'NUOVA VOCE DI CONTINUITÀ',
-        modal_edit_entry: 'MODIFICA VOCE DI CONTINUITÀ',
+        modal_edit_entry: 'MODIFICA VOCE',
+        floating_edit_scene: 'Modifica scena ({num})',
+        floating_edit_char: 'Modifica personaggio ({name})',
+        pin_char_title: 'Fissa personaggio in alto',
+        unpin_char_title: 'Rimuovi fissaggio personaggio',
+        toast_char_pinned: 'Personaggio "{name}" fissato in alto',
+        toast_char_unpinned: 'Personaggio "{name}" rimosso dai fissati',
         form_character: 'Personaggio *',
         form_select_character: 'Seleziona un personaggio...',
         form_continuity_photo: 'Foto di Continuità',
@@ -4260,7 +4315,7 @@
         btn_create_project: 'Projekt erstellen',
         btn_delete_project: 'Projekt löschen',
         modal_new_continuity: 'NEUE SZENEN-KONTINUITÄT',
-        modal_edit_continuity: 'SZENEN-KONTINUITÄT BEARBEITEN',
+        modal_edit_continuity: 'KONTINUITÄT BEARBEITEN',
         form_scene: 'Szene *',
         form_select_scene: 'Wähle eine Szene...',
         form_entries_label: 'EINTRÄGE',
@@ -4270,7 +4325,13 @@
         btn_delete_continuity: 'Kontinuität löschen',
         btn_save_continuity: 'Kontinuität speichern',
         modal_new_entry: 'NEUER KONTINUITÄTSEINTRAG',
-        modal_edit_entry: 'KONTINUITÄTSEINTRAG BEARBEITEN',
+        modal_edit_entry: 'EINTRAG BEARBEITEN',
+        floating_edit_scene: 'Szene bearbeiten ({num})',
+        floating_edit_char: 'Figur bearbeiten ({name})',
+        pin_char_title: 'Figur oben anheften',
+        unpin_char_title: 'Figur lösen',
+        toast_char_pinned: 'Figur "{name}" oben angeheftet',
+        toast_char_unpinned: 'Figur "{name}" gelöst',
         form_character: 'Figur *',
         form_select_character: 'Wähle eine Figur...',
         form_continuity_photo: 'Kontinuitätsfoto',
@@ -4512,7 +4573,7 @@
         btn_create_project: 'Créer le projet',
         btn_delete_project: 'Supprimer le projet',
         modal_new_continuity: 'NOUVELLE CONTINUITÉ DE SCÈNE',
-        modal_edit_continuity: 'MODIFIER LA CONTINUITÉ DE SCÈNE',
+        modal_edit_continuity: 'MODIFIER LA CONTINUITÉ',
         form_scene: 'Scène *',
         form_select_scene: 'Sélectionnez une scène...',
         form_entries_label: 'ENTRÉES',
@@ -4522,7 +4583,13 @@
         btn_delete_continuity: 'Supprimer la continuité',
         btn_save_continuity: 'Enregistrer la continuité',
         modal_new_entry: 'NOUVELLE ENTRÉE DE CONTINUITÉ',
-        modal_edit_entry: 'MODIFIER L\'ENTRÉE DE CONTINUITÉ',
+        modal_edit_entry: 'MODIFIER L\'ENTRÉE',
+        floating_edit_scene: 'Modifier la scène ({num})',
+        floating_edit_char: 'Modifier le personnage ({name})',
+        pin_char_title: 'Épingler le personnage en haut',
+        unpin_char_title: 'Désépingler le personnage',
+        toast_char_pinned: 'Personnage "{name}" épinglé en haut',
+        toast_char_unpinned: 'Personnage "{name}" désépinglé',
         form_character: 'Personnage *',
         form_select_character: 'Sélectionnez un personnage...',
         form_continuity_photo: 'Photo de Continuité',
@@ -6968,11 +7035,14 @@
       scenesModal.classList.add('hidden');
     });
 
+    const sceneEditFloatingTitle = document.getElementById('scene-edit-floating-title');
+
     btnShowAddScene.addEventListener('click', () => {
       editSceneId.value = '';
       document.getElementById('new-scene-num').value = '';
       document.getElementById('new-scene-desc').value = '';
       btnSaveScene.textContent = t('btn_save_scene');
+      if (sceneEditFloatingTitle) sceneEditFloatingTitle.classList.add('hidden');
       btnShowAddScene.classList.add('hidden');
       scenesForm.classList.remove('hidden');
       setSceneEditingLock(true, null);
@@ -6984,6 +7054,7 @@
       document.getElementById('new-scene-num').value = '';
       document.getElementById('new-scene-desc').value = '';
       btnSaveScene.textContent = t('btn_save');
+      if (sceneEditFloatingTitle) sceneEditFloatingTitle.classList.add('hidden');
       scenesForm.classList.add('hidden');
       btnShowAddScene.classList.remove('hidden');
       setSceneEditingLock(false);
@@ -7018,7 +7089,6 @@
 
       let totalPhotos = 0;
       const coveredSceneSet = new Set();
-      const charPhotoCounts = new Map();
 
       takes.forEach(take => {
         const sceneKey = String(take.scene || '').trim().toUpperCase();
@@ -7027,10 +7097,6 @@
         entries.forEach(entry => {
           if (entry && entry.photo) {
             totalPhotos++;
-            const chName = String(entry.character || '').trim();
-            if (chName) {
-              charPhotoCounts.set(chName, (charPhotoCounts.get(chName) || 0) + 1);
-            }
           }
         });
       });
@@ -7048,24 +7114,6 @@
         .replace('{total}', totalScenesForCoverage);
       document.getElementById('summary-coverage-pct').textContent = `${pct}%`;
       document.getElementById('summary-coverage-bar').style.width = `${pct}%`;
-
-      const topCharsCard = document.getElementById('summary-top-chars-card');
-      const topCharsList = document.getElementById('summary-top-chars-list');
-      const sortedTopChars = Array.from(charPhotoCounts.entries())
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
-      if (sortedTopChars.length > 0) {
-        topCharsCard.classList.remove('hidden');
-        topCharsList.innerHTML = sortedTopChars.map(([name, count]) => `
-          <div class="summary-top-row">
-            <span style="font-weight:700; color:#f9fafb; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-right:8px;">${escapeHtml(name)}</span>
-            <span style="font-weight:800; color:var(--amber); white-space:nowrap;">${escapeHtml(t('summary_photos_count').replace('{n}', count))}</span>
-          </div>
-        `).join('');
-      } else {
-        topCharsCard.classList.add('hidden');
-        topCharsList.innerHTML = '';
-      }
 
       const backupStatusEl = document.getElementById('summary-backup-status');
       if (activeProjectData.dirty) {
@@ -7173,6 +7221,10 @@
       document.getElementById('new-scene-num').value = target.sceneNum;
       document.getElementById('new-scene-desc').value = target.desc || '';
       btnSaveScene.textContent = t('btn_save_changes');
+      if (sceneEditFloatingTitle) {
+        sceneEditFloatingTitle.textContent = t('floating_edit_scene', { num: target.sceneNum });
+        sceneEditFloatingTitle.classList.remove('hidden');
+      }
       btnShowAddScene.classList.add('hidden');
       scenesForm.classList.remove('hidden');
       setSceneEditingLock(true, target.id);
@@ -7244,13 +7296,27 @@
       charactersModal.classList.add('hidden');
     });
 
+    const characterEditFloatingTitle = document.getElementById('character-edit-floating-title');
+    let editingCharacterPinned = false;
+
+    function sortCharactersWithPinnedFirst(list) {
+      return list.sort((a, b) => {
+        const ap = a.pinned ? 1 : 0;
+        const bp = b.pinned ? 1 : 0;
+        if (ap !== bp) return bp - ap;
+        return a.name.localeCompare(b.name);
+      });
+    }
+
     btnShowAddCharacter.addEventListener('click', () => {
       editCharacterId.value = '';
+      editingCharacterPinned = false;
       document.getElementById('new-character-name').value = '';
       document.getElementById('new-actor-name').value = '';
       inputActorPhoto.value = '';
       setActorPhotoPreview(null);
       btnSaveCharacter.textContent = t('btn_save_character');
+      if (characterEditFloatingTitle) characterEditFloatingTitle.classList.add('hidden');
       btnShowAddCharacter.classList.add('hidden');
       charactersForm.classList.remove('hidden');
       setCharacterEditingLock(true, null);
@@ -7272,11 +7338,13 @@
 
     function resetCharacterForm() {
       editCharacterId.value = '';
+      editingCharacterPinned = false;
       document.getElementById('new-character-name').value = '';
       document.getElementById('new-actor-name').value = '';
       inputActorPhoto.value = '';
       setActorPhotoPreview(null);
       btnSaveCharacter.textContent = t('btn_save');
+      if (characterEditFloatingTitle) characterEditFloatingTitle.classList.add('hidden');
       charactersForm.classList.add('hidden');
       btnShowAddCharacter.classList.remove('hidden');
       setCharacterEditingLock(false);
@@ -7312,7 +7380,7 @@
 
     async function renderCharactersList() {
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-      chars.sort((a, b) => a.name.localeCompare(b.name));
+      sortCharactersWithPinnedFirst(chars);
 
       const modalCountCharacters = document.getElementById('modal-count-characters');
       if (modalCountCharacters) modalCountCharacters.textContent = chars.length;
@@ -7325,18 +7393,21 @@
 
       deleteAllCharactersBox.classList.remove('hidden');
       charactersListContainer.innerHTML = chars.map(c => `
-        <div class="manager-item" data-id="${c.id}">
+        <div class="manager-item ${c.pinned ? 'is-pinned-char' : ''}" data-id="${c.id}">
           <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
             ${c.photo 
               ? `<img src="${c.photo}" alt="${escapeHtml(c.name)}" class="actor-avatar-list">` 
               : `<div style="width:42px; height:42px; border-radius:10px; background:var(--bg-850); border:1px solid var(--border-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;">${ICON_USER_SVG}</div>`
             }
             <div style="min-width:0; flex:1;">
-              <strong style="color:#fff; font-size:15px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.name)}</strong>
+              <strong style="color:#fff; font-size:15px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.pinned ? '★ ' : ''}${escapeHtml(c.name)}</strong>
               ${c.actor ? `<span style="color:var(--text-muted); font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.actor)}</span>` : ''}
             </div>
           </div>
           <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-action-small btn-pin-char ${c.pinned ? 'is-pinned' : ''}" onclick="togglePinCharacter('${c.id}')" title="${c.pinned ? t('unpin_char_title') : t('pin_char_title')}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="${c.pinned ? 'rgba(245,158,11,0.3)' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+            </button>
             <button type="button" class="btn-action-small edit" onclick="startEditCharacter('${c.id}')" title="${t('btn_edit_title')}">${ICON_EDIT_SVG}</button>
             <button type="button" class="btn-action-small delete" onclick="deleteCharacterItem('${c.id}')" title="${t('btn_delete_title')}">${ICON_DELETE_SVG}</button>
           </div>
@@ -7361,7 +7432,8 @@
         projectId: activeProjectId,
         name,
         actor,
-        photo: currentActorPhotoBase64 || null
+        photo: currentActorPhotoBase64 || null,
+        pinned: existingId ? Boolean(editingCharacterPinned) : false
       });
 
       resetCharacterForm();
@@ -7371,16 +7443,34 @@
       showToast(existingId ? t('toast_char_updated', { name }) : t('toast_char_added', { name }));
     });
 
+    window.togglePinCharacter = async function(id) {
+      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+      const target = chars.find(c => c.id === id);
+      if (!target) return;
+
+      target.pinned = !target.pinned;
+      await saveEntityToDB(STORE_CHARACTERS, target);
+      if (editCharacterId.value === id) editingCharacterPinned = target.pinned;
+      await renderCharactersList();
+      await updateCatalogCaches();
+      showToast(t(target.pinned ? 'toast_char_pinned' : 'toast_char_unpinned', { name: target.name }));
+    };
+
     window.startEditCharacter = async function(id) {
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       const target = chars.find(c => c.id === id);
       if (!target) return;
 
       editCharacterId.value = target.id;
+      editingCharacterPinned = Boolean(target.pinned);
       document.getElementById('new-character-name').value = target.name;
       document.getElementById('new-actor-name').value = target.actor || '';
       setActorPhotoPreview(target.photo || null);
       btnSaveCharacter.textContent = t('btn_save_changes');
+      if (characterEditFloatingTitle) {
+        characterEditFloatingTitle.textContent = t('floating_edit_char', { name: target.name });
+        characterEditFloatingTitle.classList.remove('hidden');
+      }
       btnShowAddCharacter.classList.add('hidden');
       charactersForm.classList.remove('hidden');
       setCharacterEditingLock(true, target.id);
@@ -7422,7 +7512,7 @@
       cachedScenesForProject.sort((a, b) => compareSceneNumbers(a.sceneNum, b.sceneNum));
 
       cachedCharactersForProject = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-      cachedCharactersForProject.sort((a, b) => a.name.localeCompare(b.name));
+      sortCharactersWithPinnedFirst(cachedCharactersForProject);
 
       const countScenes = document.getElementById('menu-count-scenes');
       const countChars = document.getElementById('menu-count-characters');
@@ -7463,7 +7553,7 @@
       return `<option value="">${t('form_select_character')}</option>` + 
         cachedCharactersForProject.map(c => {
           const isSelected = (c.name === selectedChar) ? 'selected' : '';
-          return `<option value="${escapeHtml(c.name)}" ${isSelected}>${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`;
+          return `<option value="${escapeHtml(c.name)}" ${isSelected}>${c.pinned ? '★ ' : ''}${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`;
         }).join('');
     }
 
@@ -8880,11 +8970,14 @@
 
     let toastTimer = null;
     function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.remove('hidden');
+      const tEl = document.getElementById('toast');
+      if (!tEl) return;
+      tEl.textContent = msg;
+      tEl.classList.remove('toast-visible');
+      void tEl.offsetWidth;
+      tEl.classList.add('toast-visible');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+      toastTimer = setTimeout(() => tEl.classList.remove('toast-visible'), 2600);
     }
 
     /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
