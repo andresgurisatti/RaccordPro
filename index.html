@@ -44,12 +44,19 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
+    html {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      height: 100dvh;
+      background-color: var(--bg-900);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
       position: fixed;
       inset: 0;
       background-color: var(--bg-900);
@@ -420,13 +427,13 @@
 
     .bottom-bar-center {
       position: fixed;
-      bottom: 0;
+      bottom: -1px;
       left: 0;
       right: 0;
       padding-top: 12px;
       padding-left: 16px;
       padding-right: 16px;
-      padding-bottom: 12px;
+      padding-bottom: calc(13px + env(safe-area-inset-bottom, 0px));
       background: rgba(19, 23, 29, 0.96);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -1670,6 +1677,92 @@
       max-height: 100%;
     }
 
+    #scenes-modal .modal-header,
+    #characters-modal .modal-header {
+      padding: 10px 12px;
+    }
+
+    #scenes-modal .modal-body,
+    #characters-modal .modal-body {
+      padding: 10px 12px;
+    }
+
+    #scenes-modal .manager-item,
+    #characters-modal .manager-item {
+      padding: 8px 10px;
+      margin-bottom: 6px;
+    }
+
+    .bulk-action-card {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: 12px;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .bulk-action-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .bulk-action-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bulk-action-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+    }
+
+    .bulk-action-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .btn-bulk-square {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid var(--border-600);
+      background: var(--bg-850);
+      color: #e5e7eb;
+      transition: transform 0.1s, background 0.15s;
+    }
+
+    .btn-bulk-square:active {
+      transform: scale(0.92);
+    }
+
+    .btn-bulk-square.amber {
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.5);
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    .btn-bulk-square.danger {
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.45);
+      background: rgba(239, 68, 68, 0.12);
+    }
+
     .header-title-clickable {
       flex: 1;
       min-width: 0;
@@ -2382,6 +2475,10 @@
             <span id="menu-count-characters" class="hidden" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
           </div>
         </button>
+        <button type="button" class="dropdown-item" id="menu-opt-bulk-actions">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span data-i18n="menu_bulk_actions">Herramientas Avanzadas</span>
+        </button>
         <div class="dropdown-divider"></div>
         <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -2591,9 +2688,9 @@
             <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_backup_label">Respaldo</span>
             <span id="summary-backup-status" style="font-weight:800;"></span>
           </div>
-          <div class="summary-top-row">
-            <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_updated_label">Última modificación</span>
-            <span id="summary-updated-at" style="font-weight:700; color:#e5e7eb;">-</span>
+          <div class="summary-top-row" style="gap:10px;">
+            <span style="color:var(--text-muted); font-weight:700; min-width:0;" data-i18n="summary_updated_label">Última modificación</span>
+            <span id="summary-updated-at" style="font-weight:700; color:#e5e7eb; white-space:nowrap; flex-shrink:0; font-size:12.5px;">-</span>
           </div>
         </div>
       </div>
@@ -2615,27 +2712,27 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="scenes-list" style="max-height:340px; overflow-y:auto; margin-bottom:14px;"></div>
-        <div style="padding-top:14px; border-top:1px solid var(--border-700);">
+        <div id="scenes-list" style="overflow-y:auto; margin-bottom:8px;"></div>
+        <div style="padding-top:8px; border-top:1px solid var(--border-700);">
           <button type="button" id="btn-show-add-scene" class="btn-primary" style="width:100%;" data-i18n="btn_add_scene_plus">+ Añadir Escena</button>
           <div id="scene-edit-floating-title" class="floating-edit-banner hidden"></div>
-          <form id="scenes-form" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
+          <form id="scenes-form" class="hidden" style="display:flex; flex-direction:column; gap:8px;">
             <input type="hidden" id="edit-scene-id" value="">
-            <div style="display:flex; gap:10px;">
-              <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:120px; text-align:center; font-weight:800; color:var(--amber);" data-i18n-placeholder="placeholder_scene_num">
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="new-scene-num" placeholder="N° (Ej: 14)" required class="form-control" style="width:110px; text-align:center; font-weight:800; color:var(--amber);" data-i18n-placeholder="placeholder_scene_num">
               <input type="text" id="new-scene-desc" placeholder="Encabezado / Set (Ej: INT. COCINA - DÍA)" class="form-control" style="flex:1;" data-i18n-placeholder="placeholder_scene_desc">
             </div>
             <div style="display:flex; gap:8px;">
               <button type="button" id="btn-cancel-edit-scene" class="btn-secondary" style="flex:1;" data-i18n="btn_cancel">Cancelar</button>
               <button type="submit" id="btn-save-scene" class="btn-primary" style="flex:1;" data-i18n="btn_save">Guardar</button>
             </div>
+            <div id="delete-scene-container" class="hidden" style="padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
+              <button type="button" id="btn-delete-scene-modal" class="btn-delete-project-full">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                <span data-i18n="btn_delete_scene">Eliminar Escena</span>
+              </button>
+            </div>
           </form>
-        </div>
-        <div id="delete-all-scenes-box" class="delete-project-box hidden">
-          <button type="button" id="btn-delete-all-scenes" class="btn-delete-project-full">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-            <span data-i18n="btn_delete_all_scenes">ELIMINAR TODAS LAS ESCENAS</span>
-          </button>
         </div>
       </div>
     </div>
@@ -2656,22 +2753,22 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="characters-list" style="max-height:320px; overflow-y:auto; margin-bottom:14px;"></div>
-        <div style="padding-top:14px; border-top:1px solid var(--border-700);">
+        <div id="characters-list" style="overflow-y:auto; margin-bottom:8px;"></div>
+        <div style="padding-top:8px; border-top:1px solid var(--border-700);">
           <button type="button" id="btn-show-add-character" class="btn-primary" style="width:100%;" data-i18n="btn_add_character_plus">+ Añadir Personaje</button>
           <div id="character-edit-floating-title" class="floating-edit-banner hidden"></div>
-          <form id="characters-form" class="hidden" style="display:flex; flex-direction:column; gap:10px;">
+          <form id="characters-form" class="hidden" style="display:flex; flex-direction:column; gap:8px;">
             <input type="hidden" id="edit-character-id" value="">
             <input type="file" id="input-actor-photo" accept="image/*" class="hidden">
 
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex; gap:8px;">
               <input type="text" id="new-character-name" placeholder="Personaje (Ej: Valeria)" required class="form-control" style="flex:1;" data-i18n-placeholder="placeholder_char_name">
               <input type="text" id="new-actor-name" placeholder="Actor (Opcional)" class="form-control" style="flex:1;" data-i18n-placeholder="placeholder_actor_name">
             </div>
 
-            <div style="display:flex; align-items:center; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
               <div id="actor-photo-preview-box" class="hidden" style="display:flex; align-items:center; gap:10px; background:var(--bg-800); border:1px solid var(--border-700); padding:6px 10px; border-radius:var(--btn-radius); flex:1;">
-                <img id="actor-photo-preview-img" src="" alt="Actor" style="width:42px; height:42px; border-radius:8px; object-fit:cover;">
+                <img id="actor-photo-preview-img" src="" alt="Actor" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
                 <span style="font-size:13px; font-weight:700; color:#e5e7eb; flex:1;" data-i18n="actor_photo_loaded">Foto del actor cargada</span>
                 <button type="button" id="btn-remove-actor-photo" class="btn-action-small delete" title="Quitar foto" data-i18n-title="btn_remove_photo_title" style="min-width:36px; min-height:36px;">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -2684,16 +2781,147 @@
               </button>
             </div>
 
+            <label class="pdf-scene-check-item" style="margin:0; padding:10px 12px;">
+              <input type="checkbox" id="char-pinned-check">
+              <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color:#fff;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+                <span data-i18n="pin_char_title">Anclar personaje arriba</span>
+              </div>
+            </label>
+
             <div style="display:flex; gap:8px;">
               <button type="button" id="btn-cancel-edit-character" class="btn-secondary" style="flex:1;" data-i18n="btn_cancel">Cancelar</button>
               <button type="submit" id="btn-save-character" class="btn-primary" style="flex:1;" data-i18n="btn_save">Guardar</button>
             </div>
+
+            <div id="delete-character-container" class="hidden" style="padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
+              <button type="button" id="btn-delete-character-modal" class="btn-delete-project-full">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                <span data-i18n="btn_delete_character">Eliminar Personaje</span>
+              </button>
+            </div>
           </form>
         </div>
-        <div id="delete-all-characters-box" class="delete-project-box hidden">
-          <button type="button" id="btn-delete-all-characters" class="btn-delete-project-full">
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: HERRAMIENTAS AVANZADAS              -->
+  <!-- ========================================== -->
+  <div id="bulk-actions-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="modal_bulk_actions_title">HERRAMIENTAS AVANZADAS</h2>
+        <button type="button" id="btn-close-bulk-actions" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_unpin_chars_title">Desanclar todos los personajes</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_unpin_chars_desc">Quita el anclaje (★) de todos los personajes para volver al orden alfabético.</p>
+          </div>
+          <button type="button" id="btn-bulk-unpin-chars" class="btn-bulk-square" title="Desanclar personajes" data-i18n-title="bulk_unpin_chars_btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="2" y1="2" x2="22" y2="22"/>
+              <line x1="12" y1="17" x2="12" y2="22"/>
+              <path d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h12"/>
+              <path d="M15 9.34V6h1a2 2 0 0 0 0-4H7.89"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_optimize_photos_title">Optimizar / recomprimir fotos</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_optimize_photos_desc">Reduce el peso de todas las fotos del proyecto para aligerar los respaldos sin borrar registros.</p>
+          </div>
+          <button type="button" id="btn-bulk-optimize-photos" class="btn-bulk-square amber" title="Optimizar fotos" data-i18n-title="bulk_optimize_photos_title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 14 10 14 10 20"/>
+              <polyline points="20 10 14 10 14 4"/>
+              <line x1="14" y1="10" x2="21" y2="3"/>
+              <line x1="3" y1="21" x2="10" y2="14"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_export_photos_zip_title">Exportar todas las fotos en ZIP</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_export_photos_zip_desc">Empaqueta todas las fotos de continuidad del proyecto en un archivo .zip.</p>
+          </div>
+          <button type="button" id="btn-bulk-export-photos-zip" class="btn-bulk-square amber" title="Exportar fotos en ZIP" data-i18n-title="bulk_export_photos_zip_title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 8v13H3V8"/>
+              <path d="M1 3h22v5H1z"/>
+              <path d="M10 12h4"/>
+              <path d="M12 12v5"/>
+              <path d="m9.5 15 2.5 2.5 2.5-2.5"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_delete_unused_scenes_title">Eliminar escenas sin continuidad</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_delete_unused_scenes_desc">Limpia del catálogo las escenas que aún no tienen continuidad registrada.</p>
+          </div>
+          <button type="button" id="btn-bulk-delete-unused-scenes" class="btn-bulk-square danger" title="Eliminar escenas sin continuidad" data-i18n-title="bulk_delete_unused_scenes_btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-            <span data-i18n="btn_delete_all_characters">ELIMINAR TODOS LOS PERSONAJES</span>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_clear_take_title">Eliminar entradas de una continuidad</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_clear_take_desc">Elimina todas las entradas de la escena seleccionada, manteniendo la continuidad creada.</p>
+            <select id="bulk-clear-take-select" class="form-control" style="margin-top:4px;"></select>
+          </div>
+          <button type="button" id="btn-bulk-clear-take-entries" class="btn-bulk-square danger" title="Eliminar entradas" data-i18n-title="bulk_clear_take_btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_strip_photos_title">Eliminar todas las fotos</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_strip_photos_desc">Conserva las continuidades, escenas y notas de texto, pero borra todas las imágenes para liberar espacio.</p>
+          </div>
+          <button type="button" id="btn-bulk-strip-photos" class="btn-bulk-square danger" title="Eliminar todas las fotos" data-i18n-title="bulk_strip_photos_btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_delete_chars_title">Eliminar todos los personajes</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_delete_chars_desc">Vacía el catálogo de personajes de este proyecto.</p>
+          </div>
+          <button type="button" id="btn-bulk-delete-all-characters" class="btn-bulk-square danger" title="Eliminar todos los personajes" data-i18n-title="btn_delete_all_characters">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_delete_scenes_title">Eliminar todas las escenas</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_delete_scenes_desc">Vacía el catálogo de escenas de este proyecto.</p>
+          </div>
+          <button type="button" id="btn-bulk-delete-all-scenes" class="btn-bulk-square danger" title="Eliminar todas las escenas" data-i18n-title="btn_delete_all_scenes">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </button>
+        </div>
+
+        <div class="bulk-action-card">
+          <div class="bulk-action-info">
+            <h3 class="bulk-action-title" data-i18n="bulk_delete_takes_title">Eliminar todas las continuidades</h3>
+            <p class="bulk-action-desc" data-i18n="bulk_delete_takes_desc">Borra todas las continuidades y sus fotos en este proyecto.</p>
+          </div>
+          <button type="button" id="btn-bulk-delete-all-takes" class="btn-bulk-square danger" title="Eliminar todas las continuidades" data-i18n-title="bulk_delete_takes_btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
           </button>
         </div>
       </div>
@@ -3300,6 +3528,48 @@
         unpin_char_title: 'Desanclar personaje',
         toast_char_pinned: 'Personaje "{name}" anclado arriba',
         toast_char_unpinned: 'Personaje "{name}" desanclado',
+        menu_bulk_actions: 'Herramientas Avanzadas',
+        modal_bulk_actions_title: 'HERRAMIENTAS AVANZADAS',
+        bulk_optimize_photos_title: 'Optimizar / recomprimir fotos',
+        bulk_optimize_photos_desc: 'Reduce el peso de todas las fotos del proyecto para aligerar los respaldos sin borrar registros.',
+        confirm_bulk_optimize_photos: '¿Optimizar y recomprimir todas las fotos del proyecto para reducir su peso?',
+        toast_bulk_photos_optimized: '{count} fotos optimizadas',
+        toast_bulk_no_photos: 'No hay fotos en este proyecto',
+        bulk_export_photos_zip_title: 'Exportar todas las fotos en ZIP',
+        bulk_export_photos_zip_desc: 'Empaqueta todas las fotos de continuidad del proyecto en un archivo .zip.',
+        toast_bulk_zip_exported: 'ZIP con {count} fotos exportado',
+        btn_delete_scene: 'Eliminar Escena',
+        btn_delete_character: 'Eliminar Personaje',
+        bulk_clear_take_title: 'Eliminar entradas de una continuidad',
+        bulk_clear_take_desc: 'Elimina todas las entradas de la escena seleccionada, manteniendo la continuidad creada.',
+        bulk_clear_take_btn: 'Eliminar todas las entradas',
+        bulk_select_take_placeholder: 'Selecciona una continuidad...',
+        confirm_bulk_clear_take: '¿Eliminar TODAS las entradas de la escena {scene}?',
+        toast_bulk_take_cleared: 'Entradas de la escena {scene} eliminadas',
+        bulk_delete_takes_title: 'Eliminar todas las continuidades',
+        bulk_delete_takes_desc: 'Borra todas las continuidades y sus fotos en este proyecto.',
+        bulk_delete_takes_btn: 'Eliminar todas las continuidades',
+        confirm_bulk_delete_takes: '¿Eliminar TODAS las continuidades de este proyecto? Esta acción no se puede deshacer.',
+        toast_bulk_takes_deleted: 'Todas las continuidades fueron eliminadas',
+        bulk_delete_scenes_title: 'Eliminar todas las escenas',
+        bulk_delete_scenes_desc: 'Vacía el catálogo de escenas de este proyecto.',
+        bulk_delete_unused_scenes_title: 'Eliminar escenas sin continuidad',
+        bulk_delete_unused_scenes_desc: 'Limpia del catálogo las escenas que aún no tienen continuidad registrada.',
+        bulk_delete_unused_scenes_btn: 'Limpiar escenas sin uso',
+        confirm_bulk_delete_unused_scenes: '¿Eliminar {count} escenas que no tienen continuidad?',
+        toast_bulk_unused_scenes_deleted: '{count} escenas sin continuidad eliminadas',
+        bulk_delete_chars_title: 'Eliminar todos los personajes',
+        bulk_delete_chars_desc: 'Vacía el catálogo de personajes de este proyecto.',
+        bulk_unpin_chars_title: 'Desanclar todos los personajes',
+        bulk_unpin_chars_desc: 'Quita el anclaje (★) de todos los personajes para volver al orden alfabético.',
+        bulk_unpin_chars_btn: 'Desanclar personajes',
+        confirm_bulk_unpin_chars: '¿Desanclar todos los personajes?',
+        toast_bulk_chars_unpinned: 'Todos los personajes desanclados',
+        bulk_strip_photos_title: 'Eliminar todas las fotos',
+        bulk_strip_photos_desc: 'Conserva las continuidades, escenas y notas de texto, pero borra todas las imágenes para liberar espacio.',
+        bulk_strip_photos_btn: 'Eliminar todas las fotos',
+        confirm_bulk_strip_photos: '¿Eliminar TODAS las fotos de continuidad del proyecto? Se conservarán las notas y escenas.',
+        toast_bulk_photos_stripped: 'Se eliminaron {count} fotos del proyecto',
         form_character: 'Personaje *',
         form_select_character: 'Selecciona un personaje...',
         form_continuity_photo: 'Foto de Continuidad',
@@ -3558,6 +3828,48 @@
         unpin_char_title: 'Unpin character',
         toast_char_pinned: 'Character "{name}" pinned to top',
         toast_char_unpinned: 'Character "{name}" unpinned',
+        menu_bulk_actions: 'Advanced Tools',
+        modal_bulk_actions_title: 'ADVANCED TOOLS',
+        bulk_optimize_photos_title: 'Optimize / recompress photos',
+        bulk_optimize_photos_desc: 'Reduces file size of all project photos to make backups lighter without deleting records.',
+        confirm_bulk_optimize_photos: 'Optimize and recompress all photos in this project to reduce size?',
+        toast_bulk_photos_optimized: '{count} photos optimized',
+        toast_bulk_no_photos: 'No photos in this project',
+        bulk_export_photos_zip_title: 'Export all photos as ZIP',
+        bulk_export_photos_zip_desc: 'Packages all continuity photos in this project into a .zip archive.',
+        toast_bulk_zip_exported: 'Exported ZIP with {count} photos',
+        btn_delete_scene: 'Delete Scene',
+        btn_delete_character: 'Delete Character',
+        bulk_clear_take_title: 'Delete entries from a continuity',
+        bulk_clear_take_desc: 'Deletes all entries from the selected scene while keeping the continuity record.',
+        bulk_clear_take_btn: 'Delete all entries',
+        bulk_select_take_placeholder: 'Select a continuity...',
+        confirm_bulk_clear_take: 'Delete ALL entries from scene {scene}?',
+        toast_bulk_take_cleared: 'Cleared entries from scene {scene}',
+        bulk_delete_takes_title: 'Delete all continuities',
+        bulk_delete_takes_desc: 'Deletes all continuities and their photos in this project.',
+        bulk_delete_takes_btn: 'Delete all continuities',
+        confirm_bulk_delete_takes: 'Delete ALL continuities in this project? This cannot be undone.',
+        toast_bulk_takes_deleted: 'All continuities deleted',
+        bulk_delete_scenes_title: 'Delete all scenes',
+        bulk_delete_scenes_desc: 'Clears this project\'s scene catalog.',
+        bulk_delete_unused_scenes_title: 'Delete unused scenes',
+        bulk_delete_unused_scenes_desc: 'Removes scenes from the catalog that have no logged continuity yet.',
+        bulk_delete_unused_scenes_btn: 'Clean unused scenes',
+        confirm_bulk_delete_unused_scenes: 'Delete {count} scenes without continuity?',
+        toast_bulk_unused_scenes_deleted: '{count} unused scenes deleted',
+        bulk_delete_chars_title: 'Delete all characters',
+        bulk_delete_chars_desc: 'Clears this project\'s character catalog.',
+        bulk_unpin_chars_title: 'Unpin all characters',
+        bulk_unpin_chars_desc: 'Removes the pin (★) from all characters to restore alphabetical order.',
+        bulk_unpin_chars_btn: 'Unpin characters',
+        confirm_bulk_unpin_chars: 'Unpin all characters?',
+        toast_bulk_chars_unpinned: 'All characters unpinned',
+        bulk_strip_photos_title: 'Delete all photos',
+        bulk_strip_photos_desc: 'Keeps continuities, scenes, and text notes, but removes all images to free space.',
+        bulk_strip_photos_btn: 'Delete all photos',
+        confirm_bulk_strip_photos: 'Delete ALL continuity photos in this project? Notes and scenes will be kept.',
+        toast_bulk_photos_stripped: 'Deleted {count} photos from project',
         form_character: 'Character *',
         form_select_character: 'Select a character...',
         form_continuity_photo: 'Continuity Photo',
@@ -3816,6 +4128,48 @@
         unpin_char_title: 'Desafixar personagem',
         toast_char_pinned: 'Personagem "{name}" fixado no topo',
         toast_char_unpinned: 'Personagem "{name}" desafixado',
+        menu_bulk_actions: 'Ferramentas Avançadas',
+        modal_bulk_actions_title: 'FERRAMENTAS AVANÇADAS',
+        bulk_optimize_photos_title: 'Otimizar / recomprimir fotos',
+        bulk_optimize_photos_desc: 'Reduz o tamanho de todas as fotos do projeto para tornar os backups mais leves.',
+        confirm_bulk_optimize_photos: 'Otimizar e recomprimir todas as fotos deste projeto?',
+        toast_bulk_photos_optimized: '{count} fotos otimizadas',
+        toast_bulk_no_photos: 'Não há fotos neste projeto',
+        bulk_export_photos_zip_title: 'Exportar todas as fotos em ZIP',
+        bulk_export_photos_zip_desc: 'Empacota todas as fotos de continuidade do projeto em um arquivo .zip.',
+        toast_bulk_zip_exported: 'ZIP com {count} fotos exportado',
+        btn_delete_scene: 'Excluir Cena',
+        btn_delete_character: 'Excluir Personagem',
+        bulk_clear_take_title: 'Excluir entradas de uma continuidade',
+        bulk_clear_take_desc: 'Exclui todas as entradas da cena selecionada, mantendo o registro de continuidade.',
+        bulk_clear_take_btn: 'Excluir todas as entradas',
+        bulk_select_take_placeholder: 'Selecione uma continuidade...',
+        confirm_bulk_clear_take: 'Excluir TODAS as entradas da cena {scene}?',
+        toast_bulk_take_cleared: 'Entradas da cena {scene} excluídas',
+        bulk_delete_takes_title: 'Excluir todas as continuidades',
+        bulk_delete_takes_desc: 'Apaga todas as continuidades e suas fotos neste projeto.',
+        bulk_delete_takes_btn: 'Excluir todas as continuidades',
+        confirm_bulk_delete_takes: 'Excluir TODAS as continuidades deste projeto? Esta ação não pode ser desfeita.',
+        toast_bulk_takes_deleted: 'Todas as continuidades foram excluídas',
+        bulk_delete_scenes_title: 'Excluir todas as cenas',
+        bulk_delete_scenes_desc: 'Limpa o catálogo de cenas deste projeto.',
+        bulk_delete_unused_scenes_title: 'Excluir cenas sem continuidade',
+        bulk_delete_unused_scenes_desc: 'Remove do catálogo as cenas que ainda não têm continuidade registrada.',
+        bulk_delete_unused_scenes_btn: 'Limpar cenas sem uso',
+        confirm_bulk_delete_unused_scenes: 'Excluir {count} cenas sem continuidade?',
+        toast_bulk_unused_scenes_deleted: '{count} cenas sem continuidade excluídas',
+        bulk_delete_chars_title: 'Excluir todos os personagens',
+        bulk_delete_chars_desc: 'Limpa o catálogo de personagens deste projeto.',
+        bulk_unpin_chars_title: 'Desafixar todos os personagens',
+        bulk_unpin_chars_desc: 'Remove a fixação (★) de todos os personagens para voltar à ordem alfabética.',
+        bulk_unpin_chars_btn: 'Desafixar personagens',
+        confirm_bulk_unpin_chars: 'Desafixar todos os personagens?',
+        toast_bulk_chars_unpinned: 'Todos os personagens desafixados',
+        bulk_strip_photos_title: 'Excluir todas as fotos',
+        bulk_strip_photos_desc: 'Mantém as continuidades, cenas e notas de texto, mas apaga todas as imagens.',
+        bulk_strip_photos_btn: 'Excluir todas as fotos',
+        confirm_bulk_strip_photos: 'Excluir TODAS as fotos de continuidade do projeto? Notas e cenas serão mantidas.',
+        toast_bulk_photos_stripped: '{count} fotos excluídas do projeto',
         form_character: 'Personagem *',
         form_select_character: 'Selecione um personagem...',
         form_continuity_photo: 'Foto de Continuidade',
@@ -4074,6 +4428,48 @@
         unpin_char_title: 'Rimuovi fissaggio personaggio',
         toast_char_pinned: 'Personaggio "{name}" fissato in alto',
         toast_char_unpinned: 'Personaggio "{name}" rimosso dai fissati',
+        menu_bulk_actions: 'Strumenti Avanzati',
+        modal_bulk_actions_title: 'STRUMENTI AVANZATI',
+        bulk_optimize_photos_title: 'Ottimizza / ricomprimi foto',
+        bulk_optimize_photos_desc: 'Riduce il peso di tutte le foto del progetto per alleggerire i backup.',
+        confirm_bulk_optimize_photos: 'Ottimizzare e ricomprimere tutte le foto di questo progetto?',
+        toast_bulk_photos_optimized: '{count} foto ottimizzate',
+        toast_bulk_no_photos: 'Nessuna foto in questo progetto',
+        bulk_export_photos_zip_title: 'Esporta tutte le foto in ZIP',
+        bulk_export_photos_zip_desc: 'Impacchetta tutte le foto di continuità del progetto in un file .zip.',
+        toast_bulk_zip_exported: 'ZIP con {count} foto esportato',
+        btn_delete_scene: 'Elimina Scena',
+        btn_delete_character: 'Elimina Personaggio',
+        bulk_clear_take_title: 'Elimina voci di una continuità',
+        bulk_clear_take_desc: 'Elimina tutte le voci della scena selezionata mantenendo la continuità.',
+        bulk_clear_take_btn: 'Elimina tutte le voci',
+        bulk_select_take_placeholder: 'Seleziona una continuità...',
+        confirm_bulk_clear_take: 'Eliminare TUTTE le voci della scena {scene}?',
+        toast_bulk_take_cleared: 'Voci della scena {scene} eliminate',
+        bulk_delete_takes_title: 'Elimina tutte le continuità',
+        bulk_delete_takes_desc: 'Elimina tutte le continuità e le relative foto in questo progetto.',
+        bulk_delete_takes_btn: 'Elimina tutte le continuità',
+        confirm_bulk_delete_takes: 'Eliminare TUTTE le continuità di questo progetto? Azione irreversibile.',
+        toast_bulk_takes_deleted: 'Tutte le continuità eliminate',
+        bulk_delete_scenes_title: 'Elimina tutte le scene',
+        bulk_delete_scenes_desc: 'Svuota il catalogo scene di questo progetto.',
+        bulk_delete_unused_scenes_title: 'Elimina scene senza continuità',
+        bulk_delete_unused_scenes_desc: 'Rimuove dal catalogo le scene senza continuità registrata.',
+        bulk_delete_unused_scenes_btn: 'Pulisci scene inutilizzate',
+        confirm_bulk_delete_unused_scenes: 'Eliminare {count} scene senza continuità?',
+        toast_bulk_unused_scenes_deleted: '{count} scene senza continuità eliminate',
+        bulk_delete_chars_title: 'Elimina tutti i personaggi',
+        bulk_delete_chars_desc: 'Svuota il catalogo personaggi di questo progetto.',
+        bulk_unpin_chars_title: 'Rimuovi fissaggio personaggi',
+        bulk_unpin_chars_desc: 'Rimuove il fissaggio (★) da tutti i personaggi per tornare all\'ordine alfabetico.',
+        bulk_unpin_chars_btn: 'Rimuovi fissaggi',
+        confirm_bulk_unpin_chars: 'Rimuovere il fissaggio a tutti i personaggi?',
+        toast_bulk_chars_unpinned: 'Tutti i personaggi rimossi dai fissati',
+        bulk_strip_photos_title: 'Elimina tutte le foto',
+        bulk_strip_photos_desc: 'Mantiene continuità, scene e note di testo, ma elimina tutte le immagini.',
+        bulk_strip_photos_btn: 'Elimina tutte le foto',
+        confirm_bulk_strip_photos: 'Eliminare TUTTE le foto di continuità del progetto?',
+        toast_bulk_photos_stripped: 'Eliminate {count} foto dal progetto',
         form_character: 'Personaggio *',
         form_select_character: 'Seleziona un personaggio...',
         form_continuity_photo: 'Foto di Continuità',
@@ -4332,6 +4728,48 @@
         unpin_char_title: 'Figur lösen',
         toast_char_pinned: 'Figur "{name}" oben angeheftet',
         toast_char_unpinned: 'Figur "{name}" gelöst',
+        menu_bulk_actions: 'Erweiterte Tools',
+        modal_bulk_actions_title: 'ERWEITERTE TOOLS',
+        bulk_optimize_photos_title: 'Fotos optimieren / komprimieren',
+        bulk_optimize_photos_desc: 'Reduziert die Dateigröße aller Projektfotos für schlankere Backups.',
+        confirm_bulk_optimize_photos: 'Alle Fotos in diesem Projekt optimieren und neu komprimieren?',
+        toast_bulk_photos_optimized: '{count} Fotos optimiert',
+        toast_bulk_no_photos: 'Keine Fotos in diesem Projekt',
+        bulk_export_photos_zip_title: 'Alle Fotos als ZIP exportieren',
+        bulk_export_photos_zip_desc: 'Packt alle Kontinuitätsfotos dieses Projekts in eine .zip-Datei.',
+        toast_bulk_zip_exported: 'ZIP mit {count} Fotos exportiert',
+        btn_delete_scene: 'Szene löschen',
+        btn_delete_character: 'Figur löschen',
+        bulk_clear_take_title: 'Einträge einer Kontinuität löschen',
+        bulk_clear_take_desc: 'Löscht alle Einträge der ausgewählten Szene, behält aber den Kontinuitätseintrag.',
+        bulk_clear_take_btn: 'Alle Einträge löschen',
+        bulk_select_take_placeholder: 'Kontinuität auswählen...',
+        confirm_bulk_clear_take: 'ALLE Einträge der Szene {scene} löschen?',
+        toast_bulk_take_cleared: 'Einträge der Szene {scene} gelöscht',
+        bulk_delete_takes_title: 'Alle Kontinuitäten löschen',
+        bulk_delete_takes_desc: 'Löscht alle Kontinuitäten und Fotos in diesem Projekt.',
+        bulk_delete_takes_btn: 'Alle Kontinuitäten löschen',
+        confirm_bulk_delete_takes: 'ALLE Kontinuitäten dieses Projekts löschen? Nicht rückgängig zu machen.',
+        toast_bulk_takes_deleted: 'Alle Kontinuitäten gelöscht',
+        bulk_delete_scenes_title: 'Alle Szenen löschen',
+        bulk_delete_scenes_desc: 'Leert den Szenenkatalog dieses Projekts.',
+        bulk_delete_unused_scenes_title: 'Szenen ohne Kontinuität löschen',
+        bulk_delete_unused_scenes_desc: 'Entfernt Szenen aus dem Katalog, die noch keine Kontinuität haben.',
+        bulk_delete_unused_scenes_btn: 'Unbenutzte Szenen bereinigen',
+        confirm_bulk_delete_unused_scenes: '{count} Szenen ohne Kontinuität löschen?',
+        toast_bulk_unused_scenes_deleted: '{count} unbenutzte Szenen gelöscht',
+        bulk_delete_chars_title: 'Alle Figuren löschen',
+        bulk_delete_chars_desc: 'Leert den Figurenkatalog dieses Projekts.',
+        bulk_unpin_chars_title: 'Alle Figuren lösen',
+        bulk_unpin_chars_desc: 'Entfernt das Anheften (★) von allen Figuren.',
+        bulk_unpin_chars_btn: 'Figuren lösen',
+        confirm_bulk_unpin_chars: 'Alle Figuren lösen?',
+        toast_bulk_chars_unpinned: 'Alle Figuren gelöst',
+        bulk_strip_photos_title: 'Alle Fotos löschen',
+        bulk_strip_photos_desc: 'Behält Kontinuitäten, Szenen und Textnotizen, löscht aber alle Bilder.',
+        bulk_strip_photos_btn: 'Alle Fotos löschen',
+        confirm_bulk_strip_photos: 'ALLE Kontinuitätsfotos in diesem Projekt löschen?',
+        toast_bulk_photos_stripped: '{count} Fotos aus dem Projekt gelöscht',
         form_character: 'Figur *',
         form_select_character: 'Wähle eine Figur...',
         form_continuity_photo: 'Kontinuitätsfoto',
@@ -4590,6 +5028,48 @@
         unpin_char_title: 'Désépingler le personnage',
         toast_char_pinned: 'Personnage "{name}" épinglé en haut',
         toast_char_unpinned: 'Personnage "{name}" désépinglé',
+        menu_bulk_actions: 'Outils avancés',
+        modal_bulk_actions_title: 'OUTILS AVANCÉS',
+        bulk_optimize_photos_title: 'Optimiser / recompresser les photos',
+        bulk_optimize_photos_desc: 'Réduit la taille de toutes les photos du projet pour alléger les sauvegardes.',
+        confirm_bulk_optimize_photos: 'Optimiser et recompresser toutes les photos de ce projet ?',
+        toast_bulk_photos_optimized: '{count} photos optimisées',
+        toast_bulk_no_photos: 'Aucune photo dans ce projet',
+        bulk_export_photos_zip_title: 'Exporter toutes les photos en ZIP',
+        bulk_export_photos_zip_desc: 'Regroupe toutes les photos de continuité du projet dans une archive .zip.',
+        toast_bulk_zip_exported: 'ZIP avec {count} photos exporté',
+        btn_delete_scene: 'Supprimer la scène',
+        btn_delete_character: 'Supprimer le personnage',
+        bulk_clear_take_title: 'Supprimer les entrées d\'une continuité',
+        bulk_clear_take_desc: 'Supprime toutes les entrées de la scène sélectionnée tout en conservant la continuité.',
+        bulk_clear_take_btn: 'Supprimer toutes les entrées',
+        bulk_select_take_placeholder: 'Sélectionner une continuité...',
+        confirm_bulk_clear_take: 'Supprimer TOUTES les entrées de la scène {scene} ?',
+        toast_bulk_take_cleared: 'Entrées de la scène {scene} supprimées',
+        bulk_delete_takes_title: 'Supprimer toutes les continuités',
+        bulk_delete_takes_desc: 'Supprime toutes les continuités et leurs photos dans ce projet.',
+        bulk_delete_takes_btn: 'Supprimer toutes les continuités',
+        confirm_bulk_delete_takes: 'Supprimer TOUTES les continuités de ce projet ? Action irréversible.',
+        toast_bulk_takes_deleted: 'Toutes les continuités supprimées',
+        bulk_delete_scenes_title: 'Supprimer toutes les scènes',
+        bulk_delete_scenes_desc: 'Vide le catalogue de scènes de ce projet.',
+        bulk_delete_unused_scenes_title: 'Supprimer les scènes sans continuité',
+        bulk_delete_unused_scenes_desc: 'Supprime du catalogue les scènes sans continuité enregistrée.',
+        bulk_delete_unused_scenes_btn: 'Nettoyer les scènes inutilisées',
+        confirm_bulk_delete_unused_scenes: 'Supprimer {count} scènes sans continuité ?',
+        toast_bulk_unused_scenes_deleted: '{count} scènes sans continuité supprimées',
+        bulk_delete_chars_title: 'Supprimer tous les personnages',
+        bulk_delete_chars_desc: 'Vide le catalogue de personnages de ce projet.',
+        bulk_unpin_chars_title: 'Désépingler tous les personnages',
+        bulk_unpin_chars_desc: 'Retire l\'épingle (★) de tous les personnages pour revenir à l\'ordre alphabétique.',
+        bulk_unpin_chars_btn: 'Désépingler les personnages',
+        confirm_bulk_unpin_chars: 'Désépingler tous les personnages ?',
+        toast_bulk_chars_unpinned: 'Tous les personnages désépinglés',
+        bulk_strip_photos_title: 'Supprimer toutes les photos',
+        bulk_strip_photos_desc: 'Conserve les continuités, scènes et notes, mais supprime toutes les images.',
+        bulk_strip_photos_btn: 'Supprimer toutes les photos',
+        confirm_bulk_strip_photos: 'Supprimer TOUTES les photos de continuité du projet ?',
+        toast_bulk_photos_stripped: '{count} photos supprimées du projet',
         form_character: 'Personnage *',
         form_select_character: 'Sélectionnez un personnage...',
         form_continuity_photo: 'Photo de Continuité',
@@ -7008,16 +7488,14 @@
     const editSceneId = document.getElementById('edit-scene-id');
     const btnSaveScene = document.getElementById('btn-save-scene');
     const btnCancelEditScene = document.getElementById('btn-cancel-edit-scene');
-    const deleteAllScenesBox = document.getElementById('delete-all-scenes-box');
     const btnCloseScenesModal = document.getElementById('btn-close-scenes-modal');
-    const btnDeleteAllScenes = document.getElementById('btn-delete-all-scenes');
     const scenesListContainer = document.getElementById('scenes-list');
+    const deleteSceneContainer = document.getElementById('delete-scene-container');
+    const btnDeleteSceneModal = document.getElementById('btn-delete-scene-modal');
 
     function setSceneEditingLock(isEditing, targetId = null) {
       btnCloseScenesModal.disabled = isEditing;
       btnCloseScenesModal.classList.toggle('editing-lock', isEditing);
-      btnDeleteAllScenes.disabled = isEditing;
-      deleteAllScenesBox.classList.toggle('editing-lock', isEditing);
       scenesListContainer.classList.toggle('manager-list-editing', isEditing);
 
       scenesListContainer.querySelectorAll('.manager-item').forEach(el => {
@@ -7043,6 +7521,7 @@
       document.getElementById('new-scene-desc').value = '';
       btnSaveScene.textContent = t('btn_save_scene');
       if (sceneEditFloatingTitle) sceneEditFloatingTitle.classList.add('hidden');
+      if (deleteSceneContainer) deleteSceneContainer.classList.add('hidden');
       btnShowAddScene.classList.add('hidden');
       scenesForm.classList.remove('hidden');
       setSceneEditingLock(true, null);
@@ -7055,6 +7534,7 @@
       document.getElementById('new-scene-desc').value = '';
       btnSaveScene.textContent = t('btn_save');
       if (sceneEditFloatingTitle) sceneEditFloatingTitle.classList.add('hidden');
+      if (deleteSceneContainer) deleteSceneContainer.classList.add('hidden');
       scenesForm.classList.add('hidden');
       btnShowAddScene.classList.remove('hidden');
       setSceneEditingLock(false);
@@ -7168,20 +7648,17 @@
 
       if (scenes.length === 0) {
         scenesListContainer.innerHTML = `<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">${t('empty_scenes_msg')}</p>`;
-        deleteAllScenesBox.classList.add('hidden');
         return;
       }
 
-      deleteAllScenesBox.classList.remove('hidden');
       scenesListContainer.innerHTML = scenes.map(s => `
         <div class="manager-item" data-id="${s.id}">
           <div style="min-width:0; flex:1;">
-            <strong style="color:var(--amber); font-size:16px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
-            <span style="color:#d1d5db; font-size:14px;">${escapeHtml(s.desc || '')}</span>
+            <strong style="color:var(--amber); font-size:15px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
+            <span style="color:#d1d5db; font-size:13.5px;">${escapeHtml(s.desc || '')}</span>
           </div>
           <div style="display:flex; gap:6px;">
             <button type="button" class="btn-action-small edit" onclick="startEditScene('${s.id}')" title="${t('btn_edit_title')}">${ICON_EDIT_SVG}</button>
-            <button type="button" class="btn-action-small delete" onclick="deleteSceneItem('${s.id}')" title="${t('btn_delete_title')}">${ICON_DELETE_SVG}</button>
           </div>
         </div>
       `).join('');
@@ -7225,11 +7702,23 @@
         sceneEditFloatingTitle.textContent = t('floating_edit_scene', { num: target.sceneNum });
         sceneEditFloatingTitle.classList.remove('hidden');
       }
+      if (deleteSceneContainer) deleteSceneContainer.classList.remove('hidden');
       btnShowAddScene.classList.add('hidden');
       scenesForm.classList.remove('hidden');
       setSceneEditingLock(true, target.id);
+      requestAnimationFrame(() => {
+        const rowEl = scenesListContainer.querySelector(`.manager-item[data-id="${target.id}"]`);
+        if (rowEl) rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
       document.getElementById('new-scene-num').focus();
     };
+
+    if (btnDeleteSceneModal) {
+      btnDeleteSceneModal.addEventListener('click', () => {
+        if (!editSceneId.value) return;
+        window.deleteSceneItem(editSceneId.value);
+      });
+    }
 
     window.deleteSceneItem = async function(id) {
       const scenes = await getEntitiesForProject(STORE_SCENES, activeProjectId);
@@ -7246,16 +7735,6 @@
       });
     };
 
-    document.getElementById('btn-delete-all-scenes').addEventListener('click', () => {
-      askConfirmation(t('confirm_delete_all_scenes'), async () => {
-        await deleteAllEntitiesForProject(STORE_SCENES, activeProjectId);
-        resetSceneForm();
-        await renderScenesList();
-        await updateCatalogCaches();
-        showToast(t('toast_all_scenes_deleted'));
-      });
-    });
-
     /* ==========================================================================
        GESTIÓN DE PERSONAJES
        ========================================================================== */
@@ -7269,16 +7748,15 @@
     const actorPhotoPreviewBox = document.getElementById('actor-photo-preview-box');
     const actorPhotoPreviewImg = document.getElementById('actor-photo-preview-img');
     const btnTriggerActorPhoto = document.getElementById('btn-trigger-actor-photo');
-    const deleteAllCharactersBox = document.getElementById('delete-all-characters-box');
     const btnCloseCharactersModal = document.getElementById('btn-close-characters-modal');
-    const btnDeleteAllCharacters = document.getElementById('btn-delete-all-characters');
     const charactersListContainer = document.getElementById('characters-list');
+    const charPinnedCheck = document.getElementById('char-pinned-check');
+    const deleteCharacterContainer = document.getElementById('delete-character-container');
+    const btnDeleteCharacterModal = document.getElementById('btn-delete-character-modal');
 
     function setCharacterEditingLock(isEditing, targetId = null) {
       btnCloseCharactersModal.disabled = isEditing;
       btnCloseCharactersModal.classList.toggle('editing-lock', isEditing);
-      btnDeleteAllCharacters.disabled = isEditing;
-      deleteAllCharactersBox.classList.toggle('editing-lock', isEditing);
       charactersListContainer.classList.toggle('manager-list-editing', isEditing);
 
       charactersListContainer.querySelectorAll('.manager-item').forEach(el => {
@@ -7311,12 +7789,14 @@
     btnShowAddCharacter.addEventListener('click', () => {
       editCharacterId.value = '';
       editingCharacterPinned = false;
+      if (charPinnedCheck) charPinnedCheck.checked = false;
       document.getElementById('new-character-name').value = '';
       document.getElementById('new-actor-name').value = '';
       inputActorPhoto.value = '';
       setActorPhotoPreview(null);
       btnSaveCharacter.textContent = t('btn_save_character');
       if (characterEditFloatingTitle) characterEditFloatingTitle.classList.add('hidden');
+      if (deleteCharacterContainer) deleteCharacterContainer.classList.add('hidden');
       btnShowAddCharacter.classList.add('hidden');
       charactersForm.classList.remove('hidden');
       setCharacterEditingLock(true, null);
@@ -7339,12 +7819,14 @@
     function resetCharacterForm() {
       editCharacterId.value = '';
       editingCharacterPinned = false;
+      if (charPinnedCheck) charPinnedCheck.checked = false;
       document.getElementById('new-character-name').value = '';
       document.getElementById('new-actor-name').value = '';
       inputActorPhoto.value = '';
       setActorPhotoPreview(null);
       btnSaveCharacter.textContent = t('btn_save');
       if (characterEditFloatingTitle) characterEditFloatingTitle.classList.add('hidden');
+      if (deleteCharacterContainer) deleteCharacterContainer.classList.add('hidden');
       charactersForm.classList.add('hidden');
       btnShowAddCharacter.classList.remove('hidden');
       setCharacterEditingLock(false);
@@ -7387,29 +7869,23 @@
 
       if (chars.length === 0) {
         charactersListContainer.innerHTML = `<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:12px;">${t('empty_chars_msg')}</p>`;
-        deleteAllCharactersBox.classList.add('hidden');
         return;
       }
 
-      deleteAllCharactersBox.classList.remove('hidden');
       charactersListContainer.innerHTML = chars.map(c => `
         <div class="manager-item ${c.pinned ? 'is-pinned-char' : ''}" data-id="${c.id}">
           <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
             ${c.photo 
               ? `<img src="${c.photo}" alt="${escapeHtml(c.name)}" class="actor-avatar-list">` 
-              : `<div style="width:42px; height:42px; border-radius:10px; background:var(--bg-850); border:1px solid var(--border-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;">${ICON_USER_SVG}</div>`
+              : `<div style="width:40px; height:40px; border-radius:10px; background:var(--bg-850); border:1px solid var(--border-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;">${ICON_USER_SVG}</div>`
             }
             <div style="min-width:0; flex:1;">
-              <strong style="color:#fff; font-size:15px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.pinned ? '★ ' : ''}${escapeHtml(c.name)}</strong>
+              <strong style="color:#fff; font-size:15px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.pinned ? '<span style="color:var(--amber);">★ </span>' : ''}${escapeHtml(c.name)}</strong>
               ${c.actor ? `<span style="color:var(--text-muted); font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(c.actor)}</span>` : ''}
             </div>
           </div>
           <div style="display:flex; gap:6px;">
-            <button type="button" class="btn-action-small btn-pin-char ${c.pinned ? 'is-pinned' : ''}" onclick="togglePinCharacter('${c.id}')" title="${c.pinned ? t('unpin_char_title') : t('pin_char_title')}">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="${c.pinned ? 'rgba(245,158,11,0.3)' : 'none'}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
-            </button>
             <button type="button" class="btn-action-small edit" onclick="startEditCharacter('${c.id}')" title="${t('btn_edit_title')}">${ICON_EDIT_SVG}</button>
-            <button type="button" class="btn-action-small delete" onclick="deleteCharacterItem('${c.id}')" title="${t('btn_delete_title')}">${ICON_DELETE_SVG}</button>
           </div>
         </div>
       `).join('');
@@ -7426,6 +7902,7 @@
       if (!name) return;
 
       const existingId = editCharacterId.value;
+      const isPinned = charPinnedCheck ? Boolean(charPinnedCheck.checked) : Boolean(editingCharacterPinned);
 
       await saveEntityToDB(STORE_CHARACTERS, {
         id: existingId || ('char_' + Date.now()),
@@ -7433,7 +7910,7 @@
         name,
         actor,
         photo: currentActorPhotoBase64 || null,
-        pinned: existingId ? Boolean(editingCharacterPinned) : false
+        pinned: isPinned
       });
 
       resetCharacterForm();
@@ -7443,19 +7920,6 @@
       showToast(existingId ? t('toast_char_updated', { name }) : t('toast_char_added', { name }));
     });
 
-    window.togglePinCharacter = async function(id) {
-      const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
-      const target = chars.find(c => c.id === id);
-      if (!target) return;
-
-      target.pinned = !target.pinned;
-      await saveEntityToDB(STORE_CHARACTERS, target);
-      if (editCharacterId.value === id) editingCharacterPinned = target.pinned;
-      await renderCharactersList();
-      await updateCatalogCaches();
-      showToast(t(target.pinned ? 'toast_char_pinned' : 'toast_char_unpinned', { name: target.name }));
-    };
-
     window.startEditCharacter = async function(id) {
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
       const target = chars.find(c => c.id === id);
@@ -7463,6 +7927,7 @@
 
       editCharacterId.value = target.id;
       editingCharacterPinned = Boolean(target.pinned);
+      if (charPinnedCheck) charPinnedCheck.checked = editingCharacterPinned;
       document.getElementById('new-character-name').value = target.name;
       document.getElementById('new-actor-name').value = target.actor || '';
       setActorPhotoPreview(target.photo || null);
@@ -7471,11 +7936,23 @@
         characterEditFloatingTitle.textContent = t('floating_edit_char', { name: target.name });
         characterEditFloatingTitle.classList.remove('hidden');
       }
+      if (deleteCharacterContainer) deleteCharacterContainer.classList.remove('hidden');
       btnShowAddCharacter.classList.add('hidden');
       charactersForm.classList.remove('hidden');
       setCharacterEditingLock(true, target.id);
+      requestAnimationFrame(() => {
+        const rowEl = charactersListContainer.querySelector(`.manager-item[data-id="${target.id}"]`);
+        if (rowEl) rowEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
       document.getElementById('new-character-name').focus();
     };
+
+    if (btnDeleteCharacterModal) {
+      btnDeleteCharacterModal.addEventListener('click', () => {
+        if (!editCharacterId.value) return;
+        window.deleteCharacterItem(editCharacterId.value);
+      });
+    }
 
     window.deleteCharacterItem = async function(id) {
       const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
@@ -7493,7 +7970,108 @@
       });
     };
 
-    document.getElementById('btn-delete-all-characters').addEventListener('click', () => {
+    /* ==========================================================================
+       ACCIONES EN MASA DEL PROYECTO
+       ========================================================================== */
+    const bulkActionsModal = document.getElementById('bulk-actions-modal');
+    const btnCloseBulkActions = document.getElementById('btn-close-bulk-actions');
+    const bulkClearTakeSelect = document.getElementById('bulk-clear-take-select');
+
+    async function refreshBulkClearTakeSelect() {
+      if (!bulkClearTakeSelect || !activeProjectId) return;
+      const takes = await getAllTakesForProject(activeProjectId);
+      takes.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
+      bulkClearTakeSelect.innerHTML = `<option value="">${t('bulk_select_take_placeholder')}</option>` +
+        takes.map(tk => {
+          const count = getNormalizedPhotos(tk).length;
+          return `<option value="${tk.id}">${t('scene_prefix')} ${escapeHtml(tk.scene)}${tk.sceneDesc ? ' — ' + escapeHtml(tk.sceneDesc) : ''} (${count})</option>`;
+        }).join('');
+    }
+
+    async function openBulkActionsModal() {
+      if (!bulkActionsModal) return;
+      await refreshBulkClearTakeSelect();
+      bulkActionsModal.classList.remove('hidden');
+    }
+
+    const menuOptBulkActions = document.getElementById('menu-opt-bulk-actions');
+    if (menuOptBulkActions) {
+      menuOptBulkActions.addEventListener('click', () => {
+        closeProjectMenu();
+        openBulkActionsModal();
+      });
+    }
+    if (btnCloseBulkActions) {
+      btnCloseBulkActions.addEventListener('click', () => bulkActionsModal.classList.add('hidden'));
+    }
+    if (bulkActionsModal) {
+      bulkActionsModal.addEventListener('click', (e) => {
+        if (e.target === bulkActionsModal) bulkActionsModal.classList.add('hidden');
+      });
+    }
+
+    document.getElementById('btn-bulk-clear-take-entries')?.addEventListener('click', async () => {
+      const takeId = bulkClearTakeSelect ? bulkClearTakeSelect.value : '';
+      if (!takeId) {
+        showToast(t('bulk_select_take_placeholder'));
+        return;
+      }
+      const takes = await getAllTakesForProject(activeProjectId);
+      const target = takes.find(tk => tk.id === takeId);
+      if (!target) return;
+      askConfirmation(t('confirm_bulk_clear_take', { scene: target.scene }), async () => {
+        target.photos = [];
+        delete target.photo;
+        target.updatedAt = Date.now();
+        await saveTakeToDB(target);
+        await refreshBulkClearTakeSelect();
+        await renderTakes();
+        showToast(t('toast_bulk_take_cleared', { scene: target.scene }));
+      });
+    });
+
+    document.getElementById('btn-bulk-delete-all-takes')?.addEventListener('click', () => {
+      askConfirmation(t('confirm_bulk_delete_takes'), async () => {
+        await deleteAllEntitiesForProject(STORE_TAKES, activeProjectId);
+        await refreshBulkClearTakeSelect();
+        await updateCatalogCaches();
+        await renderTakes();
+        showToast(t('toast_bulk_takes_deleted'));
+      });
+    });
+
+    document.getElementById('btn-bulk-delete-all-scenes')?.addEventListener('click', () => {
+      askConfirmation(t('confirm_delete_all_scenes'), async () => {
+        await deleteAllEntitiesForProject(STORE_SCENES, activeProjectId);
+        resetSceneForm();
+        await renderScenesList();
+        await updateCatalogCaches();
+        showToast(t('toast_all_scenes_deleted'));
+      });
+    });
+
+    document.getElementById('btn-bulk-delete-unused-scenes')?.addEventListener('click', async () => {
+      const [scenes, takes] = await Promise.all([
+        getEntitiesForProject(STORE_SCENES, activeProjectId),
+        getAllTakesForProject(activeProjectId)
+      ]);
+      const usedSet = new Set(takes.map(tk => String(tk.scene || '').trim().toUpperCase()));
+      const unused = scenes.filter(s => !usedSet.has(String(s.sceneNum || '').trim().toUpperCase()));
+      if (unused.length === 0) {
+        showToast(t('toast_bulk_unused_scenes_deleted', { count: 0 }));
+        return;
+      }
+      askConfirmation(t('confirm_bulk_delete_unused_scenes', { count: unused.length }), async () => {
+        for (const s of unused) {
+          await deleteEntityFromDB(STORE_SCENES, s.id);
+        }
+        await renderScenesList();
+        await updateCatalogCaches();
+        showToast(t('toast_bulk_unused_scenes_deleted', { count: unused.length }));
+      });
+    });
+
+    document.getElementById('btn-bulk-delete-all-characters')?.addEventListener('click', () => {
       askConfirmation(t('confirm_delete_all_chars'), async () => {
         await deleteAllEntitiesForProject(STORE_CHARACTERS, activeProjectId);
         resetCharacterForm();
@@ -7502,6 +8080,177 @@
         await renderTakes();
         showToast(t('toast_all_chars_deleted'));
       });
+    });
+
+    document.getElementById('btn-bulk-unpin-chars')?.addEventListener('click', () => {
+      askConfirmation(t('confirm_bulk_unpin_chars'), async () => {
+        const chars = await getEntitiesForProject(STORE_CHARACTERS, activeProjectId);
+        for (const c of chars) {
+          if (c.pinned) {
+            c.pinned = false;
+            await saveEntityToDB(STORE_CHARACTERS, c);
+          }
+        }
+        await renderCharactersList();
+        await updateCatalogCaches();
+        showToast(t('toast_bulk_chars_unpinned'));
+      });
+    });
+
+    document.getElementById('btn-bulk-strip-photos')?.addEventListener('click', () => {
+      askConfirmation(t('confirm_bulk_strip_photos'), async () => {
+        const takes = await getAllTakesForProject(activeProjectId);
+        let strippedCount = 0;
+        for (const tk of takes) {
+          const entries = getNormalizedPhotos(tk);
+          let changed = false;
+          const updatedEntries = entries.map(e => {
+            if (e && e.photo) {
+              strippedCount++;
+              changed = true;
+              return { ...e, photo: null };
+            }
+            return e;
+          });
+          if (changed || tk.photo) {
+            tk.photos = updatedEntries;
+            delete tk.photo;
+            tk.updatedAt = Date.now();
+            await saveTakeToDB(tk);
+          }
+        }
+        await renderTakes();
+        showToast(t('toast_bulk_photos_stripped', { count: strippedCount }));
+      });
+    });
+
+    function recompressDataUrl(dataUrl, maxDim = 1100, quality = 0.72) {
+      return new Promise((resolve) => {
+        if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
+          resolve(dataUrl);
+          return;
+        }
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width || 1;
+          let h = img.height || 1;
+          if (w > maxDim || h > maxDim) {
+            const ratio = Math.min(maxDim / w, maxDim / h);
+            w = Math.max(1, Math.round(w * ratio));
+            h = Math.max(1, Math.round(h * ratio));
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const nextUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve(nextUrl && nextUrl.length < dataUrl.length ? nextUrl : dataUrl);
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
+    document.getElementById('btn-bulk-optimize-photos')?.addEventListener('click', () => {
+      askConfirmation(t('confirm_bulk_optimize_photos'), async () => {
+        const [takes, chars] = await Promise.all([
+          getAllTakesForProject(activeProjectId),
+          getEntitiesForProject(STORE_CHARACTERS, activeProjectId)
+        ]);
+        let optimizedCount = 0;
+
+        for (const tk of takes) {
+          const entries = getNormalizedPhotos(tk);
+          let changed = false;
+          const nextEntries = [];
+          for (const e of entries) {
+            if (e && e.photo) {
+              const compressed = await recompressDataUrl(e.photo, 1100, 0.72);
+              if (compressed !== e.photo) {
+                optimizedCount++;
+                changed = true;
+              }
+              nextEntries.push({ ...e, photo: compressed });
+            } else {
+              nextEntries.push(e);
+            }
+          }
+          if (changed) {
+            tk.photos = nextEntries;
+            delete tk.photo;
+            tk.updatedAt = Date.now();
+            await saveTakeToDB(tk);
+          }
+        }
+
+        for (const c of chars) {
+          if (c && c.photo) {
+            const compressed = await recompressDataUrl(c.photo, 500, 0.75);
+            if (compressed !== c.photo) {
+              optimizedCount++;
+              c.photo = compressed;
+              await saveEntityToDB(STORE_CHARACTERS, c);
+            }
+          }
+        }
+
+        await renderCharactersList();
+        await updateCatalogCaches();
+        await renderTakes();
+        showToast(t('toast_bulk_photos_optimized', { count: optimizedCount }));
+      });
+    });
+
+    document.getElementById('btn-bulk-export-photos-zip')?.addEventListener('click', async () => {
+      const takes = await getAllTakesForProject(activeProjectId);
+      takes.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
+
+      const zipMap = {};
+      let photoCount = 0;
+      const usedNames = new Set();
+
+      const sanitizeSlug = (val, fallback) => {
+        const clean = String(val || '')
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-zA-Z0-9_-]+/g, '_')
+          .replace(/^_+|_+$/g, '');
+        return clean || fallback;
+      };
+
+      for (const tk of takes) {
+        const scSlug = sanitizeSlug(tk.scene, 'ESC');
+        const entries = getNormalizedPhotos(tk);
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i];
+          if (!entry || !entry.photo) continue;
+          const bin = dataUrlToBinary(entry.photo);
+          if (!bin) continue;
+          const chSlug = sanitizeSlug(entry.character, 'SIN_PERSONAJE');
+          let baseName = `ESC_${scSlug}_${chSlug}_${i + 1}.${bin.ext}`;
+          let suffix = 2;
+          while (usedNames.has(baseName)) {
+            baseName = `ESC_${scSlug}_${chSlug}_${i + 1}_${suffix}.${bin.ext}`;
+            suffix++;
+          }
+          usedNames.add(baseName);
+          zipMap[baseName] = bin.bytes;
+          photoCount++;
+        }
+      }
+
+      if (photoCount === 0) {
+        showToast(t('toast_bulk_no_photos'));
+        return;
+      }
+
+      const projSlug = sanitizeSlug(activeProjectData?.name, 'SetBible').toUpperCase();
+      const zipFileName = `${projSlug}_FOTOS.zip`;
+      const zipBlob = createStoreZipBlob(zipMap);
+      const saved = await saveFileToUserDirectory(zipBlob, zipFileName, 'application/zip', 'Archivo ZIP de Fotos', '.zip');
+      if (saved) {
+        showToast(t('toast_bulk_zip_exported', { count: photoCount }));
+      }
     });
 
     /* ==========================================================================

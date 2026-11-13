@@ -1,4 +1,4 @@
-const CACHE_NAME = 'setbible-v105';
+const CACHE_NAME = 'setbible-v109';
 const LOCAL_ASSETS = [
   './',
   './index.html',
