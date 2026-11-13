@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SetBible — Sistema de Continuidad en Set</title>
+  <title>SetBible - Film &amp; Video Continuity</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#13171d">
@@ -896,6 +896,36 @@
       border-color: rgba(245, 158, 11, 0.6);
       background: rgba(245, 158, 11, 0.14);
       font-weight: 800;
+    }
+
+    .lang-select-btn {
+      padding: 13px 16px;
+      min-height: 48px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: var(--btn-radius);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .lang-select-btn:active {
+      transform: scale(0.98);
+    }
+    .lang-select-btn.active {
+      color: var(--amber);
+      border-color: var(--amber);
+      background: rgba(245, 158, 11, 0.12);
+    }
+    .lang-select-btn .lang-check {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--amber);
     }
 
     .project-drag-handle {
@@ -1972,38 +2002,38 @@
         <button type="button" class="dropdown-item" id="home-menu-opt-sort">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
           <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
-            <span>Ordenar proyectos</span>
+            <span data-i18n="menu_sort">Ordenar proyectos</span>
             <span id="home-sort-chevron" style="color:var(--amber); font-size:12px; font-weight:900;">▼</span>
           </div>
         </button>
 
         <div id="home-sort-suboptions" class="sort-suboptions-box hidden">
           <button type="button" class="sort-sub-btn" data-sort-mode="date">
-            <span>Por fecha de creación</span>
+            <span data-i18n="menu_sort_date">Por fecha de creación</span>
             <span class="sort-check"></span>
           </button>
           <button type="button" class="sort-sub-btn" data-sort-mode="alpha-asc">
-            <span>Alfabéticamente ascendente</span>
+            <span data-i18n="menu_sort_alpha_asc">Alfabéticamente ascendente</span>
             <span class="sort-check"></span>
           </button>
           <button type="button" class="sort-sub-btn" data-sort-mode="alpha-desc">
-            <span>Alfabéticamente descendente</span>
+            <span data-i18n="menu_sort_alpha_desc">Alfabéticamente descendente</span>
             <span class="sort-check"></span>
           </button>
           <button type="button" class="sort-sub-btn" data-sort-mode="custom">
-            <span>Personalizado</span>
+            <span data-i18n="menu_sort_custom">Personalizado</span>
             <span class="sort-check"></span>
           </button>
         </div>
 
         <button type="button" class="dropdown-item" id="home-menu-opt-pin-projects">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
-          <span>Fijar proyectos</span>
+          <span data-i18n="menu_pin">Fijar proyectos</span>
         </button>
 
         <button type="button" class="dropdown-item" id="home-menu-opt-complete-projects">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          <span>Terminar proyecto</span>
+          <span data-i18n="menu_complete">Terminar proyectos</span>
         </button>
 
         <button type="button" class="dropdown-item" id="home-menu-opt-export-json">
@@ -2012,19 +2042,31 @@
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          <span>Guardar Respaldos</span>
+          <span data-i18n="menu_export_backups">Guardar Respaldos</span>
+        </button>
+
+        <button type="button" class="dropdown-item" id="home-menu-opt-lang">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
+            <span data-i18n="menu_language">Idioma</span>
+            <span id="home-lang-current-label" style="color:var(--amber); font-size:12px; font-weight:900;">Español</span>
+          </div>
         </button>
 
         <button type="button" class="dropdown-item" id="home-menu-opt-help">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <span>Ayuda</span>
+          <span data-i18n="menu_help">Ayuda</span>
         </button>
 
         <div class="dropdown-divider"></div>
 
         <button type="button" class="dropdown-item" id="home-menu-opt-delete-projects" style="color:#f87171; border-color:rgba(239,68,68,0.35);">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-          <span>Borrar proyectos</span>
+          <span data-i18n="menu_delete_projects">Borrar proyectos</span>
         </button>
       </div>
     </header>
@@ -2118,26 +2160,26 @@
       <div id="project-dropdown-menu" class="dropdown-menu">
         <button type="button" class="dropdown-item highlight" id="menu-opt-script-pdf">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span>Importar Guion (PDF)</span>
+          <span data-i18n="menu_import_script">Importar Guion (PDF)</span>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-scenes">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
           <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
-            <span>Escenas</span>
+            <span data-i18n="menu_scenes">Escenas</span>
             <span id="menu-count-scenes" class="hidden" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
           </div>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-characters">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
-            <span>Personajes</span>
+            <span data-i18n="menu_characters">Personajes</span>
             <span id="menu-count-characters" class="hidden" style="color:var(--amber); font-size:13px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px;">0</span>
           </div>
         </button>
         <div class="dropdown-divider"></div>
         <button type="button" class="dropdown-item" id="menu-opt-export-pdf">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-          <span>Exportar Reporte PDF</span>
+          <span data-i18n="menu_export_pdf">Exportar Reporte PDF</span>
         </button>
         <button type="button" class="dropdown-item" id="menu-opt-export-json">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -2146,13 +2188,25 @@
             <polyline points="7 3 7 8 15 8"/>
           </svg>
           <div style="display:flex; justify-content:space-between; align-items:center; flex:1; gap:8px;">
-            <span>Guardar Respaldo</span>
-            <span id="menu-dirty-backup-badge" class="project-dirty-badge hidden">SIN RESPALDAR</span>
+            <span data-i18n="menu_save_backup">Guardar Respaldo</span>
+            <span id="menu-dirty-backup-badge" class="project-dirty-badge hidden" data-i18n="menu_dirty_backup_badge">SIN RESPALDAR</span>
           </div>
         </button>
         <button type="button" class="dropdown-item sub-option hidden" id="menu-opt-change-json-folder">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
-          <span>Cambiar carpeta de respaldo</span>
+          <span data-i18n="menu_change_backup_folder">Cambiar carpeta de respaldo</span>
+        </button>
+        <div class="dropdown-divider"></div>
+        <button type="button" class="dropdown-item" id="menu-opt-lang">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
+            <span data-i18n="menu_language">Idioma</span>
+            <span id="project-lang-current-label" style="color:var(--amber); font-size:12px; font-weight:900;">Español</span>
+          </div>
         </button>
       </div>
     </header>
@@ -2161,7 +2215,7 @@
       <div class="toolbar-clean-row">
         <div class="search-box">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="search-input" class="search-input" placeholder="Buscar escena, personaje o nota...">
+          <input type="text" id="search-input" class="search-input" placeholder="Buscar escena, personaje o nota..." data-i18n-placeholder="search_takes_placeholder">
         </div>
         <button type="button" id="btn-reset-filters" class="btn-icon" title="Limpiar búsqueda">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
@@ -2171,7 +2225,7 @@
 
     <main class="scroll-area">
       <div class="raccords-counter-center-box">
-        <span id="badge-total-items" class="raccords-count-pill">0 raccords</span>
+        <span id="badge-total-items" class="raccords-count-pill">0 continuidades</span>
       </div>
 
       <div id="records-grid" class="takes-grid"></div>
@@ -2180,8 +2234,8 @@
         <div class="empty-icon">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
         </div>
-        <h3 style="margin:0 0 8px 0; color:#e5e7eb; font-size:18px; font-weight:800;">Sin continuidades registradas</h3>
-        <p style="margin:0; font-size:15px; line-height:1.4;">Importa tu guion en PDF desde la llave inglesa arriba o pulsa <strong>NUEVO RACCORD</strong> abajo.</p>
+        <h3 id="empty-state-title" style="margin:0 0 8px 0; color:#e5e7eb; font-size:18px; font-weight:800;" data-i18n="empty_takes_title">Sin continuidades registradas</h3>
+        <p id="empty-state-desc" style="margin:0; font-size:15px; line-height:1.4;" data-i18n="empty_takes_desc">Importa tu guion en PDF desde el menú de arriba o pulsa <strong>NUEVA CONTINUIDAD</strong> abajo.</p>
       </div>
     </main>
 
@@ -2189,7 +2243,7 @@
       <div class="bottom-bar-center-inner">
         <button type="button" id="btn-add-entry" class="btn-bottom-action-center" style="width:100%;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-          <span>NUEVO RACCORD</span>
+          <span data-i18n="btn_new_continuity">NUEVA CONTINUIDAD</span>
         </button>
       </div>
     </div>
@@ -2381,7 +2435,7 @@
   <div id="entry-modal" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 id="modal-title" class="modal-title">NUEVO RACCORD DE ESCENA</h2>
+        <h2 id="modal-title" class="modal-title" data-i18n="modal_new_continuity">NUEVA CONTINUIDAD DE ESCENA</h2>
         <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -2392,36 +2446,36 @@
           <input type="hidden" id="entry-id" value="">
 
           <div class="form-group">
-            <label class="form-label">Escena *</label>
+            <label class="form-label" data-i18n="form_scene">Escena *</label>
             <select id="select-scene" required class="form-control" style="font-weight:800; color:var(--amber);">
-              <option value="">Selecciona una escena...</option>
+              <option value="" data-i18n="form_select_scene">Selecciona una escena...</option>
             </select>
           </div>
 
           <div id="entries-form-group" class="form-group">
-            <label class="form-label">ENTRADAS</label>
+            <label class="form-label" data-i18n="form_entries_label">ENTRADAS</label>
             <button type="button" id="btn-open-subentry-modal" class="btn-primary" style="width:100%;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-              <span>Añadir Entrada</span>
+              <span data-i18n="btn_add_entry">Añadir Entrada</span>
             </button>
             <div id="photos-entries-list"></div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Notas Generales de la Escena</label>
-            <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad para esta escena..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;"></textarea>
+            <label class="form-label" data-i18n="form_general_notes">Notas Generales de la Escena</label>
+            <textarea id="input-notes" rows="2" placeholder="Observaciones generales de continuidad para esta escena..." class="form-control" style="font-size:15px; line-height:1.4; min-height:70px;" data-i18n-placeholder="form_general_notes_placeholder"></textarea>
           </div>
 
           <div id="delete-raccord-container" class="delete-project-box hidden">
             <button type="button" id="btn-delete-raccord-modal" class="btn-delete-project-full">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-              <span>Eliminar Raccord</span>
+              <span data-i18n="btn_delete_continuity">Eliminar Continuidad</span>
             </button>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
-          <button type="submit" class="btn-submit">Guardar Raccord</button>
+          <button type="button" id="btn-cancel-modal" class="btn-secondary" data-i18n="btn_cancel">Cancelar</button>
+          <button type="submit" id="btn-submit-entry-modal" class="btn-submit" data-i18n="btn_save_continuity">Guardar Continuidad</button>
         </div>
       </form>
     </div>
@@ -2433,7 +2487,7 @@
   <div id="subentry-modal" class="modal-backdrop hidden" style="z-index: 60;">
     <div class="modal-card" style="max-width:480px;">
       <div class="modal-header">
-        <h2 id="subentry-modal-title" class="modal-title" style="color:var(--amber);">NUEVA ENTRADA DE RACCORD</h2>
+        <h2 id="subentry-modal-title" class="modal-title" style="color:var(--amber);" data-i18n="modal_new_entry">NUEVA ENTRADA DE CONTINUIDAD</h2>
         <button type="button" id="btn-close-subentry-modal" class="btn-close-touch" title="Cerrar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -2498,7 +2552,7 @@
           <p id="viewer-subtitle" style="margin:3px 0 0 0; font-size:13px; font-weight:700; color:#d1d5db;"></p>
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-          <button type="button" id="btn-edit-from-viewer" class="btn-edit-square" title="Editar raccord">
+          <button type="button" id="btn-edit-from-viewer" class="btn-edit-square" title="Editar continuidad">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
           </button>
           <button type="button" id="btn-close-viewer" class="btn-close-touch" title="Cerrar">
@@ -2567,7 +2621,7 @@
     <div class="modal-card">
       <div class="modal-header" style="padding:11px 14px; gap:8px;">
         <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
-          <h2 class="modal-title" style="color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">EXPORTAR PDF</h2>
+          <h2 class="modal-title" style="color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" data-i18n="modal_export_pdf">EXPORTAR PDF</h2>
           <span id="pdf-preview-page-count" style="color:var(--amber); font-size:12px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px; flex-shrink:0;">1 pág</span>
         </div>
         <button type="button" id="btn-close-pdf-preview" class="btn-close-touch" title="Cerrar">
@@ -2577,27 +2631,18 @@
       <div class="modal-body" style="padding:10px 12px; display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden;">
         <div class="pdf-menu-panel">
           <div class="pdf-menu-row">
-            <span class="pdf-menu-label">Idioma</span>
-            <div class="lang-selector-grid" style="margin-bottom:0; gap:6px; flex:0 0 auto;">
-              <label class="lang-option">
-                <input type="radio" name="pdf-lang" value="ES" checked>
-                <span class="lang-box" style="padding:5px 10px; font-size:12px;">Español</span>
-              </label>
-              <label class="lang-option">
-                <input type="radio" name="pdf-lang" value="EN">
-                <span class="lang-box" style="padding:5px 10px; font-size:12px;">English</span>
-              </label>
-            </div>
+            <span class="pdf-menu-label" data-i18n="pdf_label_lang">Idioma</span>
+            <div id="pdf-lang-selector-grid" class="lang-selector-grid" style="margin-bottom:0; gap:6px; flex:0 0 auto;"></div>
           </div>
           <div class="pdf-menu-row">
-            <span class="pdf-menu-label">Escenas</span>
+            <span class="pdf-menu-label" data-i18n="pdf_label_scenes">Escenas</span>
             <button type="button" id="btn-open-pdf-scenes" class="pdf-menu-selector-btn">
               <span id="pdf-scenes-btn-label">Todas</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           </div>
           <div class="pdf-menu-row">
-            <span class="pdf-menu-label">Tamaño de Fuentes</span>
+            <span class="pdf-menu-label" data-i18n="pdf_label_font_size">Tamaño de Fuentes</span>
             <div class="pdf-menu-stepper">
               <button type="button" class="pdf-step-btn" data-pdf-step="font" data-dir="-5">−</button>
               <span id="pdf-font-scale-preview-label" class="pdf-scale-val" style="min-width:40px; text-align:center;">100%</span>
@@ -2605,7 +2650,7 @@
             </div>
           </div>
           <div class="pdf-menu-row">
-            <span class="pdf-menu-label">Tamaño de Fotos</span>
+            <span class="pdf-menu-label" data-i18n="pdf_label_photo_size">Tamaño de Fotos</span>
             <div class="pdf-menu-stepper">
               <button type="button" class="pdf-step-btn" data-pdf-step="photo" data-dir="-5">−</button>
               <span id="pdf-photo-scale-preview-label" class="pdf-scale-val" style="min-width:40px; text-align:center;">100%</span>
@@ -2613,7 +2658,7 @@
             </div>
           </div>
           <label class="pdf-menu-row" style="cursor:pointer; user-select:none;">
-            <span class="pdf-menu-label">Separar Raccords por página</span>
+            <span class="pdf-menu-label" data-i18n="pdf_separate_pages">Separar Continuidades por página</span>
             <span class="rp-switch">
               <input type="checkbox" id="pdf-per-raccord-checkbox">
               <span class="rp-switch-track"></span>
@@ -2624,10 +2669,10 @@
         <div id="pdf-preview-stage" class="pdf-preview-stage"></div>
       </div>
       <div class="modal-footer" style="padding:10px 12px; gap:10px;">
-        <button type="button" id="btn-back-from-pdf-preview" class="btn-secondary" style="flex:1;">Cancelar</button>
+        <button type="button" id="btn-back-from-pdf-preview" class="btn-secondary" style="flex:1;" data-i18n="btn_cancel">Cancelar</button>
         <button type="button" id="btn-save-from-pdf-preview" class="btn-primary" style="flex:1.5; padding:14px 12px; font-size:15px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>Generar PDF</span>
+          <span data-i18n="btn_generate_pdf">Generar PDF</span>
         </button>
       </div>
     </div>
@@ -2689,6 +2734,46 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- MODAL: SELECCIÓN DE IDIOMA                 -->
+  <!-- ========================================== -->
+  <div id="language-modal" class="modal-backdrop hidden" style="z-index: 85;">
+    <div class="modal-card" style="max-width:380px;">
+      <div class="modal-header">
+        <h2 class="modal-title" style="color:var(--amber);" data-i18n="modal_select_lang">SELECCIONAR IDIOMA</h2>
+        <button type="button" id="btn-close-lang-modal" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:16px 14px; display:flex; flex-direction:column; gap:8px;">
+        <button type="button" class="lang-select-btn" data-lang="en">
+          <span>English</span>
+          <span class="lang-check hidden">✓</span>
+        </button>
+        <button type="button" class="lang-select-btn" data-lang="es">
+          <span>Español</span>
+          <span class="lang-check hidden">✓</span>
+        </button>
+        <button type="button" class="lang-select-btn" data-lang="pt">
+          <span>Português</span>
+          <span class="lang-check hidden">✓</span>
+        </button>
+        <button type="button" class="lang-select-btn" data-lang="it">
+          <span>Italiano</span>
+          <span class="lang-check hidden">✓</span>
+        </button>
+        <button type="button" class="lang-select-btn" data-lang="de">
+          <span>Deutsch</span>
+          <span class="lang-check hidden">✓</span>
+        </button>
+        <button type="button" class="lang-select-btn" data-lang="fr">
+          <span>Français</span>
+          <span class="lang-check hidden">✓</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL: CONFIRMACIÓN                        -->
   <!-- ========================================== -->
   <div id="confirm-modal" class="modal-backdrop hidden" style="z-index: 80;">
@@ -2715,6 +2800,578 @@
   <script>
     if (window.pdfjsLib) {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    /* ==========================================================================
+       INTERNACIONALIZACIÓN (I18N) - 6 IDIOMAS (EN, ES, PT, IT, DE, FR)
+       ========================================================================== */
+    const I18N = {
+      es: {
+        lang_name: 'Español',
+        menu_import_backup: 'Importar Respaldo',
+        menu_export_backups: 'Guardar Respaldos',
+        menu_language: 'Idioma',
+        menu_help: 'Ayuda',
+        menu_delete_projects: 'Borrar proyectos',
+        menu_import_script: 'Importar Guion (PDF)',
+        menu_scenes: 'Escenas',
+        menu_characters: 'Personajes',
+        menu_export_pdf: 'Exportar Reporte PDF',
+        menu_save_backup: 'Guardar Respaldo',
+        menu_dirty_backup_badge: 'SIN RESPALDAR',
+        menu_change_backup_folder: 'Cambiar carpeta de respaldo',
+        search_projects_placeholder: 'Buscar proyecto o productora...',
+        search_takes_placeholder: 'Buscar escena, personaje o nota...',
+        projects_title: 'PROYECTOS',
+        empty_projects_title: 'Sin proyectos aún',
+        empty_projects_desc: 'Crea tu primer proyecto pulsando el botón de abajo o importa un respaldo previo desde el menú.',
+        btn_new_project: 'NUEVO PROYECTO',
+        btn_new_continuity: 'NUEVA CONTINUIDAD',
+        empty_takes_title: 'Sin continuidades registradas',
+        empty_takes_desc: 'Importa tu guion en PDF desde el menú de arriba o pulsa <strong>NUEVA CONTINUIDAD</strong> abajo.',
+        unit_continuity_singular: 'continuidad',
+        unit_continuity_plural: 'continuidades',
+        modal_select_lang: 'SELECCIONAR IDIOMA',
+        modal_new_project: 'NUEVO PROYECTO',
+        modal_edit_project: 'EDITAR PROYECTO',
+        form_project_name: 'Nombre del Proyecto *',
+        form_producer: 'Productora (Opcional)',
+        btn_save_project: 'Guardar Proyecto',
+        btn_create_project: 'Crear Proyecto',
+        btn_delete_project: 'Eliminar Proyecto',
+        modal_new_continuity: 'NUEVA CONTINUIDAD DE ESCENA',
+        modal_edit_continuity: 'EDITAR CONTINUIDAD DE ESCENA',
+        form_scene: 'Escena *',
+        form_select_scene: 'Selecciona una escena...',
+        form_entries_label: 'ENTRADAS',
+        btn_add_entry: 'Añadir Entrada',
+        form_general_notes: 'Notas Generales de la Escena',
+        form_general_notes_placeholder: 'Observaciones generales de continuidad para esta escena...',
+        btn_delete_continuity: 'Eliminar Continuidad',
+        btn_save_continuity: 'Guardar Continuidad',
+        modal_new_entry: 'NUEVA ENTRADA DE CONTINUIDAD',
+        modal_edit_entry: 'EDITAR ENTRADA DE CONTINUIDAD',
+        form_character: 'Personaje *',
+        form_select_character: 'Selecciona un personaje...',
+        form_continuity_photo: 'Foto de Continuidad',
+        btn_take_photo: 'Seleccionar Foto de Fototeca',
+        modal_export_pdf: 'EXPORTAR PDF',
+        pdf_label_lang: 'Idioma',
+        pdf_label_scenes: 'Escenas',
+        pdf_scenes_all: 'Todas',
+        pdf_label_font_size: 'Tamaño de Fuentes',
+        pdf_label_photo_size: 'Tamaño de Fotos',
+        pdf_separate_pages: 'Separar Continuidades por página',
+        btn_generate_pdf: 'Generar PDF',
+        btn_cancel: 'Cancelar',
+        btn_delete: 'Eliminar',
+        btn_backup_quick: 'Respaldar',
+        badge_completed: 'TERMINADO',
+        created_label: 'Creado',
+        edit_project_title: 'Editar proyecto',
+        unsaved_banner_single: '1 proyecto modificado sin respaldar',
+        unsaved_banner_plural: '{count} proyectos modificados sin respaldar',
+        toast_no_takes_for_pdf: 'Aún no hay continuidades registradas para exportar',
+        toast_entry_added: 'Entrada añadida a la continuidad',
+        toast_scene_already_has_take: 'La Escena {scene} ya tiene una continuidad registrada',
+        toast_take_saved: 'Continuidad de Escena {scene} guardada',
+        toast_take_deleted: 'Continuidad de Escena {scene} eliminada',
+        confirm_delete_take_msg: '¿Eliminar definitivamente la continuidad de la Escena {scene}?',
+        viewer_no_entries: 'Esta continuidad no tiene entradas de personajes registradas.',
+        already_has_continuity: 'Ya tiene continuidad',
+        scene_prefix: 'ESCENA',
+        no_char: 'Sin personaje',
+        view_word: 'VER',
+        no_photo_label: 'Sin foto',
+        no_note_label: 'Sin nota',
+        general_notes_label: 'Notas Generales de la Escena'
+      },
+      en: {
+        lang_name: 'English',
+        menu_import_backup: 'Import Backup',
+        menu_export_backups: 'Save Backups',
+        menu_language: 'Language',
+        menu_help: 'Help',
+        menu_delete_projects: 'Delete projects',
+        menu_import_script: 'Import Script (PDF)',
+        menu_scenes: 'Scenes',
+        menu_characters: 'Characters',
+        menu_export_pdf: 'Export PDF Report',
+        menu_save_backup: 'Save Backup',
+        menu_dirty_backup_badge: 'UNSAVED',
+        menu_change_backup_folder: 'Change backup folder',
+        search_projects_placeholder: 'Search project or company...',
+        search_takes_placeholder: 'Search scene, character or note...',
+        projects_title: 'PROJECTS',
+        empty_projects_title: 'No projects yet',
+        empty_projects_desc: 'Create your first project tapping the button below or import a backup from the menu.',
+        btn_new_project: 'NEW PROJECT',
+        btn_new_continuity: 'NEW CONTINUITY',
+        empty_takes_title: 'No continuities recorded',
+        empty_takes_desc: 'Import your script PDF from the menu above or tap <strong>NEW CONTINUITY</strong> below.',
+        unit_continuity_singular: 'continuity',
+        unit_continuity_plural: 'continuities',
+        modal_select_lang: 'SELECT LANGUAGE',
+        modal_new_project: 'NEW PROJECT',
+        modal_edit_project: 'EDIT PROJECT',
+        form_project_name: 'Project Name *',
+        form_producer: 'Production Company (Optional)',
+        btn_save_project: 'Save Project',
+        btn_create_project: 'Create Project',
+        btn_delete_project: 'Delete Project',
+        modal_new_continuity: 'NEW SCENE CONTINUITY',
+        modal_edit_continuity: 'EDIT SCENE CONTINUITY',
+        form_scene: 'Scene *',
+        form_select_scene: 'Select a scene...',
+        form_entries_label: 'ENTRIES',
+        btn_add_entry: 'Add Entry',
+        form_general_notes: 'General Scene Notes',
+        form_general_notes_placeholder: 'General continuity observations for this scene...',
+        btn_delete_continuity: 'Delete Continuity',
+        btn_save_continuity: 'Save Continuity',
+        modal_new_entry: 'NEW CONTINUITY ENTRY',
+        modal_edit_entry: 'EDIT CONTINUITY ENTRY',
+        form_character: 'Character *',
+        form_select_character: 'Select a character...',
+        form_continuity_photo: 'Continuity Photo',
+        btn_take_photo: 'Select Photo from Library',
+        modal_export_pdf: 'EXPORT PDF',
+        pdf_label_lang: 'Language',
+        pdf_label_scenes: 'Scenes',
+        pdf_scenes_all: 'All',
+        pdf_label_font_size: 'Font Size',
+        pdf_label_photo_size: 'Photo Size',
+        pdf_separate_pages: 'Separate Continuities by page',
+        btn_generate_pdf: 'Generate PDF',
+        btn_cancel: 'Cancel',
+        btn_delete: 'Delete',
+        btn_backup_quick: 'Backup',
+        badge_completed: 'COMPLETED',
+        created_label: 'Created',
+        edit_project_title: 'Edit project',
+        unsaved_banner_single: '1 unsaved modified project',
+        unsaved_banner_plural: '{count} unsaved modified projects',
+        toast_no_takes_for_pdf: 'No continuities recorded to export yet',
+        toast_entry_added: 'Entry added to continuity',
+        toast_scene_already_has_take: 'Scene {scene} already has a continuity record',
+        toast_take_saved: 'Scene {scene} continuity saved',
+        toast_take_deleted: 'Scene {scene} continuity deleted',
+        confirm_delete_take_msg: 'Permanently delete continuity for Scene {scene}?',
+        viewer_no_entries: 'This continuity has no character entries recorded.',
+        already_has_continuity: 'Already has continuity',
+        scene_prefix: 'SCENE',
+        no_char: 'Unassigned character',
+        view_word: 'VIEW',
+        no_photo_label: 'No photo',
+        no_note_label: 'No note',
+        general_notes_label: 'General Scene Notes'
+      },
+      pt: {
+        lang_name: 'Português',
+        menu_import_backup: 'Importar Backup',
+        menu_export_backups: 'Salvar Backups',
+        menu_language: 'Idioma',
+        menu_help: 'Ajuda',
+        menu_delete_projects: 'Excluir projetos',
+        menu_import_script: 'Importar Roteiro (PDF)',
+        menu_scenes: 'Cenas',
+        menu_characters: 'Personagens',
+        menu_export_pdf: 'Exportar Relatório PDF',
+        menu_save_backup: 'Salvar Backup',
+        menu_dirty_backup_badge: 'NÃO SALVO',
+        menu_change_backup_folder: 'Alterar pasta de backup',
+        search_projects_placeholder: 'Buscar projeto ou produtora...',
+        search_takes_placeholder: 'Buscar cena, personagem ou nota...',
+        projects_title: 'PROJETOS',
+        empty_projects_title: 'Nenhum projeto ainda',
+        empty_projects_desc: 'Crie seu primeiro projeto tocando no botão abaixo ou importe um backup pelo menu.',
+        btn_new_project: 'NOVO PROJETO',
+        btn_new_continuity: 'NOVA CONTINUIDADE',
+        empty_takes_title: 'Nenhuma continuidade registrada',
+        empty_takes_desc: 'Importe seu roteiro em PDF pelo menu acima ou toque em <strong>NOVA CONTINUIDADE</strong> abaixo.',
+        unit_continuity_singular: 'continuidade',
+        unit_continuity_plural: 'continuidades',
+        modal_select_lang: 'SELECIONAR IDIOMA',
+        modal_new_project: 'NOVO PROJETO',
+        modal_edit_project: 'EDITAR PROJETO',
+        form_project_name: 'Nome do Projeto *',
+        form_producer: 'Produtora (Opcional)',
+        btn_save_project: 'Salvar Projeto',
+        btn_create_project: 'Criar Projeto',
+        btn_delete_project: 'Excluir Projeto',
+        modal_new_continuity: 'NOVA CONTINUIDADE DE CENA',
+        modal_edit_continuity: 'EDITAR CONTINUIDADE DE CENA',
+        form_scene: 'Cena *',
+        form_select_scene: 'Selecione uma cena...',
+        form_entries_label: 'ENTRADAS',
+        btn_add_entry: 'Adicionar Entrada',
+        form_general_notes: 'Notas Gerais da Cena',
+        form_general_notes_placeholder: 'Observações gerais de continuidade para esta cena...',
+        btn_delete_continuity: 'Excluir Continuidade',
+        btn_save_continuity: 'Salvar Continuidade',
+        modal_new_entry: 'NOVA ENTRADA DE CONTINUIDADE',
+        modal_edit_entry: 'EDITAR ENTRADA DE CONTINUIDADE',
+        form_character: 'Personagem *',
+        form_select_character: 'Selecione um personagem...',
+        form_continuity_photo: 'Foto de Continuidade',
+        btn_take_photo: 'Selecionar Foto da Fototeca',
+        modal_export_pdf: 'EXPORTAR PDF',
+        pdf_label_lang: 'Idioma',
+        pdf_label_scenes: 'Cenas',
+        pdf_scenes_all: 'Todas',
+        pdf_label_font_size: 'Tamanho das Fontes',
+        pdf_label_photo_size: 'Tamanho das Fotos',
+        pdf_separate_pages: 'Separar Continuidades por página',
+        btn_generate_pdf: 'Gerar PDF',
+        btn_cancel: 'Cancelar',
+        btn_delete: 'Excluir',
+        btn_backup_quick: 'Fazer Backup',
+        badge_completed: 'CONCLUÍDO',
+        created_label: 'Criado',
+        edit_project_title: 'Editar projeto',
+        unsaved_banner_single: '1 projeto modificado não salvo',
+        unsaved_banner_plural: '{count} projetos modificados não salvos',
+        toast_no_takes_for_pdf: 'Ainda não há continuidades registradas para exportar',
+        toast_entry_added: 'Entrada adicionada à continuidade',
+        toast_scene_already_has_take: 'A Cena {scene} já possui uma continuidade registrada',
+        toast_take_saved: 'Continuidade da Cena {scene} salva',
+        toast_take_deleted: 'Continuidade da Cena {scene} excluída',
+        confirm_delete_take_msg: 'Excluir definitivamente a continuidade da Cena {scene}?',
+        viewer_no_entries: 'Esta continuidade não tem entradas de personagens registradas.',
+        already_has_continuity: 'Já tem continuidade',
+        scene_prefix: 'CENA',
+        no_char: 'Sem personagem',
+        view_word: 'VER',
+        no_photo_label: 'Sem foto',
+        no_note_label: 'Sem nota',
+        general_notes_label: 'Notas Gerais da Cena'
+      },
+      it: {
+        lang_name: 'Italiano',
+        menu_import_backup: 'Importa Backup',
+        menu_export_backups: 'Salva Backup',
+        menu_language: 'Lingua',
+        menu_help: 'Aiuto',
+        menu_delete_projects: 'Elimina progetti',
+        menu_import_script: 'Importa Sceneggiatura (PDF)',
+        menu_scenes: 'Scene',
+        menu_characters: 'Personaggi',
+        menu_export_pdf: 'Esporta Report PDF',
+        menu_save_backup: 'Salva Backup',
+        menu_dirty_backup_badge: 'NON SALVATO',
+        menu_change_backup_folder: 'Cambia cartella di backup',
+        search_projects_placeholder: 'Cerca progetto o produzione...',
+        search_takes_placeholder: 'Cerca scena, personaggio o nota...',
+        projects_title: 'PROGETTI',
+        empty_projects_title: 'Nessun progetto ancora',
+        empty_projects_desc: 'Crea il tuo primo progetto toccando il pulsante in basso o importa un backup dal menu.',
+        btn_new_project: 'NUOVO PROGETTO',
+        btn_new_continuity: 'NUOVA CONTINUITÀ',
+        empty_takes_title: 'Nessuna continuità registrata',
+        empty_takes_desc: 'Importa la sceneggiatura PDF dal menu in alto o tocca <strong>NUOVA CONTINUITÀ</strong> in basso.',
+        unit_continuity_singular: 'continuità',
+        unit_continuity_plural: 'continuità',
+        modal_select_lang: 'SELEZIONA LINGUA',
+        modal_new_project: 'NUOVO PROGETTO',
+        modal_edit_project: 'MODIFICA PROGETTO',
+        form_project_name: 'Nome del Progetto *',
+        form_producer: 'Produzione (Opzionale)',
+        btn_save_project: 'Salva Progetto',
+        btn_create_project: 'Crea Progetto',
+        btn_delete_project: 'Elimina Progetto',
+        modal_new_continuity: 'NUOVA CONTINUITÀ DI SCENA',
+        modal_edit_continuity: 'MODIFICA CONTINUITÀ DI SCENA',
+        form_scene: 'Scena *',
+        form_select_scene: 'Seleziona una scena...',
+        form_entries_label: 'VOCI',
+        btn_add_entry: 'Aggiungi Voce',
+        form_general_notes: 'Note Generali della Scena',
+        form_general_notes_placeholder: 'Note generali di continuità per questa scena...',
+        btn_delete_continuity: 'Elimina Continuità',
+        btn_save_continuity: 'Salva Continuità',
+        modal_new_entry: 'NUOVA VOCE DI CONTINUITÀ',
+        modal_edit_entry: 'MODIFICA VOCE DI CONTINUITÀ',
+        form_character: 'Personaggio *',
+        form_select_character: 'Seleziona un personaggio...',
+        form_continuity_photo: 'Foto di Continuità',
+        btn_take_photo: 'Seleziona Foto dalla Libreria',
+        modal_export_pdf: 'ESPORTA PDF',
+        pdf_label_lang: 'Lingua',
+        pdf_label_scenes: 'Scene',
+        pdf_scenes_all: 'Tutte',
+        pdf_label_font_size: 'Dimensione Font',
+        pdf_label_photo_size: 'Dimensione Foto',
+        pdf_separate_pages: 'Separa Continuità per pagina',
+        btn_generate_pdf: 'Genera PDF',
+        btn_cancel: 'Annulla',
+        btn_delete: 'Elimina',
+        btn_backup_quick: 'Salva Backup',
+        badge_completed: 'COMPLETATO',
+        created_label: 'Creato',
+        edit_project_title: 'Modifica progetto',
+        unsaved_banner_single: '1 progetto modificato non salvato',
+        unsaved_banner_plural: '{count} progetti modificati non salvati',
+        toast_no_takes_for_pdf: 'Nessuna continuità registrata da esportare',
+        toast_entry_added: 'Voce aggiunta alla continuità',
+        toast_scene_already_has_take: 'La Scena {scene} ha già una continuità registrata',
+        toast_take_saved: 'Continuità della Scena {scene} salvata',
+        toast_take_deleted: 'Continuità della Scena {scene} eliminata',
+        confirm_delete_take_msg: 'Eliminare definitivamente la continuità della Scena {scene}?',
+        viewer_no_entries: 'Questa continuità non ha voci di personaggi registrate.',
+        already_has_continuity: 'Ha già continuità',
+        scene_prefix: 'SCENA',
+        no_char: 'Nessun personaggio',
+        view_word: 'VEDI',
+        no_photo_label: 'Nessuna foto',
+        no_note_label: 'Nessuna nota',
+        general_notes_label: 'Note Generali della Scena'
+      },
+      de: {
+        lang_name: 'Deutsch',
+        menu_import_backup: 'Backup importieren',
+        menu_export_backups: 'Backups speichern',
+        menu_language: 'Sprache',
+        menu_help: 'Hilfe',
+        menu_delete_projects: 'Projekte löschen',
+        menu_import_script: 'Drehbuch importieren (PDF)',
+        menu_scenes: 'Szenen',
+        menu_characters: 'Figuren',
+        menu_export_pdf: 'PDF-Bericht exportieren',
+        menu_save_backup: 'Backup speichern',
+        menu_dirty_backup_badge: 'NICHT GESICHERT',
+        menu_change_backup_folder: 'Backup-Ordner ändern',
+        search_projects_placeholder: 'Projekt oder Firma suchen...',
+        search_takes_placeholder: 'Szene, Figur oder Notiz suchen...',
+        projects_title: 'PROJEKTE',
+        empty_projects_title: 'Noch keine Projekte',
+        empty_projects_desc: 'Erstelle dein erstes Projekt über die Schaltfläche unten oder importiere ein Backup aus dem Menü.',
+        btn_new_project: 'NEUES PROJEKT',
+        btn_new_continuity: 'NEUE KONTINUITÄT',
+        empty_takes_title: 'Keine Kontinuitäten erfasst',
+        empty_takes_desc: 'Importiere dein Drehbuch-PDF aus dem Menü oben oder tippe unten auf <strong>NEUE KONTINUITÄT</strong>.',
+        unit_continuity_singular: 'Kontinuität',
+        unit_continuity_plural: 'Kontinuitäten',
+        modal_select_lang: 'SPRACHE WÄHLEN',
+        modal_new_project: 'NEUES PROJEKT',
+        modal_edit_project: 'PROJEKT BEARBEITEN',
+        form_project_name: 'Projektname *',
+        form_producer: 'Produktionsfirma (Optional)',
+        btn_save_project: 'Projekt speichern',
+        btn_create_project: 'Projekt erstellen',
+        btn_delete_project: 'Projekt löschen',
+        modal_new_continuity: 'NEUE SZENEN-KONTINUITÄT',
+        modal_edit_continuity: 'SZENEN-KONTINUITÄT BEARBEITEN',
+        form_scene: 'Szene *',
+        form_select_scene: 'Wähle eine Szene...',
+        form_entries_label: 'EINTRÄGE',
+        btn_add_entry: 'Eintrag hinzufügen',
+        form_general_notes: 'Allgemeine Szenennotizen',
+        form_general_notes_placeholder: 'Allgemeine Kontinuitätsbeobachtungen für diese Szene...',
+        btn_delete_continuity: 'Kontinuität löschen',
+        btn_save_continuity: 'Kontinuität speichern',
+        modal_new_entry: 'NEUER KONTINUITÄTSEINTRAG',
+        modal_edit_entry: 'KONTINUITÄTSEINTRAG BEARBEITEN',
+        form_character: 'Figur *',
+        form_select_character: 'Wähle eine Figur...',
+        form_continuity_photo: 'Kontinuitätsfoto',
+        btn_take_photo: 'Foto aus Mediathek wählen',
+        modal_export_pdf: 'PDF EXPORTIEREN',
+        pdf_label_lang: 'Sprache',
+        pdf_label_scenes: 'Szenen',
+        pdf_scenes_all: 'Alle',
+        pdf_label_font_size: 'Schriftgröße',
+        pdf_label_photo_size: 'Fotogröße',
+        pdf_separate_pages: 'Kontinuitäten pro Seite trennen',
+        btn_generate_pdf: 'PDF erstellen',
+        btn_cancel: 'Abbrechen',
+        btn_delete: 'Löschen',
+        btn_backup_quick: 'Sichern',
+        badge_completed: 'ABGESCHLOSSEN',
+        created_label: 'Erstellt',
+        edit_project_title: 'Projekt bearbeiten',
+        unsaved_banner_single: '1 geändertes ungesichertes Projekt',
+        unsaved_banner_plural: '{count} geänderte ungesicherte Projekte',
+        toast_no_takes_for_pdf: 'Noch keine Kontinuitäten zum Exportieren vorhanden',
+        toast_entry_added: 'Eintrag zur Kontinuität hinzugefügt',
+        toast_scene_already_has_take: 'Szene {scene} hat bereits eine Kontinuität erfasst',
+        toast_take_saved: 'Kontinuität für Szene {scene} gespeichert',
+        toast_take_deleted: 'Kontinuität für Szene {scene} gelöscht',
+        confirm_delete_take_msg: 'Kontinuität für Szene {scene} endgültig löschen?',
+        viewer_no_entries: 'Diese Kontinuität hat keine Figuren-Einträge.',
+        already_has_continuity: 'Hat bereits Kontinuität',
+        scene_prefix: 'SZENE',
+        no_char: 'Keine Figur zugewiesen',
+        view_word: 'ANSEHEN',
+        no_photo_label: 'Kein Foto',
+        no_note_label: 'Keine Notiz',
+        general_notes_label: 'Allgemeine Szenennotizen'
+      },
+      fr: {
+        lang_name: 'Français',
+        menu_import_backup: 'Importer sauvegarde',
+        menu_export_backups: 'Enregistrer sauvegardes',
+        menu_language: 'Langue',
+        menu_help: 'Aide',
+        menu_delete_projects: 'Supprimer des projets',
+        menu_import_script: 'Importer le scénario (PDF)',
+        menu_scenes: 'Scènes',
+        menu_characters: 'Personnages',
+        menu_export_pdf: 'Exporter rapport PDF',
+        menu_save_backup: 'Enregistrer sauvegarde',
+        menu_dirty_backup_badge: 'NON ENREGISTRÉ',
+        menu_change_backup_folder: 'Changer le dossier de sauvegarde',
+        search_projects_placeholder: 'Rechercher projet ou société...',
+        search_takes_placeholder: 'Rechercher scène, personnage ou note...',
+        projects_title: 'PROJETS',
+        empty_projects_title: 'Aucun projet pour le moment',
+        empty_projects_desc: 'Créez votre premier projet en touchant le bouton ci-dessous ou importez une sauvegarde depuis le menu.',
+        btn_new_project: 'NOUVEAU PROJET',
+        btn_new_continuity: 'NOUVELLE CONTINUITÉ',
+        empty_takes_title: 'Aucune continuité enregistrée',
+        empty_takes_desc: 'Importez votre scénario PDF depuis le menu ci-dessus ou appuyez sur <strong>NOUVELLE CONTINUITÉ</strong> ci-dessous.',
+        unit_continuity_singular: 'continuité',
+        unit_continuity_plural: 'continuités',
+        modal_select_lang: 'CHOISIR LA LANGUE',
+        modal_new_project: 'NOUVEAU PROJET',
+        modal_edit_project: 'MODIFIER LE PROJET',
+        form_project_name: 'Nom du Projet *',
+        form_producer: 'Société de Production (Optionnel)',
+        btn_save_project: 'Enregistrer le projet',
+        btn_create_project: 'Créer le projet',
+        btn_delete_project: 'Supprimer le projet',
+        modal_new_continuity: 'NOUVELLE CONTINUITÉ DE SCÈNE',
+        modal_edit_continuity: 'MODIFIER LA CONTINUITÉ DE SCÈNE',
+        form_scene: 'Scène *',
+        form_select_scene: 'Sélectionnez une scène...',
+        form_entries_label: 'ENTRÉES',
+        btn_add_entry: 'Ajouter une entrée',
+        form_general_notes: 'Notes Générales de la Scène',
+        form_general_notes_placeholder: 'Remarques générales de continuité pour cette scène...',
+        btn_delete_continuity: 'Supprimer la continuité',
+        btn_save_continuity: 'Enregistrer la continuité',
+        modal_new_entry: 'NOUVELLE ENTRÉE DE CONTINUITÉ',
+        modal_edit_entry: 'MODIFIER L\'ENTRÉE DE CONTINUITÉ',
+        form_character: 'Personnage *',
+        form_select_character: 'Sélectionnez un personnage...',
+        form_continuity_photo: 'Photo de Continuité',
+        btn_take_photo: 'Choisir une photo dans la photothèque',
+        modal_export_pdf: 'EXPORTER PDF',
+        pdf_label_lang: 'Langue',
+        pdf_label_scenes: 'Scènes',
+        pdf_scenes_all: 'Toutes',
+        pdf_label_font_size: 'Taille des polices',
+        pdf_label_photo_size: 'Taille des photos',
+        pdf_separate_pages: 'Séparer les Continuités par page',
+        btn_generate_pdf: 'Générer le PDF',
+        btn_cancel: 'Annuler',
+        btn_delete: 'Supprimer',
+        btn_backup_quick: 'Sauvegarder',
+        badge_completed: 'TERMINÉ',
+        created_label: 'Créé',
+        edit_project_title: 'Modifier le projet',
+        unsaved_banner_single: '1 projet modifié non sauvegardé',
+        unsaved_banner_plural: '{count} projets modifiés non sauvegardés',
+        toast_no_takes_for_pdf: 'Aucune continuité enregistrée à exporter pour le moment',
+        toast_entry_added: 'Entrée ajoutée à la continuité',
+        toast_scene_already_has_take: 'La Scène {scene} a déjà une continuité enregistrée',
+        toast_take_saved: 'Continuité de la Scène {scene} enregistrée',
+        toast_take_deleted: 'Continuité de la Scène {scene} supprimée',
+        confirm_delete_take_msg: 'Supprimer définitivement la continuité de la Scène {scene} ?',
+        viewer_no_entries: 'Cette continuité n\'a aucune entrée de personnage.',
+        already_has_continuity: 'A déjà une continuité',
+        scene_prefix: 'SCÈNE',
+        no_char: 'Sans personnage',
+        view_word: 'VOIR',
+        no_photo_label: 'Sans photo',
+        no_note_label: 'Sans note',
+        general_notes_label: 'Notes Générales de la Scène'
+      }
+    };
+
+    let currentAppLang = 'es';
+
+    function detectDeviceLanguage() {
+      const browserLangs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+      for (const raw of browserLangs) {
+        if (!raw) continue;
+        const l = raw.toLowerCase().trim();
+        if (l.startsWith('es')) return 'es';
+        if (l.startsWith('pt')) return 'pt';
+        if (l.startsWith('it')) return 'it';
+        if (l.startsWith('de')) return 'de';
+        if (l.startsWith('fr')) return 'fr';
+        if (l.startsWith('en')) return 'en';
+      }
+      return 'en';
+    }
+
+    function getInitialLanguage() {
+      const saved = localStorage.getItem('setbible_app_lang') || localStorage.getItem('rp_app_lang');
+      if (saved && I18N[saved]) return saved;
+      return detectDeviceLanguage();
+    }
+
+    function t(key, params = {}) {
+      const langObj = I18N[currentAppLang] || I18N['es'];
+      let text = (langObj && langObj[key] !== undefined) ? langObj[key] : ((I18N['es'] && I18N['es'][key] !== undefined) ? I18N['es'][key] : key);
+      for (const [k, v] of Object.entries(params)) {
+        text = text.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      }
+      return text;
+    }
+
+    function applyAppLanguage(lang) {
+      if (!I18N[lang]) lang = 'es';
+      currentAppLang = lang;
+      localStorage.setItem('setbible_app_lang', lang);
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translation = t(key);
+        if (translation) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.placeholder = translation;
+          } else {
+            el.innerHTML = translation;
+          }
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const translation = t(key);
+        if (translation) {
+          el.placeholder = translation;
+        }
+      });
+
+      const langName = I18N[lang].lang_name;
+      const homeLangLabel = document.getElementById('home-lang-current-label');
+      if (homeLangLabel) homeLangLabel.textContent = langName;
+      const projLangLabel = document.getElementById('project-lang-current-label');
+      if (projLangLabel) projLangLabel.textContent = langName;
+
+      document.querySelectorAll('.lang-select-btn').forEach(btn => {
+        const btnLang = btn.getAttribute('data-lang');
+        const isCur = (btnLang === lang);
+        btn.classList.toggle('active', isCur);
+        const check = btn.querySelector('.lang-check');
+        if (check) check.classList.toggle('hidden', !isCur);
+      });
+
+      renderPdfLangSelectorUI();
+
+      if (activeProjectId) {
+        if (typeof renderTakes === 'function') renderTakes();
+      } else {
+        if (typeof renderProjects === 'function') renderProjects();
+      }
+    }
+
+    function initLanguage() {
+      const initLang = getInitialLanguage();
+      applyAppLanguage(initLang);
     }
 
     const ICON_EDIT_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>`;
@@ -4223,6 +4880,56 @@
     });
 
     /* ==========================================================================
+       CONTROL DEL MODAL DE IDIOMA
+       ========================================================================== */
+    const languageModal = document.getElementById('language-modal');
+    const btnCloseLangModal = document.getElementById('btn-close-lang-modal');
+
+    function openLanguageModal() {
+      closeHomeMenu();
+      closeProjectMenu();
+      if (languageModal) languageModal.classList.remove('hidden');
+    }
+
+    function closeLanguageModal() {
+      if (languageModal) languageModal.classList.add('hidden');
+    }
+
+    const homeMenuOptLang = document.getElementById('home-menu-opt-lang');
+    if (homeMenuOptLang) {
+      homeMenuOptLang.addEventListener('click', () => {
+        openLanguageModal();
+      });
+    }
+
+    const menuOptLang = document.getElementById('menu-opt-lang');
+    if (menuOptLang) {
+      menuOptLang.addEventListener('click', () => {
+        openLanguageModal();
+      });
+    }
+
+    if (btnCloseLangModal) {
+      btnCloseLangModal.addEventListener('click', closeLanguageModal);
+    }
+
+    if (languageModal) {
+      languageModal.addEventListener('click', (e) => {
+        if (e.target === languageModal) closeLanguageModal();
+      });
+    }
+
+    document.querySelectorAll('.lang-select-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const selectedLang = btn.getAttribute('data-lang');
+        if (selectedLang) {
+          applyAppLanguage(selectedLang);
+          closeLanguageModal();
+        }
+      });
+    });
+
+    /* ==========================================================================
        TOUR GUIADO / AYUDA VISUAL DE SETBIBLE
        ========================================================================== */
     const helpTourModal = document.getElementById('help-tour-modal');
@@ -4245,7 +4952,7 @@
                 <span style="color:var(--amber); font-weight:900; font-size:14px; letter-spacing:1px;">⋮⋮</span>
                 <div>
                   <div style="font-size:13px; font-weight:900; color:#fff;">SERIE NOCTURNA T1</div>
-                  <div style="font-size:11px; color:#9ca3af;">18 raccords · Fijado</div>
+                  <div style="font-size:11px; color:#9ca3af;">18 continuidades · Fijado</div>
                 </div>
               </div>
               <span class="help-mock-pill">Fijado</span>
@@ -4253,7 +4960,7 @@
             <div class="help-mock-card help-anim-complete" style="display:flex; align-items:center; justify-content:space-between;">
               <div>
                 <div style="font-size:13px; font-weight:900; color:#d1d5db;">CORTOMETRAJE SOL</div>
-                <div style="font-size:11px; color:#9ca3af;">12 raccords · Terminado</div>
+                <div style="font-size:11px; color:#9ca3af;">12 continuidades · Terminado</div>
               </div>
               <span class="help-mock-pill" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.35);">✓ Listo</span>
             </div>
@@ -4289,7 +4996,7 @@
         `
       },
       {
-        title: '3. Raccords, Fotos y Zoom',
+        title: '3. Continuidades, Fotos y Zoom',
         desc: 'Toca <strong>+</strong> para registrar una escena con notas generales y múltiples <strong>entradas</strong> (vestuario, utilería, maquillaje). Toca cualquier foto para abrirla en grande con zoom.',
         visual: `
           <div class="help-mock-card" style="display:flex; flex-direction:column; gap:8px;">
@@ -4334,7 +5041,7 @@
       },
       {
         title: '5. Reporte PDF en Directo',
-        desc: 'Elige <strong>Exportar Reporte PDF</strong> en el menú del proyecto. Verás un mosaico en vivo donde ajustas idioma, escenas, tamaño de fuentes/fotos y si separar cada raccord por página.',
+        desc: 'Elige <strong>Exportar Reporte PDF</strong> en el menú del proyecto. Verás un mosaico en vivo donde ajustas idioma, escenas, tamaño de fuentes/fotos y si separar cada continuidad por página.',
         visual: `
           <div style="display:flex; gap:10px; align-items:center; justify-content:center; width:100%;">
             <div style="width:62px; height:82px; background:#fff; border-radius:5px; padding:6px; box-shadow:0 6px 16px rgba(0,0,0,0.5); display:flex; flex-direction:column; gap:4px; overflow:hidden;">
@@ -5339,18 +6046,18 @@
       const allowedUpper = allowedSceneNum ? String(allowedSceneNum).trim().toUpperCase() : null;
 
       const selectScene = document.getElementById('select-scene');
-      selectScene.innerHTML = '<option value="">Selecciona una escena...</option>' + 
+      selectScene.innerHTML = `<option value="">${t('form_select_scene')}</option>` + 
         cachedScenesForProject.map(s => {
           const scUpper = String(s.sceneNum).trim().toUpperCase();
           const isTaken = usedScenesSet.has(scUpper) && (scUpper !== allowedUpper);
           const disabledAttr = isTaken ? 'disabled' : '';
-          const takenLabel = isTaken ? ' (Ya tiene raccord)' : '';
-          return `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}" ${disabledAttr}>ESC ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}${takenLabel}</option>`;
+          const takenLabel = isTaken ? ` (${t('already_has_continuity')})` : '';
+          return `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}" ${disabledAttr}>${t('scene_prefix')} ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}${takenLabel}</option>`;
         }).join('');
     }
 
     function buildCharacterSelectOptions(selectedChar) {
-      return '<option value="">Selecciona un personaje...</option>' + 
+      return `<option value="">${t('form_select_character')}</option>` + 
         cachedCharactersForProject.map(c => {
           const isSelected = (c.name === selectedChar) ? 'selected' : '';
           return `<option value="${escapeHtml(c.name)}" ${isSelected}>${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`;
@@ -5379,8 +6086,8 @@
       const total = cachedTakesForPdf.length;
       const selected = document.querySelectorAll('.pdf-scene-checkbox:checked').length;
       pdfScenesBtnLabel.textContent = (selected === total)
-        ? `Todas (${total})`
-        : `${selected} de ${total}`;
+        ? `${t('pdf_scenes_all')} (${total})`
+        : `${selected} / ${total}`;
     }
 
     document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
@@ -5388,7 +6095,7 @@
       cachedTakesForPdf = await getAllTakesForProject(activeProjectId);
 
       if (cachedTakesForPdf.length === 0) {
-        showToast('Aún no hay raccords registrados para exportar');
+        showToast(t('toast_no_takes_for_pdf'));
         return;
       }
 
@@ -5543,15 +6250,58 @@
     let pdfFontScalePct = Number.isFinite(storedFontScale) ? Math.max(75, Math.min(150, storedFontScale)) : 100;
     let pdfPhotoScalePct = Number.isFinite(storedPhotoScale) ? Math.max(60, Math.min(140, storedPhotoScale)) : 100;
     let pdfLayoutMode = localStorage.getItem('rp_pdf_layout_mode') === 'per-raccord' ? 'per-raccord' : 'flow';
-    let pdfLang = localStorage.getItem('rp_pdf_lang') === 'EN' ? 'EN' : 'ES';
+    let pdfLang = localStorage.getItem('rp_pdf_lang') || (currentAppLang || 'es').toUpperCase();
+
+    function renderPdfLangSelectorUI() {
+      const container = document.getElementById('pdf-lang-selector-grid');
+      if (!container) return;
+
+      const appL = (currentAppLang || 'es').toUpperCase();
+      let primaryLang = appL;
+      let secondaryLang = 'EN';
+
+      if (primaryLang === 'EN') {
+        secondaryLang = 'ES';
+      }
+
+      const langNames = {
+        'EN': 'English',
+        'ES': 'Español',
+        'PT': 'Português',
+        'IT': 'Italiano',
+        'DE': 'Deutsch',
+        'FR': 'Français'
+      };
+
+      if (pdfLang !== primaryLang && pdfLang !== secondaryLang) {
+        pdfLang = primaryLang;
+      }
+
+      container.innerHTML = `
+        <label class="lang-option">
+          <input type="radio" name="pdf-lang" value="${primaryLang}" ${pdfLang === primaryLang ? 'checked' : ''}>
+          <span class="lang-box" style="padding:5px 10px; font-size:12px;">${langNames[primaryLang] || primaryLang}</span>
+        </label>
+        <label class="lang-option">
+          <input type="radio" name="pdf-lang" value="${secondaryLang}" ${pdfLang === secondaryLang ? 'checked' : ''}>
+          <span class="lang-box" style="padding:5px 10px; font-size:12px;">${langNames[secondaryLang] || secondaryLang}</span>
+        </label>
+      `;
+
+      container.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
+        r.addEventListener('change', (e) => {
+          pdfLang = e.target.value;
+          localStorage.setItem('rp_pdf_lang', pdfLang);
+          scheduleLivePdfPreviewUpdate();
+        });
+      });
+    }
 
     function syncPdfTuningControlsUI() {
-      pdfFontScalePreviewLabel.textContent = `${pdfFontScalePct}%`;
-      pdfPhotoScalePreviewLabel.textContent = `${pdfPhotoScalePct}%`;
-      pdfPerRaccordCheckbox.checked = (pdfLayoutMode === 'per-raccord');
-      document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
-        r.checked = (r.value === pdfLang);
-      });
+      if (pdfFontScalePreviewLabel) pdfFontScalePreviewLabel.textContent = `${pdfFontScalePct}%`;
+      if (pdfPhotoScalePreviewLabel) pdfPhotoScalePreviewLabel.textContent = `${pdfPhotoScalePct}%`;
+      if (pdfPerRaccordCheckbox) pdfPerRaccordCheckbox.checked = (pdfLayoutMode === 'per-raccord');
+      renderPdfLangSelectorUI();
     }
     syncPdfTuningControlsUI();
 
@@ -5593,14 +6343,6 @@
       scheduleLivePdfPreviewUpdate();
     });
 
-    document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
-      r.addEventListener('change', (e) => {
-        pdfLang = (e.target.value === 'EN') ? 'EN' : 'ES';
-        localStorage.setItem('rp_pdf_lang', pdfLang);
-        scheduleLivePdfPreviewUpdate();
-      });
-    });
-
     async function buildCurrentPdfDocument() {
       const selectedIds = new Set(
         Array.from(document.querySelectorAll('.pdf-scene-checkbox:checked')).map(cb => cb.value)
@@ -5617,20 +6359,78 @@
       }
 
       const langEl = document.querySelector('input[name="pdf-lang"]:checked');
-      const lang = langEl ? langEl.value : 'ES';
-      const isEN = (lang === 'EN');
+      const lang = langEl ? langEl.value : (pdfLang || 'ES');
 
-      const i18n = {
-        reportTitle: isEN ? 'CONTINUITY REPORT' : 'REPORTE DE CONTINUIDAD',
-        projectLabel: isEN ? 'Project' : 'Proyecto',
-        generatedLabel: isEN ? 'Generated' : 'Generado',
-        sceneLabel: isEN ? 'SCENE' : 'ESCENA',
-        generalNotesLabel: isEN ? 'General notes' : 'Notas generales',
-        entryLabel: isEN ? 'ENTRY' : 'ENTRADA',
-        noCharLabel: isEN ? 'Unassigned character' : 'Sin personaje',
-        pageWord: isEN ? 'Page' : 'Página',
-        ofWord: isEN ? 'of' : 'de'
+      const pdfDicts = {
+        ES: {
+          reportTitle: 'REPORTE DE CONTINUIDAD',
+          projectLabel: 'Proyecto',
+          generatedLabel: 'Generado',
+          sceneLabel: 'ESCENA',
+          generalNotesLabel: 'Notas generales',
+          entryLabel: 'ENTRADA',
+          noCharLabel: 'Sin personaje',
+          pageWord: 'Página',
+          ofWord: 'de'
+        },
+        EN: {
+          reportTitle: 'CONTINUITY REPORT',
+          projectLabel: 'Project',
+          generatedLabel: 'Generated',
+          sceneLabel: 'SCENE',
+          generalNotesLabel: 'General notes',
+          entryLabel: 'ENTRY',
+          noCharLabel: 'Unassigned character',
+          pageWord: 'Page',
+          ofWord: 'of'
+        },
+        PT: {
+          reportTitle: 'RELATÓRIO DE CONTINUIDADE',
+          projectLabel: 'Projeto',
+          generatedLabel: 'Gerado',
+          sceneLabel: 'CENA',
+          generalNotesLabel: 'Notas gerais',
+          entryLabel: 'ENTRADA',
+          noCharLabel: 'Sem personagem',
+          pageWord: 'Página',
+          ofWord: 'de'
+        },
+        IT: {
+          reportTitle: 'RAPPORTO DI CONTINUITÀ',
+          projectLabel: 'Progetto',
+          generatedLabel: 'Generato',
+          sceneLabel: 'SCENA',
+          generalNotesLabel: 'Note generali',
+          entryLabel: 'VOCE',
+          noCharLabel: 'Nessun personaggio',
+          pageWord: 'Pagina',
+          ofWord: 'di'
+        },
+        DE: {
+          reportTitle: 'KONTINUITÄTSBERICHT',
+          projectLabel: 'Projekt',
+          generatedLabel: 'Erstellt',
+          sceneLabel: 'SZENE',
+          generalNotesLabel: 'Allgemeine Notizen',
+          entryLabel: 'EINTRAG',
+          noCharLabel: 'Keine Figur zugewiesen',
+          pageWord: 'Seite',
+          ofWord: 'von'
+        },
+        FR: {
+          reportTitle: 'RAPPORT DE CONTINUITÉ',
+          projectLabel: 'Projet',
+          generatedLabel: 'Généré',
+          sceneLabel: 'SCÈNE',
+          generalNotesLabel: 'Notes générales',
+          entryLabel: 'ENTRÉE',
+          noCharLabel: 'Sans personnage',
+          pageWord: 'Page',
+          ofWord: 'sur'
+        }
       };
+
+      const i18n = pdfDicts[lang] || pdfDicts['ES'];
 
       const selectedTakes = cachedTakesForPdf
         .filter(t => selectedIds.has(t.id))
@@ -5856,7 +6656,7 @@
         doc.text(pageLabel, pageWidth - margin, footerY, { align: 'right' });
       }
 
-      return { doc, isEN };
+      return { doc, isEN: (lang === 'EN'), lang };
     }
 
     let previewRenderToken = 0;
@@ -5924,11 +6724,12 @@
       try {
         const built = await buildCurrentPdfDocument();
         if (!built) return;
-        const { doc, isEN } = built;
+        const { doc, lang } = built;
 
         pdfPreviewModal.classList.add('hidden');
         reportModal.classList.add('hidden');
-        showToast(isEN ? 'Building PDF report...' : 'Construyendo reporte PDF...');
+        const toastLang = (lang || 'ES').toUpperCase();
+        showToast(toastLang === 'EN' ? 'Building PDF report...' : (toastLang === 'PT' ? 'Gerando relatório PDF...' : (toastLang === 'IT' ? 'Generazione report PDF...' : (toastLang === 'DE' ? 'PDF-Bericht wird erstellt...' : (toastLang === 'FR' ? 'Création du rapport PDF...' : 'Construyendo reporte PDF...')))));
 
         const rawProjName = (activeProjectData ? activeProjectData.name : 'PROYECTO')
           .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -6114,7 +6915,8 @@
         return matchScene || matchNotes || matchEntries;
       });
 
-      badgeTotalItems.textContent = `${filtered.length} ${filtered.length === 1 ? 'raccord' : 'raccords'}`;
+      const unit = filtered.length === 1 ? t('unit_continuity_singular') : t('unit_continuity_plural');
+      badgeTotalItems.textContent = `${filtered.length} ${unit}`;
 
       if (filtered.length === 0) {
         recordsGrid.innerHTML = '';
@@ -6131,7 +6933,7 @@
           <div class="raccord-char-row">
             <div class="raccord-char-top">
               <div class="raccord-char-name">
-                <span>${escapeHtml(p.character || 'Sin personaje')}</span>
+                <span>${escapeHtml(p.character || t('no_char'))}</span>
               </div>
               ${p.photo ? `<span class="raccord-photo-chip">${ICON_PHOTO_SVG}<span>1</span></span>` : ''}
             </div>
@@ -6142,7 +6944,7 @@
           <div class="raccord-card" data-action="open-viewer" data-id="${take.id}">
             <div>
               <div class="raccord-scene-header">
-                <span class="raccord-scene-badge">ESC ${escapeHtml(take.scene)}</span>
+                <span class="raccord-scene-badge">${t('scene_prefix')} ${escapeHtml(take.scene)}</span>
                 ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
               </div>
               ${entriesHtml ? `<div class="raccord-card-body">${entriesHtml}</div>` : ''}
@@ -6185,7 +6987,7 @@
 
     document.getElementById('btn-add-entry').addEventListener('click', async () => {
       await updateCatalogCaches(null);
-      document.getElementById('modal-title').textContent = 'NUEVO RACCORD DE ESCENA';
+      document.getElementById('modal-title').textContent = t('modal_new_continuity');
       document.getElementById('entry-id').value = '';
       document.getElementById('select-scene').value = '';
       document.getElementById('input-notes').value = '';
@@ -6234,8 +7036,8 @@
             : `<div class="subentry-no-thumb">${getCharacterAvatarHtml(item.character, true)}</div>`
           }
           <div class="subentry-info">
-            <h4 class="subentry-char-title">${escapeHtml(item.character || 'Sin personaje')}</h4>
-            <p class="subentry-note-snippet">${escapeHtml(item.note || 'Sin nota de continuidad')}</p>
+            <h4 class="subentry-char-title">${escapeHtml(item.character || t('no_char'))}</h4>
+            <p class="subentry-note-snippet">${escapeHtml(item.note || t('no_note_label'))}</p>
           </div>
           <div class="subentry-actions">
             <button type="button" class="btn-action-small edit" onclick="openEditSubentry('${item.id}')" title="Editar entrada">${ICON_EDIT_SVG}</button>
@@ -6251,7 +7053,7 @@
     function openNewSubentryModal(fromViewer = false) {
       addingSubentryDirectlyToViewer = fromViewer;
       editingSubentryDirectlyInViewer = false;
-      document.getElementById('subentry-modal-title').textContent = 'NUEVA ENTRADA DE RACCORD';
+      document.getElementById('subentry-modal-title').textContent = t('modal_new_entry');
       subentryIdInput.value = '';
       subentryCharacterSelect.innerHTML = buildCharacterSelectOptions('');
       subentryNoteInput.value = '';
@@ -6276,7 +7078,7 @@
 
       addingSubentryDirectlyToViewer = false;
       editingSubentryDirectlyInViewer = false;
-      document.getElementById('subentry-modal-title').textContent = 'EDITAR ENTRADA DE RACCORD';
+      document.getElementById('subentry-modal-title').textContent = t('modal_edit_entry');
       subentryIdInput.value = target.id;
       subentryCharacterSelect.innerHTML = buildCharacterSelectOptions(target.character || '');
       subentryNoteInput.value = target.note || '';
@@ -6298,7 +7100,7 @@
 
       addingSubentryDirectlyToViewer = false;
       editingSubentryDirectlyInViewer = true;
-      document.getElementById('subentry-modal-title').textContent = 'EDITAR ENTRADA DE RACCORD';
+      document.getElementById('subentry-modal-title').textContent = t('modal_edit_entry');
       subentryIdInput.value = target.id;
       subentryCharacterSelect.innerHTML = buildCharacterSelectOptions(target.character || '');
       subentryNoteInput.value = target.note || '';
@@ -6441,7 +7243,7 @@
           subentryModal.classList.add('hidden');
           await renderTakes();
           await openRaccordViewer(activeViewerTakeId);
-          showToast('Entrada añadida al raccord');
+          showToast(t('toast_entry_added'));
           return;
         }
       }
@@ -6462,7 +7264,7 @@
       subentryModal.classList.add('hidden');
     });
 
-    // Validar en base de datos para prohibir escenas duplicadas antes de guardar el Raccord
+    // Validar en base de datos para prohibir escenas duplicadas antes de guardar la Continuidad
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const existingId = document.getElementById('entry-id').value;
@@ -6486,7 +7288,7 @@
       );
 
       if (duplicateTake) {
-        showToast(`La Escena ${scene} ya tiene un raccord registrado`);
+        showToast(t('toast_scene_already_has_take', { scene }));
         return;
       }
 
@@ -6508,7 +7310,7 @@
       if (existingId) {
         await openRaccordViewer(existingId);
       }
-      showToast(`Raccord de Escena ${scene} guardado`);
+      showToast(t('toast_take_saved', { scene }));
     });
 
     async function openEditTake(id) {
@@ -6519,7 +7321,7 @@
       // Habilitar la escena original que se está editando en el menú
       await updateCatalogCaches(target.scene);
 
-      document.getElementById('modal-title').textContent = 'EDITAR RACCORD DE ESCENA';
+      document.getElementById('modal-title').textContent = t('modal_edit_continuity');
       document.getElementById('entry-id').value = target.id;
       document.getElementById('select-scene').value = target.scene;
       document.getElementById('input-notes').value = target.notes || '';
@@ -6541,12 +7343,12 @@
       const target = all.find(t => t.id === id);
       if (!target) return;
 
-      askConfirmation(`¿Eliminar definitivamente el raccord de la Escena ${target.scene}?`, async () => {
+      askConfirmation(t('confirm_delete_take_msg', { scene: target.scene }), async () => {
         await deleteTakeFromDB(id);
         entryModal.classList.add('hidden');
         await updateCatalogCaches();
         await renderTakes();
-        showToast(`Raccord de Escena ${target.scene} eliminado`);
+        showToast(t('toast_take_deleted', { scene: target.scene }));
       });
     });
 
@@ -6619,20 +7421,20 @@
                   <img src="${p.photo}" alt="${escapeHtml(p.character || 'Entrada')}">
                   <button type="button" class="btn-view-photo-eye" data-action="view-full-photo" data-idx="${idx}">
                     ${ICON_EYE_SVG}
-                    <span>VER</span>
+                    <span>${t('view_word')}</span>
                   </button>
                 </div>
               ` : `
                 <div class="viewer-square-mask viewer-no-photo">
-                  <span>Sin foto</span>
+                  <span>${t('no_photo_label')}</span>
                 </div>
               `}
-              <div class="viewer-entry-note">${p.note ? escapeHtml(p.note) : '<span style="color:var(--text-muted); font-style:italic;">Sin nota</span>'}</div>
+              <div class="viewer-entry-note">${p.note ? escapeHtml(p.note) : `<span style="color:var(--text-muted); font-style:italic;">${t('no_note_label')}</span>`}</div>
             </div>
           </div>
         `).join('');
       } else {
-        htmlContent += `<p style="color:var(--text-muted); text-align:center; padding:24px 0;">Este raccord no tiene entradas de personajes registradas.</p>`;
+        htmlContent += `<p style="color:var(--text-muted); text-align:center; padding:24px 0;">${t('viewer_no_entries')}</p>`;
       }
 
       document.getElementById('viewer-body').innerHTML = htmlContent;
@@ -6699,6 +7501,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
+      initLanguage();
       await initDB();
       await refreshBackupFolderLabel();
       await showProjectsView();
