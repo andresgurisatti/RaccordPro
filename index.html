@@ -483,7 +483,7 @@
     #btn-home-menu-toggle {
       position: relative;
       z-index: 51;
-      overflow: hidden;
+      overflow: visible;
       transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
                   border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
                   box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -1735,8 +1735,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.42);
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.48);
       border-radius: 12px;
       padding: 9px 12px;
       margin-bottom: 14px;
@@ -1752,35 +1752,49 @@
       gap: 8px;
       font-size: 13px;
       font-weight: 800;
-      color: #fde68a;
+      color: #fecaca;
       min-width: 0;
     }
 
     .unsaved-backups-btn {
       padding: 6px 12px;
       border-radius: 9px;
-      background: var(--amber);
-      color: #000;
+      background: #ef4444;
+      color: #fff;
       font-size: 12px;
       font-weight: 900;
       flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
     }
 
     .unsaved-backups-btn:active {
       transform: scale(0.95);
+      background: #dc2626;
     }
 
     .project-dirty-badge {
       display: inline-flex;
       align-items: center;
+      gap: 5px;
       font-size: 10px;
       font-weight: 900;
-      color: #fca5a5;
-      background: rgba(239, 68, 68, 0.18);
-      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.16);
+      border: 1px solid rgba(239, 68, 68, 0.52);
       padding: 2px 7px;
       border-radius: 999px;
       letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+
+    .project-dirty-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff3b30;
+      box-shadow: 0 0 6px #ef4444;
+      display: inline-block;
       flex-shrink: 0;
     }
 
@@ -1789,17 +1803,30 @@
       position: relative;
     }
 
+    @keyframes redDotPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 59, 48, 0.9), 0 0 4px #ff3b30;
+      }
+      50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 18px rgba(255, 59, 48, 1), 0 0 8px #ff4d4d;
+      }
+    }
+
     .menu-dirty-dot {
       position: absolute;
-      top: 2px;
-      right: 2px;
-      width: 14px;
-      height: 14px;
+      top: -3px;
+      right: -3px;
+      width: 17px;
+      height: 17px;
       border-radius: 50%;
-      background: #ef4444;
-      border: 2px solid var(--bg-850);
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.85);
+      background: radial-gradient(circle at 35% 35%, #ff5252, #e11d48);
+      border: 2.5px solid var(--bg-850);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.95), 0 0 4px #ff3b30;
       pointer-events: none;
+      z-index: 60;
+      animation: redDotPulse 2.4s ease-in-out infinite;
     }
 
     @keyframes helpCardSwapUp {
@@ -2006,7 +2033,7 @@
       <div class="container-narrow">
         <div id="unsaved-backups-banner" class="unsaved-backups-banner hidden">
           <div class="unsaved-backups-text">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             <span id="unsaved-backups-label">1 proyecto modificado sin respaldar</span>
           </div>
           <button type="button" id="btn-quick-backup-dirty" class="unsaved-backups-btn">Respaldar</button>
@@ -2632,9 +2659,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
           <span id="batch-projects-subtitle" class="form-label" style="margin:0;">Selecciona los proyectos:</span>
-          <button type="button" id="btn-toggle-all-batch-projects" style="color:var(--amber); font-size:13px; font-weight:800;">Seleccionar Todos</button>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button type="button" id="btn-toggle-dirty-batch-projects" class="hidden" style="color:#f87171; font-size:12.5px; font-weight:800; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.35); padding:3px 8px; border-radius:8px;">Solo sin respaldar</button>
+            <button type="button" id="btn-toggle-all-batch-projects" style="color:var(--amber); font-size:13px; font-weight:800;">Desmarcar Todos</button>
+          </div>
         </div>
         <div id="batch-projects-checklist" style="max-height:300px; overflow-y:auto;"></div>
       </div>
@@ -2996,7 +3026,7 @@
     }
 
     if (btnQuickBackupDirty) {
-      btnQuickBackupDirty.addEventListener('click', () => openBatchProjectsModal('export'));
+      btnQuickBackupDirty.addEventListener('click', () => openBatchProjectsModal('export-dirty'));
     }
 
     function saveEntityToDB(storeName, item) {
@@ -3805,7 +3835,7 @@
       });
     }
 
-    async function buildSetBibleBackupFile(proj, datePart, usedFileNames) {
+    async function buildSetBibleBackupFile(proj, usedFileNames) {
       const takes = await getAllTakesForProject(proj.id);
       const scenes = await getEntitiesForProject(STORE_SCENES, proj.id);
       const characters = await getEntitiesForProject(STORE_CHARACTERS, proj.id);
@@ -3816,10 +3846,10 @@
         .replace(/[^A-Z0-9]+/g, '_')
         .replace(/^_+|_+$/g, '') || 'SETBIBLE';
 
-      let fileName = `${rawProjName}_BACKUP_${datePart}.setbible`;
+      let fileName = `${rawProjName}.setbible`;
       let suffix = 2;
       while (usedFileNames && usedFileNames.has(fileName)) {
-        fileName = `${rawProjName}_${suffix}_BACKUP_${datePart}.setbible`;
+        fileName = `${rawProjName}_${suffix}.setbible`;
         suffix++;
       }
       if (usedFileNames) usedFileNames.add(fileName);
@@ -3906,9 +3936,30 @@
 
       if (lowerName.endsWith('.setbible') || lowerName.endsWith('.zip') || isZipSignature) {
         const unzipped = await readZipEntries(buf);
+
+        // Si es un paquete contenedor con varios respaldos individuales
+        const nestedBackupFiles = Object.keys(unzipped).filter(k => 
+          (k.endsWith('.setbible') || k.endsWith('.zip') || (k.endsWith('.json') && k !== 'project.json')) && !k.startsWith('photos/')
+        );
+
+        if (nestedBackupFiles.length > 0 && !unzipped['project.json']) {
+          const bundleProjects = [];
+          for (const subName of nestedBackupFiles) {
+            const subBytes = unzipped[subName];
+            const subFile = new File([subBytes], subName);
+            const parsedSub = await parseBackupFile(subFile);
+            if (parsedSub && parsedSub.project) {
+              bundleProjects.push(parsedSub);
+            } else if (parsedSub && parsedSub.multiProjectBackup && Array.isArray(parsedSub.projects)) {
+              bundleProjects.push(...parsedSub.projects);
+            }
+          }
+          return { multiProjectBackup: true, projects: bundleProjects };
+        }
+
         const jsonBytes = unzipped['project.json'];
         if (!jsonBytes) {
-          throw new Error('El paquete .setbible no contiene project.json');
+          throw new Error('El paquete no contiene project.json');
         }
         const data = JSON.parse(new TextDecoder('utf-8').decode(jsonBytes));
 
@@ -4375,8 +4426,9 @@
     const batchProjectsSubtitle = document.getElementById('batch-projects-subtitle');
     const batchProjectsChecklist = document.getElementById('batch-projects-checklist');
     const btnToggleAllBatchProjects = document.getElementById('btn-toggle-all-batch-projects');
+    const btnToggleDirtyBatchProjects = document.getElementById('btn-toggle-dirty-batch-projects');
     const btnConfirmBatchProjects = document.getElementById('btn-confirm-batch-projects');
-    let currentBatchProjectsMode = 'export'; // 'pin' | 'complete' | 'export' | 'delete'
+    let currentBatchProjectsMode = 'export'; // 'pin' | 'complete' | 'export' | 'export-dirty' | 'delete'
 
     function updateBatchToggleAllLabel() {
       const checkboxes = Array.from(document.querySelectorAll('.batch-project-checkbox'));
@@ -4394,23 +4446,27 @@
 
       currentBatchProjectsMode = mode;
       const isDelete = (mode === 'delete');
+      const isExport = (mode === 'export' || mode === 'export-dirty');
 
       const titlesMap = {
         'pin': 'FIJAR PROYECTOS',
         'complete': 'TERMINAR PROYECTOS',
         'export': 'GUARDAR RESPALDOS',
+        'export-dirty': 'GUARDAR RESPALDOS',
         'delete': 'BORRAR PROYECTOS'
       };
       const subtitlesMap = {
         'pin': 'Marca los proyectos que quieres fijar arriba:',
         'complete': 'Marca los proyectos terminados:',
         'export': 'Selecciona los proyectos a respaldar:',
+        'export-dirty': 'Proyectos modificados sin respaldar:',
         'delete': 'Selecciona los proyectos a eliminar:'
       };
       const btnTextMap = {
         'pin': 'Guardar Fijados',
         'complete': 'Guardar Terminados',
         'export': 'Guardar Respaldos',
+        'export-dirty': 'Guardar Respaldos',
         'delete': 'Borrar Seleccionados'
       };
 
@@ -4429,23 +4485,34 @@
 
       const hasAnyDirty = projects.some(p => isProjectModifiedSinceBackup(p));
 
+      if (btnToggleDirtyBatchProjects) {
+        if (isExport && hasAnyDirty) {
+          const dirtyCount = projects.filter(p => isProjectModifiedSinceBackup(p)).length;
+          btnToggleDirtyBatchProjects.textContent = `Solo sin respaldar (${dirtyCount})`;
+          btnToggleDirtyBatchProjects.classList.remove('hidden');
+        } else {
+          btnToggleDirtyBatchProjects.classList.add('hidden');
+        }
+      }
+
       batchProjectsChecklist.innerHTML = projects.map(proj => {
         const prodValue = proj.producer || proj.director || '';
         const isDirty = isProjectModifiedSinceBackup(proj);
         let isChecked = false;
-        if (mode === 'export') isChecked = hasAnyDirty ? isDirty : true;
+        if (mode === 'export') isChecked = true;
+        else if (mode === 'export-dirty') isChecked = isDirty;
         else if (mode === 'pin') isChecked = Boolean(proj.pinned);
         else if (mode === 'complete') isChecked = Boolean(proj.completed);
 
         return `
           <label class="pdf-scene-check-item">
-            <input type="checkbox" class="batch-project-checkbox" value="${proj.id}" ${isChecked ? 'checked' : ''}>
+            <input type="checkbox" class="batch-project-checkbox" value="${proj.id}" data-dirty="${isDirty ? 'true' : 'false'}" ${isChecked ? 'checked' : ''}>
             <div style="min-width:0; flex:1;">
               <strong style="color:#fff; font-size:15px; display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                 ${proj.pinned ? `<span class="project-pin-icon">${ICON_PIN_SVG}</span>` : ''}
                 <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(proj.name)}</span>
                 ${proj.completed ? `<span class="project-completed-badge">${ICON_COMPLETED_SVG}<span>TERMINADO</span></span>` : ''}
-                ${mode === 'export' && isDirty ? `<span class="project-dirty-badge">SIN RESPALDAR</span>` : ''}
+                ${isExport && isDirty ? `<span class="project-dirty-badge">SIN RESPALDAR</span>` : ''}
               </strong>
               <span style="color:var(--text-muted); font-size:12.5px; display:block;">${prodValue ? escapeHtml(prodValue) + ' • ' : ''}${new Date(proj.createdAt).toLocaleDateString()}</span>
             </div>
@@ -4465,6 +4532,25 @@
       checkboxes.forEach(cb => cb.checked = !allChecked);
       updateBatchToggleAllLabel();
     });
+
+    if (btnToggleDirtyBatchProjects) {
+      btnToggleDirtyBatchProjects.addEventListener('click', () => {
+        const checkboxes = Array.from(document.querySelectorAll('.batch-project-checkbox'));
+        const dirtyCheckboxes = checkboxes.filter(cb => cb.dataset.dirty === 'true');
+        const onlyDirtyChecked = dirtyCheckboxes.length > 0 && 
+          dirtyCheckboxes.every(cb => cb.checked) && 
+          !checkboxes.some(cb => cb.dataset.dirty !== 'true' && cb.checked);
+
+        if (onlyDirtyChecked) {
+          checkboxes.forEach(cb => cb.checked = true);
+        } else {
+          checkboxes.forEach(cb => {
+            cb.checked = (cb.dataset.dirty === 'true');
+          });
+        }
+        updateBatchToggleAllLabel();
+      });
+    }
 
     document.getElementById('btn-close-batch-projects').addEventListener('click', () => batchProjectsModal.classList.add('hidden'));
     document.getElementById('btn-cancel-batch-projects').addEventListener('click', () => batchProjectsModal.classList.add('hidden'));
@@ -4531,14 +4617,11 @@
 
         showToast(selectedProjects.length === 1 ? 'Empacando respaldo .setbible...' : `Empacando ${selectedProjects.length} respaldos .setbible...`);
 
-        const now = new Date();
-        const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-
         const usedFileNames = new Set();
         const preparedFiles = [];
 
         for (const proj of selectedProjects) {
-          const pkg = await buildSetBibleBackupFile(proj, datePart, usedFileNames);
+          const pkg = await buildSetBibleBackupFile(proj, usedFileNames);
           preparedFiles.push(pkg);
         }
 
@@ -4588,6 +4671,7 @@
             try {
               await navigator.share({ files: shareFiles });
               await markAllBackedUp();
+              showToast(`${preparedFiles.length} respaldos guardados correctamente`);
               return;
             } catch (err) {
               if (err.name === 'AbortError') return;
@@ -4595,7 +4679,9 @@
           }
         }
 
-        for (const item of preparedFiles) {
+        // Descargar cada archivo .setbible individualmente por separado
+        for (let i = 0; i < preparedFiles.length; i++) {
+          const item = preparedFiles[i];
           const url = URL.createObjectURL(item.blob);
           const a = document.createElement('a');
           a.href = url;
@@ -4603,10 +4689,12 @@
           document.body.appendChild(a);
           a.click();
           a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 1500);
+          // Intervalo entre descargas para que el navegador procese cada archivo por separado sin descartar los siguientes
+          await new Promise(resolve => setTimeout(resolve, 450));
+          setTimeout(() => URL.revokeObjectURL(url), 5000);
         }
         await markAllBackedUp();
-        showToast(`${preparedFiles.length} respaldos guardados correctamente`);
+        showToast(`${preparedFiles.length} respaldos .setbible guardados por separado`);
       } catch (err) {
         console.error('Error exportando proyectos:', err);
         showToast('Error al guardar los respaldos');
@@ -5875,9 +5963,7 @@
 
       try {
         showToast('Empacando respaldo .setbible...');
-        const now = new Date();
-        const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-        const pkg = await buildSetBibleBackupFile(activeProjectData, datePart, null);
+        const pkg = await buildSetBibleBackupFile(activeProjectData, null);
 
         if ('showDirectoryPicker' in window) {
           let savedRecord = await getDirectoryHandleFromDB(GLOBAL_BACKUP_DIR_KEY);
