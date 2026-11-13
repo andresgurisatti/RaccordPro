@@ -157,15 +157,15 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 12px 14px;
-      padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: 75px;
     }
 
-    #view-home .scroll-area {
-      padding-bottom: calc(125px + env(safe-area-inset-bottom, 0px));
+    #view-projects .scroll-area {
+      padding-bottom: 120px;
     }
 
     #view-takes .scroll-area {
-      padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: 75px;
     }
 
     .container-narrow {
@@ -423,15 +423,15 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding-top: 10px;
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-bottom: max(10px, env(safe-area-inset-bottom, 10px));
+      padding-top: 8px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-bottom: 10px;
       background: linear-gradient(180deg, rgba(13, 15, 18, 0) 0%, rgba(13, 15, 18, 0.95) 30%, #0d0f12 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       z-index: 25;
       pointer-events: none;
     }
@@ -442,23 +442,23 @@
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
     }
 
     .btn-bottom-action-center {
       background: linear-gradient(135deg, var(--amber), var(--amber-dark));
       color: #000;
       font-weight: 900;
-      font-size: 17px;
-      letter-spacing: 0.8px;
-      padding: 18px 34px;
-      min-height: 60px;
+      font-size: 16px;
+      letter-spacing: 0.6px;
+      padding: 14px 24px;
+      min-height: 50px;
       border-radius: var(--btn-radius);
       box-shadow: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
       transition: transform 0.1s;
     }
@@ -469,7 +469,7 @@
 
     .bottom-buttons-row {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       width: 100%;
     }
 
@@ -2510,7 +2510,7 @@
 
             <button type="button" id="btn-trigger-subentry-photo" class="btn-photo-single">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-              <span>Seleccionar Foto de Fototeca</span>
+              <span data-i18n="btn_take_photo">Seleccionar Foto</span>
             </button>
 
             <div id="subentry-photo-preview-box" class="subentry-preview-box hidden">
@@ -2854,7 +2854,7 @@
         form_character: 'Personaje *',
         form_select_character: 'Selecciona un personaje...',
         form_continuity_photo: 'Foto de Continuidad',
-        btn_take_photo: 'Seleccionar Foto de Fototeca',
+        btn_take_photo: 'Seleccionar Foto',
         modal_export_pdf: 'EXPORTAR PDF',
         pdf_label_lang: 'Idioma',
         pdf_label_scenes: 'Escenas',
@@ -2934,7 +2934,7 @@
         form_character: 'Character *',
         form_select_character: 'Select a character...',
         form_continuity_photo: 'Continuity Photo',
-        btn_take_photo: 'Select Photo from Library',
+        btn_take_photo: 'Select Photo',
         modal_export_pdf: 'EXPORT PDF',
         pdf_label_lang: 'Language',
         pdf_label_scenes: 'Scenes',
@@ -3014,7 +3014,7 @@
         form_character: 'Personagem *',
         form_select_character: 'Selecione um personagem...',
         form_continuity_photo: 'Foto de Continuidade',
-        btn_take_photo: 'Selecionar Foto da Fototeca',
+        btn_take_photo: 'Selecionar Foto',
         modal_export_pdf: 'EXPORTAR PDF',
         pdf_label_lang: 'Idioma',
         pdf_label_scenes: 'Cenas',
@@ -3094,7 +3094,7 @@
         form_character: 'Personaggio *',
         form_select_character: 'Seleziona un personaggio...',
         form_continuity_photo: 'Foto di Continuità',
-        btn_take_photo: 'Seleziona Foto dalla Libreria',
+        btn_take_photo: 'Seleziona Foto',
         modal_export_pdf: 'ESPORTA PDF',
         pdf_label_lang: 'Lingua',
         pdf_label_scenes: 'Scene',
@@ -3174,7 +3174,7 @@
         form_character: 'Figur *',
         form_select_character: 'Wähle eine Figur...',
         form_continuity_photo: 'Kontinuitätsfoto',
-        btn_take_photo: 'Foto aus Mediathek wählen',
+        btn_take_photo: 'Foto auswählen',
         modal_export_pdf: 'PDF EXPORTIEREN',
         pdf_label_lang: 'Sprache',
         pdf_label_scenes: 'Szenen',
@@ -3254,7 +3254,7 @@
         form_character: 'Personnage *',
         form_select_character: 'Sélectionnez un personnage...',
         form_continuity_photo: 'Photo de Continuité',
-        btn_take_photo: 'Choisir une photo dans la photothèque',
+        btn_take_photo: 'Choisir une photo',
         modal_export_pdf: 'EXPORTER PDF',
         pdf_label_lang: 'Langue',
         pdf_label_scenes: 'Scènes',
