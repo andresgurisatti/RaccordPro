@@ -264,7 +264,26 @@
       gap: 12px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, opacity 0.2s, transform 0.15s, box-shadow 0.15s;
+    }
+
+    .project-card.is-pinned {
+      border-color: rgba(245, 158, 11, 0.55);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.07), var(--bg-850));
+    }
+
+    .project-card.is-completed {
+      opacity: 0.48;
+      background: rgba(19, 23, 29, 0.65);
+    }
+
+    .project-card.is-dragging {
+      opacity: 0.96 !important;
+      border-color: var(--amber) !important;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(245, 158, 11, 0.28);
+      transform: scale(1.02);
+      z-index: 30;
+      position: relative;
     }
 
     .project-card:active {
@@ -282,6 +301,32 @@
       color: #fff;
       margin-bottom: 6px;
       word-wrap: break-word;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .project-pin-icon {
+      color: var(--amber);
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .project-completed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 2px 7px;
+      border-radius: 7px;
+      flex-shrink: 0;
     }
 
     .project-card-meta {
@@ -434,7 +479,8 @@
       pointer-events: auto;
     }
 
-    #btn-project-menu-toggle {
+    #btn-project-menu-toggle,
+    #btn-home-menu-toggle {
       position: relative;
       z-index: 51;
       overflow: hidden;
@@ -444,7 +490,8 @@
                   transform 0.15s ease;
     }
 
-    #btn-project-menu-toggle.is-open {
+    #btn-project-menu-toggle.is-open,
+    #btn-home-menu-toggle.is-open {
       background: rgba(245, 158, 11, 0.18);
       border-color: var(--amber);
       box-shadow: 0 0 20px rgba(245, 158, 11, 0.38), inset 0 0 10px rgba(245, 158, 11, 0.16);
@@ -480,13 +527,15 @@
       filter: blur(3px);
     }
 
-    #btn-project-menu-toggle.is-open .menu-icon-stage .icon-wrench {
+    #btn-project-menu-toggle.is-open .menu-icon-stage .icon-wrench,
+    #btn-home-menu-toggle.is-open .menu-icon-stage .icon-wrench {
       opacity: 0;
       transform: rotate(135deg) scale(0.3);
       filter: blur(3px);
     }
 
-    #btn-project-menu-toggle.is-open .menu-icon-stage .icon-close-x {
+    #btn-project-menu-toggle.is-open .menu-icon-stage .icon-close-x,
+    #btn-home-menu-toggle.is-open .menu-icon-stage .icon-close-x {
       opacity: 1;
       transform: rotate(0deg) scale(1);
       filter: blur(0px);
@@ -790,7 +839,9 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(5, 7, 10, 0.78);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       z-index: 50;
       display: flex;
       align-items: center;
@@ -799,6 +850,61 @@
       padding-right: 16px;
       padding-top: calc(20px + env(safe-area-inset-top, 0px));
       padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .sort-suboptions-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-left: 10px;
+      border-left: 2px solid rgba(245, 158, 11, 0.35);
+      margin: 2px 0 4px 8px;
+    }
+
+    .sort-sub-btn {
+      padding: 10px 12px;
+      min-height: 42px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(26, 31, 38, 0.75);
+      border: 1px solid var(--border-700);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      text-align: left;
+      transition: all 0.15s;
+    }
+
+    .sort-sub-btn.active {
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.6);
+      background: rgba(245, 158, 11, 0.14);
+      font-weight: 800;
+    }
+
+    .project-drag-handle {
+      width: 38px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--bg-800);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: var(--amber);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .project-drag-handle:active {
+      cursor: grabbing;
+      background: rgba(245, 158, 11, 0.2);
     }
 
     .modal-card {
@@ -1354,6 +1460,176 @@
       background: rgba(245, 158, 11, 0.15);
     }
 
+    .pdf-tuning-panel {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pdf-slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .pdf-slider-label {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #d1d5db;
+      min-width: 112px;
+    }
+
+    .pdf-slider-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .pdf-slider-controls input[type="range"] {
+      flex: 1;
+      accent-color: var(--amber);
+      height: 6px;
+      cursor: pointer;
+    }
+
+    .pdf-step-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--bg-850);
+      border: 1px solid var(--border-600);
+      color: var(--amber);
+      font-weight: 900;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pdf-step-btn:active {
+      background: rgba(245, 158, 11, 0.2);
+      transform: scale(0.92);
+    }
+
+    .pdf-scale-val {
+      font-size: 12.5px;
+      font-weight: 900;
+      color: var(--amber);
+      min-width: 42px;
+      text-align: right;
+    }
+
+    #pdf-preview-modal {
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: calc(10px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+
+    #pdf-preview-modal .modal-card {
+      max-width: 920px;
+      width: 96vw;
+      height: 92vh;
+      max-height: 92vh;
+    }
+
+    .pdf-preview-stage {
+      --pdf-preview-base-min: 140px;
+      --pdf-preview-zoom: 1;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      background: #0b0d10;
+      border: 1px solid var(--border-700);
+      border-radius: 10px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(calc(var(--pdf-preview-base-min) * var(--pdf-preview-zoom)), 1fr));
+      grid-auto-rows: max-content;
+      align-content: start;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .pdf-preview-stage {
+        --pdf-preview-base-min: 175px;
+        gap: 14px;
+        padding: 14px;
+      }
+    }
+
+    .pdf-zoom-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-850);
+      border: 1px solid var(--border-700);
+      border-radius: 9px;
+      padding: 2px 4px;
+      flex-shrink: 0;
+    }
+
+    .pdf-zoom-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      color: var(--amber);
+      font-size: 16px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pdf-zoom-btn:active {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    .pdf-zoom-val {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #e5e7eb;
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .pdf-preview-page-card {
+      width: 100%;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pdf-preview-page-card canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .pdf-preview-page-badge {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(17, 24, 39, 0.85);
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      pointer-events: none;
+    }
+
     .toast-bar {
       position: fixed;
       bottom: calc(95px + env(safe-area-inset-bottom, 0px));
@@ -1389,6 +1665,77 @@
         <div>
           <h1 class="brand-title">Raccord<span>PRO</span></h1>
         </div>
+      </div>
+
+      <div id="home-menu-backdrop" class="menu-backdrop"></div>
+
+      <div style="display:flex; align-items:center;">
+        <button type="button" id="btn-home-menu-toggle" class="btn-icon" title="Menú de Proyectos">
+          <span class="menu-icon-stage">
+            <svg class="icon-wrench" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+            <svg class="icon-close-x" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <div id="home-dropdown-menu" class="dropdown-menu">
+        <button type="button" class="dropdown-item" id="home-menu-opt-sort">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
+            <span>Ordenar proyectos</span>
+            <span id="home-sort-chevron" style="color:var(--amber); font-size:12px; font-weight:900;">▼</span>
+          </div>
+        </button>
+
+        <div id="home-sort-suboptions" class="sort-suboptions-box hidden">
+          <button type="button" class="sort-sub-btn" data-sort-mode="date">
+            <span>Por fecha de creación</span>
+            <span class="sort-check"></span>
+          </button>
+          <button type="button" class="sort-sub-btn" data-sort-mode="alpha-asc">
+            <span>Alfabéticamente ascendente</span>
+            <span class="sort-check"></span>
+          </button>
+          <button type="button" class="sort-sub-btn" data-sort-mode="alpha-desc">
+            <span>Alfabéticamente descendente</span>
+            <span class="sort-check"></span>
+          </button>
+          <button type="button" class="sort-sub-btn" data-sort-mode="custom">
+            <span>Personalizado</span>
+            <span class="sort-check"></span>
+          </button>
+        </div>
+
+        <button type="button" class="dropdown-item" id="home-menu-opt-pin-projects">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+          <span>Fijar proyectos</span>
+        </button>
+
+        <button type="button" class="dropdown-item" id="home-menu-opt-complete-projects">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Terminar proyecto</span>
+        </button>
+
+        <button type="button" class="dropdown-item" id="home-menu-opt-export-json">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          <span>Guardar Respaldos</span>
+        </button>
+
+        <div class="dropdown-divider"></div>
+
+        <button type="button" class="dropdown-item" id="home-menu-opt-delete-projects" style="color:#f87171; border-color:rgba(239,68,68,0.35);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          <span>Borrar proyectos</span>
+        </button>
       </div>
     </header>
 
@@ -1431,7 +1778,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4H7a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h9"/><line x1="21" y1="12" x2="10" y2="12"/><polyline points="14 8 10 12 14 16"/></svg>
             <span>Importar Proyecto</span>
           </button>
-          <input type="file" id="input-import-json" accept=".json,application/json" class="hidden">
+          <input type="file" id="input-import-json" accept=".json,application/json" multiple class="hidden">
         </div>
       </div>
     </div>
@@ -1597,6 +1944,23 @@
             <input type="text" id="proj-producer" placeholder="Ej: TIS Producciones" class="form-control">
           </div>
 
+          <div id="edit-project-flags-box" class="hidden" style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+            <label class="pdf-scene-check-item" style="margin:0; padding:12px 14px;">
+              <input type="checkbox" id="proj-pinned-check">
+              <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:14.5px; color:#fff;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+                <span>Fijar proyecto arriba</span>
+              </div>
+            </label>
+            <label class="pdf-scene-check-item" style="margin:0; padding:12px 14px;">
+              <input type="checkbox" id="proj-completed-check">
+              <div style="display:flex; align-items:center; gap:8px; font-weight:800; font-size:14.5px; color:#fff;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>Proyecto terminado</span>
+              </div>
+            </label>
+          </div>
+
           <div id="delete-project-container" class="delete-project-box hidden">
             <button type="button" id="btn-delete-project-modal" class="btn-delete-project-full">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1737,7 +2101,7 @@
             <label class="form-label">ENTRADAS</label>
             <button type="button" id="btn-open-subentry-modal" class="btn-primary" style="width:100%;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-              <span>Añadir Entrada (Personaje / Foto / Nota)</span>
+              <span>Añadir Entrada</span>
             </button>
             <div id="photos-entries-list"></div>
           </div>
@@ -1847,7 +2211,7 @@
       <div class="modal-footer" style="padding: 10px 12px;">
         <button type="button" id="btn-add-subentry-from-viewer" class="btn-primary" style="width:100%;">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          <span>Añadir Entrada (Personaje / Foto / Nota)</span>
+          <span>Añadir Entrada</span>
         </button>
       </div>
     </div>
@@ -1869,41 +2233,131 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: CONFIGURAR Y EXPORTAR REPORTE PDF   -->
+  <!-- MODAL: SELECCIONAR ESCENAS PARA PDF        -->
   <!-- ========================================== -->
-  <div id="report-modal" class="modal-backdrop hidden">
-    <div class="modal-card" style="max-width:560px;">
+  <div id="report-modal" class="modal-backdrop hidden" style="z-index: 85;">
+    <div class="modal-card" style="max-width:500px;">
       <div class="modal-header">
-        <h2 class="modal-title">EXPORTAR REPORTE PDF</h2>
+        <h2 class="modal-title">SELECCIONAR ESCENAS</h2>
         <button type="button" id="btn-close-report" class="btn-close-touch" title="Cerrar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <div class="modal-body">
-        <label class="form-label">Idioma del Reporte:</label>
-        <div class="lang-selector-grid">
-          <label class="lang-option">
-            <input type="radio" name="pdf-lang" value="ES" checked>
-            <span class="lang-box">Español (ES)</span>
-          </label>
-          <label class="lang-option">
-            <input type="radio" name="pdf-lang" value="EN">
-            <span class="lang-box">English (EN)</span>
-          </label>
-        </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-          <span class="form-label" style="margin:0;">Selecciona las escenas a incluir:</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <span class="form-label" style="margin:0;">Escenas incluidas en el PDF:</span>
           <button type="button" id="btn-toggle-all-pdf-scenes" style="color:var(--amber); font-size:13px; font-weight:800;">Desmarcar todas</button>
         </div>
 
-        <div id="pdf-scenes-checklist" style="max-height:260px; overflow-y:auto; margin-bottom:16px;"></div>
+        <div id="pdf-scenes-checklist" style="max-height:55vh; overflow-y:auto;"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="btn-generate-real-pdf" class="btn-primary" style="width:100%;">
+        <button type="button" id="btn-apply-pdf-scenes" class="btn-primary" style="width:100%; padding:14px 12px; font-size:15px;">
+          Aplicar Selección
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: PREVISUALIZACIÓN Y EXPORTAR PDF     -->
+  <!-- ========================================== -->
+  <div id="pdf-preview-modal" class="modal-backdrop hidden" style="z-index: 75;">
+    <div class="modal-card">
+      <div class="modal-header" style="padding:11px 14px; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1;">
+          <h2 class="modal-title" style="color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">EXPORTAR PDF</h2>
+          <span id="pdf-preview-page-count" style="color:var(--amber); font-size:12px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px; flex-shrink:0;">1 pág</span>
+        </div>
+        <div class="pdf-zoom-bar" title="Zoom de páginas">
+          <button type="button" id="btn-pdf-zoom-out" class="pdf-zoom-btn" aria-label="Reducir zoom">−</button>
+          <span id="pdf-preview-zoom-label" class="pdf-zoom-val">100%</span>
+          <button type="button" id="btn-pdf-zoom-in" class="pdf-zoom-btn" aria-label="Aumentar zoom">+</button>
+        </div>
+        <button type="button" id="btn-close-pdf-preview" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:10px 12px; display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden;">
+        <div class="pdf-tuning-panel" style="margin-bottom:10px; padding:8px 10px; gap:7px; flex-shrink:0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div class="lang-selector-grid" style="margin-bottom:0; gap:6px; flex:0 0 auto;">
+              <label class="lang-option">
+                <input type="radio" name="pdf-lang" value="ES" checked>
+                <span class="lang-box" style="padding:7px 11px; font-size:12.5px;">ES</span>
+              </label>
+              <label class="lang-option">
+                <input type="radio" name="pdf-lang" value="EN">
+                <span class="lang-box" style="padding:7px 11px; font-size:12.5px;">EN</span>
+              </label>
+            </div>
+            <button type="button" id="btn-open-pdf-scenes" class="btn-secondary" style="flex:1; padding:7px 10px; font-size:12.5px; font-weight:800; color:var(--amber); border-color:rgba(245,158,11,0.45); border-radius:10px; min-height:0;">
+              Escenas (Todas)
+            </button>
+          </div>
+          <div class="lang-selector-grid" style="margin-bottom:2px; gap:8px;">
+            <label class="lang-option">
+              <input type="radio" name="pdf-layout-mode-preview" value="flow" checked>
+              <span class="lang-box" style="padding:7px 8px; font-size:12.5px;">De corrido</span>
+            </label>
+            <label class="lang-option">
+              <input type="radio" name="pdf-layout-mode-preview" value="per-raccord">
+              <span class="lang-box" style="padding:7px 8px; font-size:12.5px;">Separar por página</span>
+            </label>
+          </div>
+          <div class="pdf-slider-row">
+            <span class="pdf-slider-label" style="font-size:12px; min-width:100px;">Tamaño Fuentes</span>
+            <div class="pdf-slider-controls">
+              <button type="button" class="pdf-step-btn" data-pdf-step="font" data-dir="-5">−</button>
+              <input type="range" id="pdf-font-scale-preview" min="75" max="150" step="5" value="100">
+              <button type="button" class="pdf-step-btn" data-pdf-step="font" data-dir="5">+</button>
+              <span id="pdf-font-scale-preview-label" class="pdf-scale-val">100%</span>
+            </div>
+          </div>
+          <div class="pdf-slider-row">
+            <span class="pdf-slider-label" style="font-size:12px; min-width:100px;">Tamaño Fotos</span>
+            <div class="pdf-slider-controls">
+              <button type="button" class="pdf-step-btn" data-pdf-step="photo" data-dir="-5">−</button>
+              <input type="range" id="pdf-photo-scale-preview" min="60" max="140" step="5" value="100">
+              <button type="button" class="pdf-step-btn" data-pdf-step="photo" data-dir="5">+</button>
+              <span id="pdf-photo-scale-preview-label" class="pdf-scale-val">100%</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="pdf-preview-stage" class="pdf-preview-stage"></div>
+      </div>
+      <div class="modal-footer" style="padding:10px 12px; gap:10px;">
+        <button type="button" id="btn-back-from-pdf-preview" class="btn-secondary" style="flex:1;">Cancelar</button>
+        <button type="button" id="btn-save-from-pdf-preview" class="btn-primary" style="flex:1.5; padding:14px 12px; font-size:15px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           <span>Generar y Guardar PDF</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SELECTOR MÚLTIPLE DE PROYECTOS      -->
+  <!-- ========================================== -->
+  <div id="batch-projects-modal" class="modal-backdrop hidden" style="z-index: 65;">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <h2 id="batch-projects-modal-title" class="modal-title" style="color:var(--amber);">SELECCIONAR PROYECTOS</h2>
+        <button type="button" id="btn-close-batch-projects" class="btn-close-touch" title="Cerrar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span id="batch-projects-subtitle" class="form-label" style="margin:0;">Selecciona los proyectos:</span>
+          <button type="button" id="btn-toggle-all-batch-projects" style="color:var(--amber); font-size:13px; font-weight:800;">Seleccionar Todos</button>
+        </div>
+        <div id="batch-projects-checklist" style="max-height:300px; overflow-y:auto;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-batch-projects" class="btn-secondary">Cancelar</button>
+        <button type="button" id="btn-confirm-batch-projects" class="btn-submit">Confirmar</button>
       </div>
     </div>
   </div>
@@ -2082,21 +2536,79 @@
       });
     }
 
+    const GLOBAL_BACKUP_DIR_KEY = 'global_backup';
+
     async function refreshBackupFolderLabel() {
       const changeBtn = document.getElementById('menu-opt-change-json-folder');
-      if (!activeProjectId || !changeBtn) return;
+      const homeFolderLabel = document.getElementById('home-backup-folder-label');
+      const homeFolderBtn = document.getElementById('home-menu-opt-change-json-folder');
 
       if (!('showDirectoryPicker' in window)) {
-        changeBtn.classList.add('hidden');
+        if (changeBtn) changeBtn.classList.add('hidden');
+        if (homeFolderLabel) homeFolderLabel.textContent = 'Elegir carpeta de respaldos';
         return;
       }
 
-      const savedRecord = await getDirectoryHandleFromDB(activeProjectId);
-      if (savedRecord && savedRecord.folderName) {
-        changeBtn.classList.remove('hidden');
-      } else {
-        changeBtn.classList.add('hidden');
+      let savedRecord = await getDirectoryHandleFromDB(GLOBAL_BACKUP_DIR_KEY);
+      if (!savedRecord && activeProjectId) {
+        savedRecord = await getDirectoryHandleFromDB(activeProjectId);
       }
+
+      if (savedRecord && savedRecord.folderName) {
+        if (changeBtn) {
+          changeBtn.classList.remove('hidden');
+          const span = changeBtn.querySelector('span');
+          if (span) span.textContent = `Cambiar carpeta (📁 ${savedRecord.folderName})`;
+        }
+        if (homeFolderLabel) {
+          homeFolderLabel.textContent = `Cambiar carpeta (📁 ${savedRecord.folderName})`;
+        }
+      } else {
+        if (changeBtn) changeBtn.classList.add('hidden');
+        if (homeFolderLabel) {
+          homeFolderLabel.textContent = 'Elegir carpeta de respaldos';
+        }
+      }
+    }
+
+    async function writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, filesArray) {
+      let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
+      if (perm !== 'granted') {
+        perm = await dirHandle.requestPermission({ mode: 'readwrite' });
+      }
+      if (perm !== 'granted') return false;
+
+      const existingNames = [];
+      for (const item of filesArray) {
+        try {
+          await dirHandle.getFileHandle(item.fileName, { create: false });
+          existingNames.push(item.fileName);
+        } catch (e) {}
+      }
+
+      const doWrite = async () => {
+        for (const item of filesArray) {
+          const fileHandle = await dirHandle.getFileHandle(item.fileName, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(item.blob);
+          await writable.close();
+        }
+        showToast(
+          filesArray.length === 1
+            ? `Respaldo guardado en 📁 ${dirHandle.name}`
+            : `${filesArray.length} respaldos guardados en 📁 ${dirHandle.name}`
+        );
+      };
+
+      if (existingNames.length > 0) {
+        const msg = existingNames.length === 1
+          ? `El archivo "${existingNames[0]}" ya existe en la carpeta "${dirHandle.name}". ¿Deseas reemplazarlo?`
+          : `Ya existen ${existingNames.length} archivos con el mismo nombre en la carpeta "${dirHandle.name}". ¿Deseas reemplazarlos?`;
+        askConfirmation(msg, doWrite);
+      } else {
+        await doWrite();
+      }
+      return true;
     }
 
     function getFallbackList(key) {
@@ -2335,8 +2847,7 @@
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
             await navigator.share({
-              files: [file],
-              title: fileName
+              files: [file]
             });
             return;
           } catch (err) {
@@ -2442,9 +2953,39 @@
       });
     }
 
+    let projectsSortMode = localStorage.getItem('rp_projects_sort') || 'date';
+
+    const ICON_PIN_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="rgba(245,158,11,0.25)" stroke="#f59e0b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>`;
+    const ICON_COMPLETED_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+    const ICON_DRAG_GRIP_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="5" r="1.8"/><circle cx="15" cy="5" r="1.8"/><circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/><circle cx="9" cy="19" r="1.8"/><circle cx="15" cy="19" r="1.8"/></svg>`;
+
+    function sortProjectsArray(projects) {
+      const list = [...projects];
+      list.sort((a, b) => {
+        const pinA = a.pinned ? 1 : 0;
+        const pinB = b.pinned ? 1 : 0;
+        if (pinA !== pinB) return pinB - pinA;
+
+        if (projectsSortMode === 'alpha-asc') {
+          return (a.name || '').localeCompare(b.name || '', undefined, { numeric: true, sensitivity: 'base' });
+        }
+        if (projectsSortMode === 'alpha-desc') {
+          return (b.name || '').localeCompare(a.name || '', undefined, { numeric: true, sensitivity: 'base' });
+        }
+        if (projectsSortMode === 'custom') {
+          const ordA = typeof a.customOrder === 'number' ? a.customOrder : Number.MAX_SAFE_INTEGER;
+          const ordB = typeof b.customOrder === 'number' ? b.customOrder : Number.MAX_SAFE_INTEGER;
+          if (ordA !== ordB) return ordA - ordB;
+          return (b.createdAt || 0) - (a.createdAt || 0);
+        }
+        return (b.createdAt || 0) - (a.createdAt || 0);
+      });
+      return list;
+    }
+
     async function renderProjects() {
-      const projects = await getAllProjectsFromDB();
-      projects.sort((a, b) => b.createdAt - a.createdAt);
+      const rawProjects = await getAllProjectsFromDB();
+      const projects = sortProjectsArray(rawProjects);
 
       const q = searchProjectsQuery.toLowerCase().trim();
       const filteredProjects = projects.filter(p => {
@@ -2463,12 +3004,27 @@
 
       emptyProjects.classList.add('hidden');
 
-      projectsList.innerHTML = filteredProjects.map(proj => {
+      const showCustomOrderControls = (projectsSortMode === 'custom' && !q && filteredProjects.length > 1);
+
+      projectsList.innerHTML = filteredProjects.map((proj) => {
         const prodValue = proj.producer || proj.director || '';
+        const classes = ['project-card'];
+        if (proj.pinned) classes.push('is-pinned');
+        if (proj.completed) classes.push('is-completed');
+
         return `
-          <div class="project-card" data-action="open-project" data-id="${proj.id}">
+          <div class="${classes.join(' ')}" data-action="open-project" data-id="${proj.id}">
+            ${showCustomOrderControls ? `
+              <div class="project-drag-handle" data-action="drag-project" title="Arrastrar para ordenar">
+                ${ICON_DRAG_GRIP_SVG}
+              </div>
+            ` : ''}
             <div class="project-card-info">
-              <div class="project-card-title">${escapeHtml(proj.name)}</div>
+              <div class="project-card-title">
+                ${proj.pinned ? `<span class="project-pin-icon" title="Proyecto fijado">${ICON_PIN_SVG}</span>` : ''}
+                <span>${escapeHtml(proj.name)}</span>
+                ${proj.completed ? `<span class="project-completed-badge" title="Proyecto terminado">${ICON_COMPLETED_SVG}<span>TERMINADO</span></span>` : ''}
+              </div>
               <p class="project-card-meta">
                 ${prodValue ? escapeHtml(prodValue) + ' • ' : ''}Creado: ${new Date(proj.createdAt).toLocaleDateString()}
               </p>
@@ -2485,8 +3041,111 @@
     const projectModalTitle = document.getElementById('project-modal-title');
     const btnSubmitProject = document.getElementById('btn-submit-project');
     const deleteProjectContainer = document.getElementById('delete-project-container');
+    const editProjectFlagsBox = document.getElementById('edit-project-flags-box');
+    const projPinnedCheck = document.getElementById('proj-pinned-check');
+    const projCompletedCheck = document.getElementById('proj-completed-check');
+
+    /* ==========================================================================
+       ARRASTRAR Y SOLTAR (DRAG & DROP) PARA ORDEN PERSONALIZADO DE PROYECTOS
+       ========================================================================== */
+    let draggingProjectCard = null;
+    let draggingPointerId = null;
+    let suppressNextProjectClick = false;
+
+    projectsList.addEventListener('pointerdown', (e) => {
+      const handle = e.target.closest('[data-action="drag-project"]');
+      if (!handle) return;
+      const card = handle.closest('.project-card');
+      if (!card) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      draggingProjectCard = card;
+      draggingPointerId = e.pointerId;
+      suppressNextProjectClick = true;
+      card.classList.add('is-dragging');
+      try {
+        handle.setPointerCapture(e.pointerId);
+      } catch (err) {}
+    });
+
+    projectsList.addEventListener('pointermove', (e) => {
+      if (!draggingProjectCard || e.pointerId !== draggingPointerId) return;
+      e.preventDefault();
+
+      const clientY = e.clientY;
+      const scrollArea = draggingProjectCard.closest('.scroll-area');
+      if (scrollArea) {
+        const rect = scrollArea.getBoundingClientRect();
+        if (clientY < rect.top + 55) {
+          scrollArea.scrollTop -= 8;
+        } else if (clientY > rect.bottom - 55) {
+          scrollArea.scrollTop += 8;
+        }
+      }
+
+      const siblings = Array.from(projectsList.querySelectorAll('.project-card:not(.is-dragging)'));
+      let nextSibling = null;
+      for (const sib of siblings) {
+        const box = sib.getBoundingClientRect();
+        const midY = box.top + box.height / 2;
+        if (clientY < midY) {
+          nextSibling = sib;
+          break;
+        }
+      }
+
+      if (nextSibling) {
+        if (draggingProjectCard.nextElementSibling !== nextSibling) {
+          projectsList.insertBefore(draggingProjectCard, nextSibling);
+        }
+      } else {
+        projectsList.appendChild(draggingProjectCard);
+      }
+    });
+
+    async function finishProjectDrag(e) {
+      if (!draggingProjectCard) return;
+      if (e && draggingPointerId !== null && e.pointerId !== draggingPointerId) return;
+
+      const card = draggingProjectCard;
+      draggingProjectCard = null;
+      draggingPointerId = null;
+      card.classList.remove('is-dragging');
+
+      const orderedIds = Array.from(projectsList.querySelectorAll('.project-card')).map(el => el.getAttribute('data-id'));
+      const allProjects = await getAllProjectsFromDB();
+      const map = new Map(allProjects.map(p => [p.id, p]));
+
+      for (let i = 0; i < orderedIds.length; i++) {
+        const p = map.get(orderedIds[i]);
+        if (p) {
+          p.customOrder = i;
+          await saveProjectToDB(p);
+        }
+      }
+
+      await renderProjects();
+      setTimeout(() => { suppressNextProjectClick = false; }, 80);
+    }
+
+    projectsList.addEventListener('pointerup', finishProjectDrag);
+    projectsList.addEventListener('pointercancel', finishProjectDrag);
 
     projectsList.addEventListener('click', async (e) => {
+      if (suppressNextProjectClick) {
+        e.stopPropagation();
+        e.preventDefault();
+        suppressNextProjectClick = false;
+        return;
+      }
+
+      if (e.target.closest('[data-action="drag-project"]')) {
+        e.stopPropagation();
+        return;
+      }
+
       const editBtn = e.target.closest('[data-action="edit-project"]');
       if (editBtn) {
         e.stopPropagation();
@@ -2506,6 +3165,9 @@
       document.getElementById('proj-id').value = '';
       document.getElementById('proj-name').value = '';
       document.getElementById('proj-producer').value = '';
+      projPinnedCheck.checked = false;
+      projCompletedCheck.checked = false;
+      editProjectFlagsBox.classList.add('hidden');
       projectModalTitle.textContent = 'NUEVO PROYECTO';
       btnSubmitProject.textContent = 'Crear Proyecto';
       deleteProjectContainer.classList.add('hidden');
@@ -2520,6 +3182,9 @@
       document.getElementById('proj-id').value = proj.id;
       document.getElementById('proj-name').value = proj.name;
       document.getElementById('proj-producer').value = proj.producer || proj.director || '';
+      projPinnedCheck.checked = Boolean(proj.pinned);
+      projCompletedCheck.checked = Boolean(proj.completed);
+      editProjectFlagsBox.classList.remove('hidden');
       projectModalTitle.textContent = 'EDITAR PROYECTO';
       btnSubmitProject.textContent = 'Guardar Cambios';
       deleteProjectContainer.classList.remove('hidden');
@@ -2540,9 +3205,12 @@
         const projects = await getAllProjectsFromDB();
         const existingProj = projects.find(p => p.id === existingId);
         const updatedProj = {
+          ...(existingProj || {}),
           id: existingId,
           name,
           producer,
+          pinned: projPinnedCheck.checked,
+          completed: projCompletedCheck.checked,
           createdAt: existingProj ? existingProj.createdAt : Date.now()
         };
         await saveProjectToDB(updatedProj);
@@ -2554,6 +3222,8 @@
           id: 'proj_' + Date.now(),
           name,
           producer,
+          pinned: false,
+          completed: false,
           createdAt: Date.now()
         };
         await saveProjectToDB(newProj);
@@ -2589,19 +3259,39 @@
         inputImportJson.click();
       });
 
-      inputImportJson.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-  
-        showToast('Abriendo archivo de respaldo...');
-  
-        const reader = new FileReader();
-  
-        reader.onload = async (event) => {
-          try {
-            const data = JSON.parse(event.target.result);
-  
-            if (data.project && data.project.id) {
+      inputImportJson.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
+
+        showToast(files.length === 1 ? 'Abriendo archivo de respaldo...' : `Importando ${files.length} archivos de respaldo...`);
+
+        let importedProjectsCount = 0;
+        let lastImportedProjectName = '';
+        let importedLegacyRecords = false;
+
+        try {
+          for (const file of files) {
+            const text = await file.text();
+            const data = JSON.parse(text);
+
+            if (data.multiProjectBackup && Array.isArray(data.projects)) {
+              for (const bundle of data.projects) {
+                if (bundle && bundle.project && bundle.project.id) {
+                  await saveProjectToDB(bundle.project);
+                  if (Array.isArray(bundle.takes)) {
+                    for (const take of bundle.takes) await saveTakeToDB(take);
+                  }
+                  if (Array.isArray(bundle.scenes)) {
+                    for (const s of bundle.scenes) await saveEntityToDB(STORE_SCENES, s);
+                  }
+                  if (Array.isArray(bundle.characters)) {
+                    for (const c of bundle.characters) await saveEntityToDB(STORE_CHARACTERS, c);
+                  }
+                  importedProjectsCount++;
+                  lastImportedProjectName = bundle.project.name || '';
+                }
+              }
+            } else if (data.project && data.project.id) {
               await saveProjectToDB(data.project);
               if (Array.isArray(data.takes)) {
                 for (const take of data.takes) await saveTakeToDB(take);
@@ -2612,31 +3302,31 @@
               if (Array.isArray(data.characters)) {
                 for (const c of data.characters) await saveEntityToDB(STORE_CHARACTERS, c);
               }
-              await renderProjects();
-              showToast(`Proyecto "${data.project.name}" restaurado`);
+              importedProjectsCount++;
+              lastImportedProjectName = data.project.name || '';
             } else if (Array.isArray(data) && data.length > 0 && data[0].projectId) {
               for (const take of data) await saveTakeToDB(take);
-              await renderProjects();
-              showToast('Registros restaurados con éxito');
-            } else {
-              showToast('Formato JSON no compatible');
+              importedLegacyRecords = true;
             }
-          } catch (err) {
-            console.error('Error importando JSON:', err);
-            showToast('Error de formato en el archivo');
-          } finally {
-            // Limpiamos el input para permitir recargar el mismo archivo si es necesario
-            e.target.value = '';
           }
-        };
-  
-        reader.onerror = () => {
-          console.error('Error fatal al leer el archivo');
-          showToast('Error al leer el disco. Inténtalo de nuevo.');
+
+          await renderProjects();
+
+          if (importedProjectsCount === 1) {
+            showToast(`Proyecto "${lastImportedProjectName}" restaurado`);
+          } else if (importedProjectsCount > 1) {
+            showToast(`${importedProjectsCount} proyectos restaurados con éxito`);
+          } else if (importedLegacyRecords) {
+            showToast('Registros restaurados con éxito');
+          } else {
+            showToast('Formato JSON no compatible');
+          }
+        } catch (err) {
+          console.error('Error importando JSON:', err);
+          showToast('Error de formato en el archivo');
+        } finally {
           e.target.value = '';
-        };
-  
-        reader.readAsText(file);
+        }
       });
     }
 
@@ -2670,6 +3360,352 @@
     projectMenuBackdrop.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
+    });
+
+    /* ==========================================================================
+       CONTROL DEL MENÚ EN PÁGINA DE INICIO (PROYECTOS)
+       ========================================================================== */
+    const homeDropdownMenu = document.getElementById('home-dropdown-menu');
+    const btnHomeMenuToggle = document.getElementById('btn-home-menu-toggle');
+    const homeMenuBackdrop = document.getElementById('home-menu-backdrop');
+    const homeSortSuboptions = document.getElementById('home-sort-suboptions');
+    const homeSortChevron = document.getElementById('home-sort-chevron');
+
+    function updateSortButtonsUI() {
+      const sortBtns = document.querySelectorAll('#home-sort-suboptions .sort-sub-btn');
+      sortBtns.forEach(btn => {
+        const mode = btn.getAttribute('data-sort-mode');
+        const isActive = (mode === projectsSortMode);
+        btn.classList.toggle('active', isActive);
+        const checkSpan = btn.querySelector('.sort-check');
+        if (checkSpan) checkSpan.textContent = isActive ? '✓' : '';
+      });
+    }
+    updateSortButtonsUI();
+
+    function toggleHomeMenu() {
+      const willOpen = !homeDropdownMenu.classList.contains('is-open');
+      homeDropdownMenu.classList.toggle('is-open', willOpen);
+      btnHomeMenuToggle.classList.toggle('is-open', willOpen);
+      homeMenuBackdrop.classList.toggle('is-open', willOpen);
+      if (willOpen) {
+        updateSortButtonsUI();
+      } else {
+        homeSortSuboptions.classList.add('hidden');
+        homeSortChevron.textContent = '▼';
+      }
+    }
+
+    function closeHomeMenu() {
+      homeDropdownMenu.classList.remove('is-open');
+      btnHomeMenuToggle.classList.remove('is-open');
+      homeMenuBackdrop.classList.remove('is-open');
+      homeSortSuboptions.classList.add('hidden');
+      homeSortChevron.textContent = '▼';
+    }
+
+    btnHomeMenuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleHomeMenu();
+    });
+
+    homeMenuBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+
+    document.getElementById('home-menu-opt-sort').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willShow = homeSortSuboptions.classList.contains('hidden');
+      homeSortSuboptions.classList.toggle('hidden', !willShow);
+      homeSortChevron.textContent = willShow ? '▲' : '▼';
+      updateSortButtonsUI();
+    });
+
+    homeSortSuboptions.addEventListener('click', async (e) => {
+      const btn = e.target.closest('.sort-sub-btn');
+      if (!btn) return;
+      e.stopPropagation();
+      const mode = btn.getAttribute('data-sort-mode');
+      if (!mode) return;
+
+      if (mode === 'custom') {
+        const currentOrdered = sortProjectsArray(await getAllProjectsFromDB());
+        for (let i = 0; i < currentOrdered.length; i++) {
+          if (typeof currentOrdered[i].customOrder !== 'number') {
+            currentOrdered[i].customOrder = i;
+            await saveProjectToDB(currentOrdered[i]);
+          }
+        }
+      }
+
+      projectsSortMode = mode;
+      localStorage.setItem('rp_projects_sort', mode);
+      updateSortButtonsUI();
+      await renderProjects();
+      closeHomeMenu();
+
+      const labels = {
+        'date': 'Ordenado por fecha de creación',
+        'alpha-asc': 'Ordenado alfabéticamente (A → Z)',
+        'alpha-desc': 'Ordenado alfabéticamente (Z → A)',
+        'custom': 'Orden personalizado activo (arrastra ⋮⋮ para ordenar)'
+      };
+      showToast(labels[mode] || 'Orden actualizado');
+    });
+
+    /* ==========================================================================
+       MODAL SELECTOR MÚLTIPLE DE PROYECTOS (FIJAR / TERMINAR / EXPORTAR / BORRAR)
+       ========================================================================== */
+    const batchProjectsModal = document.getElementById('batch-projects-modal');
+    const batchProjectsModalTitle = document.getElementById('batch-projects-modal-title');
+    const batchProjectsSubtitle = document.getElementById('batch-projects-subtitle');
+    const batchProjectsChecklist = document.getElementById('batch-projects-checklist');
+    const btnToggleAllBatchProjects = document.getElementById('btn-toggle-all-batch-projects');
+    const btnConfirmBatchProjects = document.getElementById('btn-confirm-batch-projects');
+    let currentBatchProjectsMode = 'export'; // 'pin' | 'complete' | 'export' | 'delete'
+
+    function updateBatchToggleAllLabel() {
+      const checkboxes = Array.from(document.querySelectorAll('.batch-project-checkbox'));
+      const allChecked = checkboxes.length > 0 && checkboxes.every(cb => cb.checked);
+      btnToggleAllBatchProjects.textContent = allChecked ? 'Desmarcar Todos' : 'Seleccionar Todos';
+    }
+
+    async function openBatchProjectsModal(mode) {
+      closeHomeMenu();
+      const projects = sortProjectsArray(await getAllProjectsFromDB());
+      if (projects.length === 0) {
+        showToast('No hay proyectos registrados');
+        return;
+      }
+
+      currentBatchProjectsMode = mode;
+      const isDelete = (mode === 'delete');
+
+      const titlesMap = {
+        'pin': 'FIJAR PROYECTOS',
+        'complete': 'TERMINAR PROYECTOS',
+        'export': 'GUARDAR RESPALDOS',
+        'delete': 'BORRAR PROYECTOS'
+      };
+      const subtitlesMap = {
+        'pin': 'Marca los proyectos que quieres fijar arriba:',
+        'complete': 'Marca los proyectos terminados:',
+        'export': 'Selecciona los proyectos a respaldar:',
+        'delete': 'Selecciona los proyectos a eliminar:'
+      };
+      const btnTextMap = {
+        'pin': 'Guardar Fijados',
+        'complete': 'Guardar Terminados',
+        'export': 'Guardar Respaldos',
+        'delete': 'Borrar Seleccionados'
+      };
+
+      batchProjectsModalTitle.textContent = titlesMap[mode] || 'SELECCIONAR PROYECTOS';
+      batchProjectsModalTitle.style.color = isDelete ? '#f87171' : 'var(--amber)';
+      batchProjectsSubtitle.textContent = subtitlesMap[mode] || 'Selecciona los proyectos:';
+      btnConfirmBatchProjects.textContent = btnTextMap[mode] || 'Confirmar';
+
+      if (isDelete) {
+        btnConfirmBatchProjects.style.background = '#ef4444';
+        btnConfirmBatchProjects.style.color = '#fff';
+      } else {
+        btnConfirmBatchProjects.style.background = 'linear-gradient(135deg, var(--amber), var(--amber-dark))';
+        btnConfirmBatchProjects.style.color = '#000';
+      }
+
+      batchProjectsChecklist.innerHTML = projects.map(proj => {
+        const prodValue = proj.producer || proj.director || '';
+        let isChecked = false;
+        if (mode === 'export') isChecked = true;
+        else if (mode === 'pin') isChecked = Boolean(proj.pinned);
+        else if (mode === 'complete') isChecked = Boolean(proj.completed);
+
+        return `
+          <label class="pdf-scene-check-item">
+            <input type="checkbox" class="batch-project-checkbox" value="${proj.id}" ${isChecked ? 'checked' : ''}>
+            <div style="min-width:0; flex:1;">
+              <strong style="color:#fff; font-size:15px; display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${proj.pinned ? `<span class="project-pin-icon">${ICON_PIN_SVG}</span>` : ''}
+                <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(proj.name)}</span>
+                ${proj.completed ? `<span class="project-completed-badge">${ICON_COMPLETED_SVG}<span>TERMINADO</span></span>` : ''}
+              </strong>
+              <span style="color:var(--text-muted); font-size:12.5px; display:block;">${prodValue ? escapeHtml(prodValue) + ' • ' : ''}${new Date(proj.createdAt).toLocaleDateString()}</span>
+            </div>
+          </label>
+        `;
+      }).join('');
+
+      updateBatchToggleAllLabel();
+      batchProjectsModal.classList.remove('hidden');
+    }
+
+    batchProjectsChecklist.addEventListener('change', updateBatchToggleAllLabel);
+
+    btnToggleAllBatchProjects.addEventListener('click', () => {
+      const checkboxes = Array.from(document.querySelectorAll('.batch-project-checkbox'));
+      const allChecked = checkboxes.length > 0 && checkboxes.every(cb => cb.checked);
+      checkboxes.forEach(cb => cb.checked = !allChecked);
+      updateBatchToggleAllLabel();
+    });
+
+    document.getElementById('btn-close-batch-projects').addEventListener('click', () => batchProjectsModal.classList.add('hidden'));
+    document.getElementById('btn-cancel-batch-projects').addEventListener('click', () => batchProjectsModal.classList.add('hidden'));
+
+    document.getElementById('home-menu-opt-pin-projects').addEventListener('click', () => openBatchProjectsModal('pin'));
+    document.getElementById('home-menu-opt-complete-projects').addEventListener('click', () => openBatchProjectsModal('complete'));
+    document.getElementById('home-menu-opt-export-json').addEventListener('click', () => openBatchProjectsModal('export'));
+    document.getElementById('home-menu-opt-delete-projects').addEventListener('click', () => openBatchProjectsModal('delete'));
+
+    btnConfirmBatchProjects.addEventListener('click', async () => {
+      const selectedIds = Array.from(document.querySelectorAll('.batch-project-checkbox:checked')).map(cb => cb.value);
+      const selectedSet = new Set(selectedIds);
+
+      if (currentBatchProjectsMode === 'pin') {
+        const allProjects = await getAllProjectsFromDB();
+        for (const proj of allProjects) {
+          proj.pinned = selectedSet.has(proj.id);
+          await saveProjectToDB(proj);
+        }
+        batchProjectsModal.classList.add('hidden');
+        await renderProjects();
+        showToast('Proyectos fijados actualizados');
+        return;
+      }
+
+      if (currentBatchProjectsMode === 'complete') {
+        const allProjects = await getAllProjectsFromDB();
+        for (const proj of allProjects) {
+          proj.completed = selectedSet.has(proj.id);
+          await saveProjectToDB(proj);
+        }
+        batchProjectsModal.classList.add('hidden');
+        await renderProjects();
+        showToast('Estado de proyectos actualizado');
+        return;
+      }
+
+      if (selectedIds.length === 0) {
+        showToast('Selecciona al menos un proyecto');
+        return;
+      }
+
+      if (currentBatchProjectsMode === 'delete') {
+        const count = selectedIds.length;
+        const msg = count === 1
+          ? '¿Eliminar definitivamente el proyecto seleccionado y todos sus registros?'
+          : `¿Eliminar definitivamente los ${count} proyectos seleccionados y todos sus registros? Esta acción no se puede deshacer.`;
+        askConfirmation(msg, async () => {
+          for (const id of selectedIds) {
+            await deleteProjectFromDB(id);
+          }
+          batchProjectsModal.classList.add('hidden');
+          await renderProjects();
+          showToast(count === 1 ? 'Proyecto eliminado' : `${count} proyectos eliminados`);
+        });
+        return;
+      }
+
+      // Modo Guardar Respaldos (un archivo .json individual por cada proyecto)
+      try {
+        const allProjects = await getAllProjectsFromDB();
+        const selectedProjects = allProjects.filter(p => selectedIds.includes(p.id));
+        if (selectedProjects.length === 0) return;
+
+        const now = new Date();
+        const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+
+        const usedFileNames = new Set();
+        const preparedFiles = [];
+
+        for (const proj of selectedProjects) {
+          const takes = await getAllTakesForProject(proj.id);
+          const scenes = await getEntitiesForProject(STORE_SCENES, proj.id);
+          const characters = await getEntitiesForProject(STORE_CHARACTERS, proj.id);
+          const backupPayload = {
+            version: 2,
+            exportedAt: new Date().toISOString(),
+            project: proj,
+            takes,
+            scenes,
+            characters
+          };
+          const rawProjName = (proj.name || 'PROYECTO')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .toUpperCase()
+            .replace(/[^A-Z0-9]+/g, '_')
+            .replace(/^_+|_+$/g, '') || 'RACCORDPRO';
+
+          let fileName = `${rawProjName}_BACKUP_${datePart}.json`;
+          let suffix = 2;
+          while (usedFileNames.has(fileName)) {
+            fileName = `${rawProjName}_${suffix}_BACKUP_${datePart}.json`;
+            suffix++;
+          }
+          usedFileNames.add(fileName);
+
+          const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: 'application/json' });
+          preparedFiles.push({ fileName, blob });
+        }
+
+        batchProjectsModal.classList.add('hidden');
+
+        if ('showDirectoryPicker' in window) {
+          let savedRecord = await getDirectoryHandleFromDB(GLOBAL_BACKUP_DIR_KEY);
+          let dirHandle = savedRecord ? savedRecord.handle : null;
+
+          if (!dirHandle) {
+            dirHandle = await pickAndSaveBackupDirectory();
+          }
+
+          if (dirHandle) {
+            try {
+              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, preparedFiles);
+              if (ok) return;
+            } catch (dirErr) {
+              console.warn('No se pudo escribir directamente en la carpeta asignada:', dirErr);
+            }
+          }
+        }
+
+        if (preparedFiles.length === 1) {
+          await saveFileToUserDirectory(
+            preparedFiles[0].blob,
+            preparedFiles[0].fileName,
+            'application/json',
+            'Respaldo de Proyecto RaccordPro (JSON)',
+            '.json'
+          );
+          return;
+        }
+
+        if (isMobileTouchDevice()) {
+          const shareFiles = preparedFiles.map(item => new File([item.blob], item.fileName, { type: 'application/json' }));
+          if (navigator.canShare && navigator.canShare({ files: shareFiles })) {
+            try {
+              await navigator.share({ files: shareFiles });
+              return;
+            } catch (err) {
+              if (err.name === 'AbortError') return;
+            }
+          }
+        }
+
+        for (const item of preparedFiles) {
+          const url = URL.createObjectURL(item.blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = item.fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+        }
+        showToast(`${preparedFiles.length} respaldos guardados correctamente`);
+      } catch (err) {
+        console.error('Error exportando proyectos:', err);
+        showToast('Error al guardar los respaldos');
+      }
     });
 
     /* ==========================================================================
@@ -3273,7 +4309,16 @@
     const reportModal = document.getElementById('report-modal');
     const pdfScenesChecklist = document.getElementById('pdf-scenes-checklist');
     const btnToggleAllPdfScenes = document.getElementById('btn-toggle-all-pdf-scenes');
+    const btnOpenPdfScenes = document.getElementById('btn-open-pdf-scenes');
     let cachedTakesForPdf = [];
+
+    function updatePdfScenesButtonLabel() {
+      const total = cachedTakesForPdf.length;
+      const selected = document.querySelectorAll('.pdf-scene-checkbox:checked').length;
+      btnOpenPdfScenes.textContent = (selected === total)
+        ? `Escenas (Todas · ${total})`
+        : `Escenas (${selected}/${total})`;
+    }
 
     document.getElementById('menu-opt-export-pdf').addEventListener('click', async () => {
       closeProjectMenu();
@@ -3301,6 +4346,17 @@
       }).join('');
 
       btnToggleAllPdfScenes.textContent = 'Desmarcar todas';
+      updatePdfScenesButtonLabel();
+      syncPdfTuningControlsUI();
+      pdfPreviewStage.innerHTML = '<p style="color:var(--text-muted); font-weight:700; padding:30px 0; grid-column:1/-1; text-align:center;">Generando vista previa...</p>';
+      pdfPreviewModal.classList.remove('hidden');
+      await renderLivePdfPreview();
+    });
+
+    btnOpenPdfScenes.addEventListener('click', () => {
+      const checkboxes = Array.from(document.querySelectorAll('.pdf-scene-checkbox'));
+      const allChecked = checkboxes.length > 0 && checkboxes.every(cb => cb.checked);
+      btnToggleAllPdfScenes.textContent = allChecked ? 'Desmarcar todas' : 'Seleccionar todas';
       reportModal.classList.remove('hidden');
     });
 
@@ -3311,18 +4367,49 @@
       btnToggleAllPdfScenes.textContent = allChecked ? 'Seleccionar todas' : 'Desmarcar todas';
     });
 
-    document.getElementById('btn-close-report').addEventListener('click', () => reportModal.classList.add('hidden'));
+    document.getElementById('btn-apply-pdf-scenes').addEventListener('click', async () => {
+      const selected = document.querySelectorAll('.pdf-scene-checkbox:checked').length;
+      if (selected === 0) {
+        showToast('Selecciona al menos una escena');
+        return;
+      }
+      reportModal.classList.add('hidden');
+      updatePdfScenesButtonLabel();
+      await renderLivePdfPreview();
+    });
+
+    document.getElementById('btn-close-report').addEventListener('click', async () => {
+      const selected = document.querySelectorAll('.pdf-scene-checkbox:checked').length;
+      if (selected === 0) {
+        showToast('Selecciona al menos una escena');
+        return;
+      }
+      reportModal.classList.add('hidden');
+      updatePdfScenesButtonLabel();
+      await renderLivePdfPreview();
+    });
+
+    const pdfImageDimsCache = new Map();
+    let cachedClapperPng = null;
 
     function getImageDimensions(base64) {
+      if (pdfImageDimsCache.has(base64)) {
+        return Promise.resolve(pdfImageDimsCache.get(base64));
+      }
       return new Promise((resolve) => {
         const img = new Image();
-        img.onload = () => resolve({ width: img.width, height: img.height });
+        img.onload = () => {
+          const d = { width: img.width, height: img.height };
+          pdfImageDimsCache.set(base64, d);
+          resolve(d);
+        };
         img.onerror = () => resolve({ width: 4, height: 3 });
         img.src = base64;
       });
     }
 
     function getExactAppClapperboardPng() {
+      if (cachedClapperPng) return Promise.resolve(cachedClapperPng);
       return new Promise((resolve) => {
         const svgMarkup = `
           <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
@@ -3345,7 +4432,8 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, 128, 128);
           URL.revokeObjectURL(url);
-          resolve(canvas.toDataURL('image/png'));
+          cachedClapperPng = canvas.toDataURL('image/png');
+          resolve(cachedClapperPng);
         };
         img.onerror = () => {
           URL.revokeObjectURL(url);
@@ -3380,19 +4468,121 @@
       doc.text(textPro, startX + iconSize + gap + wRaccord, textY);
     }
 
-    document.getElementById('btn-generate-real-pdf').addEventListener('click', async () => {
+    const pdfPreviewModal = document.getElementById('pdf-preview-modal');
+    const pdfPreviewStage = document.getElementById('pdf-preview-stage');
+    const pdfPreviewPageCount = document.getElementById('pdf-preview-page-count');
+    const pdfPreviewZoomLabel = document.getElementById('pdf-preview-zoom-label');
+    const pdfFontScalePreview = document.getElementById('pdf-font-scale-preview');
+    const pdfPhotoScalePreview = document.getElementById('pdf-photo-scale-preview');
+    const pdfFontScalePreviewLabel = document.getElementById('pdf-font-scale-preview-label');
+    const pdfPhotoScalePreviewLabel = document.getElementById('pdf-photo-scale-preview-label');
+
+    const storedFontScale = parseInt(localStorage.getItem('rp_pdf_font_scale') || '100', 10);
+    const storedPhotoScale = parseInt(localStorage.getItem('rp_pdf_photo_scale') || '100', 10);
+    const storedPreviewZoom = parseInt(localStorage.getItem('rp_pdf_preview_zoom') || '100', 10);
+    let pdfFontScalePct = Number.isFinite(storedFontScale) ? Math.max(75, Math.min(150, storedFontScale)) : 100;
+    let pdfPhotoScalePct = Number.isFinite(storedPhotoScale) ? Math.max(60, Math.min(140, storedPhotoScale)) : 100;
+    let pdfPreviewZoomPct = Number.isFinite(storedPreviewZoom) ? Math.max(80, Math.min(140, storedPreviewZoom)) : 100;
+    let pdfLayoutMode = localStorage.getItem('rp_pdf_layout_mode') === 'per-raccord' ? 'per-raccord' : 'flow';
+    let pdfLang = localStorage.getItem('rp_pdf_lang') === 'EN' ? 'EN' : 'ES';
+
+    function applyPdfPreviewZoomUI() {
+      pdfPreviewStage.style.setProperty('--pdf-preview-zoom', String(pdfPreviewZoomPct / 100));
+      pdfPreviewZoomLabel.textContent = `${pdfPreviewZoomPct}%`;
+    }
+
+    function setPdfPreviewZoom(val) {
+      pdfPreviewZoomPct = Math.max(80, Math.min(140, Math.round(val / 10) * 10));
+      localStorage.setItem('rp_pdf_preview_zoom', String(pdfPreviewZoomPct));
+      applyPdfPreviewZoomUI();
+    }
+
+    document.getElementById('btn-pdf-zoom-out').addEventListener('click', () => setPdfPreviewZoom(pdfPreviewZoomPct - 10));
+    document.getElementById('btn-pdf-zoom-in').addEventListener('click', () => setPdfPreviewZoom(pdfPreviewZoomPct + 10));
+
+    function syncPdfTuningControlsUI() {
+      applyPdfPreviewZoomUI();
+      pdfFontScalePreview.value = pdfFontScalePct;
+      pdfFontScalePreviewLabel.textContent = `${pdfFontScalePct}%`;
+
+      pdfPhotoScalePreview.value = pdfPhotoScalePct;
+      pdfPhotoScalePreviewLabel.textContent = `${pdfPhotoScalePct}%`;
+
+      document.querySelectorAll('input[name="pdf-layout-mode-preview"]').forEach(r => {
+        r.checked = (r.value === pdfLayoutMode);
+      });
+      document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
+        r.checked = (r.value === pdfLang);
+      });
+    }
+    syncPdfTuningControlsUI();
+
+    let previewDebounceTimer = null;
+    function scheduleLivePdfPreviewUpdate() {
+      if (pdfPreviewModal.classList.contains('hidden')) return;
+      clearTimeout(previewDebounceTimer);
+      previewDebounceTimer = setTimeout(() => {
+        renderLivePdfPreview();
+      }, 90);
+    }
+
+    function setPdfFontScale(val) {
+      pdfFontScalePct = Math.max(75, Math.min(150, Math.round(val / 5) * 5));
+      localStorage.setItem('rp_pdf_font_scale', String(pdfFontScalePct));
+      syncPdfTuningControlsUI();
+      scheduleLivePdfPreviewUpdate();
+    }
+
+    function setPdfPhotoScale(val) {
+      pdfPhotoScalePct = Math.max(60, Math.min(140, Math.round(val / 5) * 5));
+      localStorage.setItem('rp_pdf_photo_scale', String(pdfPhotoScalePct));
+      syncPdfTuningControlsUI();
+      scheduleLivePdfPreviewUpdate();
+    }
+
+    function setPdfLayoutMode(mode) {
+      pdfLayoutMode = (mode === 'per-raccord') ? 'per-raccord' : 'flow';
+      localStorage.setItem('rp_pdf_layout_mode', pdfLayoutMode);
+      syncPdfTuningControlsUI();
+      scheduleLivePdfPreviewUpdate();
+    }
+
+    pdfFontScalePreview.addEventListener('input', (e) => setPdfFontScale(parseInt(e.target.value, 10)));
+    pdfPhotoScalePreview.addEventListener('input', (e) => setPdfPhotoScale(parseInt(e.target.value, 10)));
+
+    document.querySelectorAll('input[name="pdf-layout-mode-preview"]').forEach(r => {
+      r.addEventListener('change', (e) => setPdfLayoutMode(e.target.value));
+    });
+    document.querySelectorAll('input[name="pdf-lang"]').forEach(r => {
+      r.addEventListener('change', (e) => {
+        pdfLang = (e.target.value === 'EN') ? 'EN' : 'ES';
+        localStorage.setItem('rp_pdf_lang', pdfLang);
+        scheduleLivePdfPreviewUpdate();
+      });
+    });
+
+    document.querySelectorAll('[data-pdf-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const kind = btn.getAttribute('data-pdf-step');
+        const dir = parseInt(btn.getAttribute('data-dir'), 10);
+        if (kind === 'font') setPdfFontScale(pdfFontScalePct + dir);
+        else if (kind === 'photo') setPdfPhotoScale(pdfPhotoScalePct + dir);
+      });
+    });
+
+    async function buildCurrentPdfDocument() {
       const selectedIds = new Set(
         Array.from(document.querySelectorAll('.pdf-scene-checkbox:checked')).map(cb => cb.value)
       );
 
       if (selectedIds.size === 0) {
         showToast('Selecciona al menos una escena');
-        return;
+        return null;
       }
 
       if (!window.jspdf || !window.jspdf.jsPDF) {
         showToast('El generador PDF requiere conexión la primera vez');
-        return;
+        return null;
       }
 
       const langEl = document.querySelector('input[name="pdf-lang"]:checked');
@@ -3415,212 +4605,299 @@
         .filter(t => selectedIds.has(t.id))
         .sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
-      reportModal.classList.add('hidden');
-      showToast(isEN ? 'Building PDF report...' : 'Construyendo reporte PDF...');
+      const fontScale = pdfFontScalePct / 100;
+      const photoScale = pdfPhotoScalePct / 100;
+      const separateByPage = (pdfLayoutMode === 'per-raccord');
 
-      try {
-        const clapperPng = await getExactAppClapperboardPng();
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const clapperPng = await getExactAppClapperboardPng();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const margin = 14;
-        const bottomSafeY = pageHeight - 18;
-        const contentWidth = pageWidth - (margin * 2);
-        let y = 16;
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 12;
+      const bottomSafeY = pageHeight - 14;
+      const contentWidth = pageWidth - (margin * 2);
+      let y = 12;
 
-        doc.setFillColor(19, 23, 29);
-        doc.rect(0, 0, pageWidth, 32, 'F');
+      doc.setFillColor(19, 23, 29);
+      doc.rect(0, 0, pageWidth, 28, 'F');
 
-        drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 8.2);
+      drawExactRaccordProLogo(doc, clapperPng, pageWidth - margin, 6.8);
 
-        doc.setTextColor(245, 158, 11);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(13.5);
-        doc.text(i18n.reportTitle, margin, 12.5);
+      doc.setTextColor(245, 158, 11);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.text(i18n.reportTitle, margin, 11);
 
-        const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
-        const prodName = activeProjectData ? (activeProjectData.producer || activeProjectData.director || '') : '';
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(10.5);
-        doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 19.5);
+      const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
+      const prodName = activeProjectData ? (activeProjectData.producer || activeProjectData.director || '') : '';
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 17.5);
 
-        doc.setTextColor(180, 185, 195);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8.5);
-        const metaLine = `${prodName ? prodName + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()}`;
-        doc.text(metaLine, margin, 25.5);
+      doc.setTextColor(180, 185, 195);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.2);
+      const metaLine = `${prodName ? prodName + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()}`;
+      doc.text(metaLine, margin, 23.2);
 
-        y = 40;
-        let hasDrawnTakeOnPage = false;
+      y = 33;
 
-        for (const take of selectedTakes) {
-          const headerBlockH = 13;
+      const sceneTitleFontSize = 10.5 * fontScale;
+      const sceneDescFontSize = 9.2 * fontScale;
+      const headerRectH = Math.max(8.5, 9 * fontScale);
+      const headerBlockH = headerRectH + 2.5;
 
-          let noteLines = [];
-          let generalNoteH = 0;
-          if (take.notes && take.notes.trim()) {
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(9.5);
-            noteLines = doc.splitTextToSize(`${i18n.generalNotesLabel}: ${take.notes.trim()}`, contentWidth - 4);
-            generalNoteH = (noteLines.length * 4.8) + 4;
-          }
+      const genNoteFontSize = 9.5 * fontScale;
+      const genNoteLineH = 4.5 * fontScale;
+      const genNoteTopOffset = 3.5 * fontScale;
 
-          const rawEntries = getNormalizedPhotos(take);
-          const preparedEntries = [];
-          let entriesTotalH = 0;
+      const charFontSize = 11.5 * fontScale;
+      const entryNoteFontSize = 9.5 * fontScale;
+      const entryNoteLineH = 4.6 * fontScale;
 
-          for (let i = 0; i < rawEntries.length; i++) {
-            const p = rawEntries[i];
-            const hasPhoto = Boolean(p.photo);
-            let drawW = 0;
-            let drawH = 0;
+      const maxImgW = Math.min(144, 105 * photoScale);
+      const maxImgH = Math.min(130, 74 * photoScale);
 
-            if (hasPhoto) {
-              const dims = await getImageDimensions(p.photo);
-              const maxImgW = 106;
-              const maxImgH = 84;
-              const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
-              drawW = dims.width * ratio;
-              drawH = dims.height * ratio;
-            }
+      for (let tIdx = 0; tIdx < selectedTakes.length; tIdx++) {
+        const take = selectedTakes[tIdx];
 
-            const textColX = hasPhoto ? (margin + drawW + 6) : (margin + 4);
-            const textColW = hasPhoto ? (contentWidth - drawW - 10) : (contentWidth - 8);
-
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9.5);
-            const hasNote = p.note && p.note.trim().length > 0;
-            const pNoteLines = hasNote ? doc.splitTextToSize(p.note.trim(), textColW) : [];
-
-            const textContentHeight = hasNote ? (pNoteLines.length * 4.8) + 18 : 18;
-            const blockHeight = hasPhoto ? Math.max(drawH + 6, textContentHeight) : textContentHeight;
-
-            preparedEntries.push({
-              p,
-              hasPhoto,
-              drawW,
-              drawH,
-              textColX,
-              hasNote,
-              pNoteLines,
-              blockHeight
-            });
-
-            entriesTotalH += blockHeight + 4;
-          }
-
-          const totalTakeHeight = headerBlockH + generalNoteH + entriesTotalH;
-          const firstChunkHeight = headerBlockH + generalNoteH + (preparedEntries.length > 0 ? preparedEntries[0].blockHeight : 0);
-
-          if (hasDrawnTakeOnPage && (y + totalTakeHeight > bottomSafeY)) {
-            doc.addPage();
-            y = 16;
-            hasDrawnTakeOnPage = false;
-          } else if (!hasDrawnTakeOnPage && y > 16 && (y + totalTakeHeight > bottomSafeY) && (totalTakeHeight <= (bottomSafeY - 16)) && (y + firstChunkHeight > bottomSafeY)) {
-            doc.addPage();
-            y = 16;
-            hasDrawnTakeOnPage = false;
-          }
-
-          doc.setFillColor(242, 244, 247);
-          doc.setDrawColor(210, 215, 222);
-          doc.roundedRect(margin, y, contentWidth, 10, 2, 2, 'FD');
-
-          doc.setTextColor(180, 95, 6);
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(11);
-          const sceneTitleStr = `${i18n.sceneLabel} ${take.scene}`;
-          doc.text(sceneTitleStr, margin + 4, y + 6.6);
-
-          if (take.sceneDesc) {
-            const titleW = doc.getTextWidth(sceneTitleStr);
-            const descX = margin + 4 + Math.max(32, titleW + 6);
-            doc.setTextColor(35, 40, 48);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(9.5);
-            const descTrunc = doc.splitTextToSize(take.sceneDesc, contentWidth - (descX - margin) - 4)[0];
-            doc.text(descTrunc, descX, y + 6.6);
-          }
-
-          y += headerBlockH;
-
-          if (noteLines.length > 0) {
-            doc.setTextColor(55, 65, 81);
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(9.5);
-            if (y + (noteLines.length * 4.8) > bottomSafeY) {
-              doc.addPage();
-              y = 16;
-            }
-            doc.text(noteLines, margin + 2, y);
-            y += generalNoteH;
-          }
-
-          for (let i = 0; i < preparedEntries.length; i++) {
-            const item = preparedEntries[i];
-            const { p, hasPhoto, drawW, drawH, textColX, hasNote, pNoteLines, blockHeight } = item;
-
-            if (y + blockHeight > bottomSafeY) {
-              doc.addPage();
-              y = 16;
-            }
-
-            doc.setDrawColor(225, 228, 232);
-            doc.setFillColor(255, 255, 255);
-            doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, 'FD');
-
-            if (hasPhoto) {
-              try {
-                doc.addImage(p.photo, 'JPEG', margin + 3, y + 3, drawW, drawH);
-              } catch (imgErr) {
-                console.warn('Error insertando imagen en PDF:', imgErr);
-              }
-            }
-
-            doc.setTextColor(180, 95, 6);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(9);
-            doc.text(`${i18n.entryLabel} #${i + 1}`, textColX, y + 7.5);
-
-            doc.setTextColor(17, 24, 39);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(11.5);
-            doc.text(p.character || i18n.noCharLabel, textColX, y + 14);
-
-            if (hasNote) {
-              doc.setTextColor(55, 65, 81);
-              doc.setFont('helvetica', 'normal');
-              doc.setFontSize(9.5);
-              doc.text(pNoteLines, textColX, y + 20.5);
-            }
-
-            y += blockHeight + 4;
-          }
-
-          y += 4;
-          hasDrawnTakeOnPage = true;
+        if (separateByPage && tIdx > 0) {
+          doc.addPage();
+          y = 12;
         }
 
-        const totalPages = doc.internal.getNumberOfPages();
-        for (let pageIdx = 1; pageIdx <= totalPages; pageIdx++) {
-          doc.setPage(pageIdx);
-          const footerY = pageHeight - 9;
+        let noteLines = [];
+        let generalNoteH = 0;
+        if (take.notes && take.notes.trim()) {
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(genNoteFontSize);
+          noteLines = doc.splitTextToSize(`${i18n.generalNotesLabel}: ${take.notes.trim()}`, contentWidth - 4);
+          generalNoteH = genNoteTopOffset + (noteLines.length * genNoteLineH) + 2;
+        }
 
-          doc.setDrawColor(220, 224, 230);
-          doc.setLineWidth(0.3);
-          doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
+        const rawEntries = getNormalizedPhotos(take);
+        const preparedEntries = [];
 
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(8.5);
-          doc.setTextColor(100, 105, 115);
-          doc.text(projTitle, margin, footerY);
+        for (let i = 0; i < rawEntries.length; i++) {
+          const p = rawEntries[i];
+          const hasPhoto = Boolean(p.photo);
+          let drawW = 0;
+          let drawH = 0;
+
+          if (hasPhoto) {
+            const dims = await getImageDimensions(p.photo);
+            const ratio = Math.min(maxImgW / dims.width, maxImgH / dims.height);
+            drawW = dims.width * ratio;
+            drawH = dims.height * ratio;
+          }
+
+          const textColX = hasPhoto ? (margin + drawW + 5) : (margin + 4);
+          const textColW = Math.max(28, hasPhoto ? (contentWidth - drawW - 9) : (contentWidth - 8));
 
           doc.setFont('helvetica', 'normal');
-          const pageLabel = `${i18n.pageWord} ${pageIdx} ${i18n.ofWord} ${totalPages}`;
-          doc.text(pageLabel, pageWidth - margin, footerY, { align: 'right' });
+          doc.setFontSize(entryNoteFontSize);
+          const hasNote = p.note && p.note.trim().length > 0;
+          const pNoteLines = hasNote ? doc.splitTextToSize(p.note.trim(), textColW) : [];
+
+          const charBaselineOffset = 8.5 * fontScale;
+          const noteStartOffset = 15 * fontScale;
+          const textContentHeight = hasNote
+            ? (pNoteLines.length * entryNoteLineH) + noteStartOffset + 2
+            : charBaselineOffset + 6;
+          const blockHeight = hasPhoto ? Math.max(drawH + 5, textContentHeight) : textContentHeight;
+
+          preparedEntries.push({
+            p,
+            hasPhoto,
+            drawW,
+            drawH,
+            textColX,
+            hasNote,
+            pNoteLines,
+            charBaselineOffset,
+            noteStartOffset,
+            blockHeight
+          });
         }
+
+        const minStartHeight = headerBlockH + generalNoteH + (preparedEntries.length > 0 ? preparedEntries[0].blockHeight : 0);
+
+        if (!separateByPage && y > 12 && (y + minStartHeight > bottomSafeY)) {
+          doc.addPage();
+          y = 12;
+        }
+
+        doc.setFillColor(242, 244, 247);
+        doc.setDrawColor(210, 215, 222);
+        doc.roundedRect(margin, y, contentWidth, headerRectH, 2, 2, 'FD');
+
+        const headerTextBaseline = y + (headerRectH * 0.68);
+        doc.setTextColor(180, 95, 6);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(sceneTitleFontSize);
+        const sceneTitleStr = `${i18n.sceneLabel} ${take.scene}`;
+        doc.text(sceneTitleStr, margin + 4, headerTextBaseline);
+
+        if (take.sceneDesc) {
+          const titleW = doc.getTextWidth(sceneTitleStr);
+          const descX = margin + 4 + Math.max(30, titleW + 6);
+          doc.setTextColor(35, 40, 48);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(sceneDescFontSize);
+          const availDescW = Math.max(20, contentWidth - (descX - margin) - 4);
+          const descTrunc = doc.splitTextToSize(take.sceneDesc, availDescW)[0];
+          if (descTrunc) doc.text(descTrunc, descX, headerTextBaseline);
+        }
+
+        y += headerBlockH;
+
+        if (noteLines.length > 0) {
+          doc.setTextColor(55, 65, 81);
+          doc.setFont('helvetica', 'italic');
+          doc.setFontSize(genNoteFontSize);
+          if (y + generalNoteH > bottomSafeY) {
+            doc.addPage();
+            y = 12;
+          }
+          doc.text(noteLines, margin + 2, y + genNoteTopOffset);
+          y += generalNoteH;
+        }
+
+        for (let i = 0; i < preparedEntries.length; i++) {
+          const item = preparedEntries[i];
+          const { p, hasPhoto, drawW, drawH, textColX, hasNote, pNoteLines, charBaselineOffset, noteStartOffset, blockHeight } = item;
+
+          if (y + blockHeight > bottomSafeY) {
+            doc.addPage();
+            y = 12;
+          }
+
+          doc.setDrawColor(225, 228, 232);
+          doc.setFillColor(255, 255, 255);
+          doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, 'FD');
+
+          if (hasPhoto) {
+            try {
+              doc.addImage(p.photo, 'JPEG', margin + 2.5, y + 2.5, drawW, drawH);
+            } catch (imgErr) {
+              console.warn('Error insertando imagen en PDF:', imgErr);
+            }
+          }
+
+          doc.setTextColor(17, 24, 39);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(charFontSize);
+          const maxCharW = Math.max(25, contentWidth - (textColX - margin) - 3);
+          const charLines = doc.splitTextToSize(p.character || i18n.noCharLabel, maxCharW);
+          doc.text(charLines[0] || '', textColX, y + charBaselineOffset);
+
+          if (hasNote) {
+            doc.setTextColor(55, 65, 81);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(entryNoteFontSize);
+            doc.text(pNoteLines, textColX, y + noteStartOffset);
+          }
+
+          y += blockHeight + 3;
+        }
+
+        y += 3;
+      }
+
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let pageIdx = 1; pageIdx <= totalPages; pageIdx++) {
+        doc.setPage(pageIdx);
+        const footerY = pageHeight - 9;
+
+        doc.setDrawColor(220, 224, 230);
+        doc.setLineWidth(0.3);
+        doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(100, 105, 115);
+        doc.text(projTitle, margin, footerY);
+
+        doc.setFont('helvetica', 'normal');
+        const pageLabel = `${i18n.pageWord} ${pageIdx} ${i18n.ofWord} ${totalPages}`;
+        doc.text(pageLabel, pageWidth - margin, footerY, { align: 'right' });
+      }
+
+      return { doc, isEN };
+    }
+
+    let previewRenderToken = 0;
+
+    async function renderLivePdfPreview() {
+      const token = ++previewRenderToken;
+      try {
+        const built = await buildCurrentPdfDocument();
+        if (!built || token !== previewRenderToken) return;
+
+        const { doc } = built;
+        const totalPages = doc.internal.getNumberOfPages();
+        pdfPreviewPageCount.textContent = `${totalPages} ${totalPages === 1 ? 'pág' : 'págs'}`;
+
+        if (window.pdfjsLib) {
+          const arrayBuffer = doc.output('arraybuffer');
+          const pdfDoc = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          if (token !== previewRenderToken) return;
+
+          const fragment = document.createDocumentFragment();
+          for (let pNum = 1; pNum <= pdfDoc.numPages; pNum++) {
+            const page = await pdfDoc.getPage(pNum);
+            if (token !== previewRenderToken) return;
+
+            const viewport = page.getViewport({ scale: 1.5 });
+            const card = document.createElement('div');
+            card.className = 'pdf-preview-page-card';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+            await page.render({ canvasContext: ctx, viewport }).promise;
+
+            const badge = document.createElement('span');
+            badge.className = 'pdf-preview-page-badge';
+            badge.textContent = String(pNum);
+
+            card.appendChild(canvas);
+            card.appendChild(badge);
+            fragment.appendChild(card);
+          }
+
+          if (token !== previewRenderToken) return;
+          pdfPreviewStage.innerHTML = '';
+          pdfPreviewStage.appendChild(fragment);
+        } else {
+          const blobUrl = URL.createObjectURL(doc.output('blob'));
+          pdfPreviewStage.innerHTML = `<iframe src="${blobUrl}" style="width:100%; height:100%; border:none; border-radius:6px; background:#fff;"></iframe>`;
+        }
+      } catch (err) {
+        console.error('Error previsualizando PDF:', err);
+      }
+    }
+
+    document.getElementById('btn-close-pdf-preview').addEventListener('click', () => {
+      pdfPreviewModal.classList.add('hidden');
+    });
+
+    document.getElementById('btn-back-from-pdf-preview').addEventListener('click', () => {
+      pdfPreviewModal.classList.add('hidden');
+    });
+
+    async function triggerGenerateAndSavePdf() {
+      try {
+        const built = await buildCurrentPdfDocument();
+        if (!built) return;
+        const { doc, isEN } = built;
+
+        pdfPreviewModal.classList.add('hidden');
+        reportModal.classList.add('hidden');
+        showToast(isEN ? 'Building PDF report...' : 'Construyendo reporte PDF...');
 
         const rawProjName = (activeProjectData ? activeProjectData.name : 'PROYECTO')
           .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -3641,12 +4918,13 @@
           'Reporte de Continuidad (PDF)',
           '.pdf'
         );
-
       } catch (err) {
         console.error('Error generando PDF:', err);
         showToast('Error al generar el documento PDF');
       }
-    });
+    }
+
+    document.getElementById('btn-save-from-pdf-preview').addEventListener('click', triggerGenerateAndSavePdf);
 
     /* ==========================================================================
        UTILIDADES (ESCAPADO HTML Y COMPRESIÓN DE IMÁGENES)
@@ -3695,10 +4973,13 @@
        EXPORTACIÓN DE RESPALDO JSON DEL PROYECTO
        ========================================================================== */
     async function pickAndSaveBackupDirectory() {
-      if (!('showDirectoryPicker' in window) || !activeProjectId) return null;
+      if (!('showDirectoryPicker' in window)) return null;
       try {
         const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-        await saveDirectoryHandleToDB(activeProjectId, dirHandle);
+        await saveDirectoryHandleToDB(GLOBAL_BACKUP_DIR_KEY, dirHandle);
+        if (activeProjectId) {
+          await saveDirectoryHandleToDB(activeProjectId, dirHandle);
+        }
         await refreshBackupFolderLabel();
         return dirHandle;
       } catch (err) {
@@ -3710,7 +4991,7 @@
       closeProjectMenu();
       const handle = await pickAndSaveBackupDirectory();
       if (handle) {
-        showToast(`Carpeta asignada: 📁 ${handle.name}`);
+        showToast(`Carpeta de respaldos fijada: 📁 ${handle.name}`);
       }
     });
 
@@ -3744,7 +5025,10 @@
         const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
 
         if ('showDirectoryPicker' in window) {
-          let savedRecord = await getDirectoryHandleFromDB(activeProjectId);
+          let savedRecord = await getDirectoryHandleFromDB(GLOBAL_BACKUP_DIR_KEY);
+          if (!savedRecord) {
+            savedRecord = await getDirectoryHandleFromDB(activeProjectId);
+          }
           let dirHandle = savedRecord ? savedRecord.handle : null;
 
           if (!dirHandle) {
@@ -3753,18 +5037,8 @@
 
           if (dirHandle) {
             try {
-              let perm = await dirHandle.queryPermission({ mode: 'readwrite' });
-              if (perm !== 'granted') {
-                perm = await dirHandle.requestPermission({ mode: 'readwrite' });
-              }
-              if (perm === 'granted') {
-                const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
-                const writable = await fileHandle.createWritable();
-                await writable.write(blob);
-                await writable.close();
-                showToast(`Respaldo guardado en 📁 ${dirHandle.name}`);
-                return;
-              }
+              const ok = await writeFilesToSavedDirectoryWithReplaceCheck(dirHandle, [{ fileName, blob }]);
+              if (ok) return;
             } catch (dirErr) {
               console.warn('No se pudo escribir directamente en la carpeta asignada:', dirErr);
             }
@@ -4410,6 +5684,7 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
       await initDB();
+      await refreshBackupFolderLabel();
       await showProjectsView();
     });
   </script>
