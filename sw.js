@@ -1,8 +1,11 @@
-const CACHE_NAME = 'raccordpro-v93';
+const CACHE_NAME = 'setbible-v94';
 const LOCAL_ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './apple-touch-icon.png',
+  './icon-192.png',
+  './icon-512.png'
 ];
 const CDN_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
