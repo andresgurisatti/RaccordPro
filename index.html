@@ -7058,8 +7058,8 @@
         topCharsCard.classList.remove('hidden');
         topCharsList.innerHTML = sortedTopChars.map(([name, count]) => `
           <div class="summary-top-row">
-            <span style="font-weight:700; color:#f9fafb; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-right:8px;">${escapeHTML(name)}</span>
-            <span style="font-weight:800; color:var(--amber); white-space:nowrap;">${escapeHTML(t('summary_photos_count').replace('{n}', count))}</span>
+            <span style="font-weight:700; color:#f9fafb; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding-right:8px;">${escapeHtml(name)}</span>
+            <span style="font-weight:800; color:var(--amber); white-space:nowrap;">${escapeHtml(t('summary_photos_count').replace('{n}', count))}</span>
           </div>
         `).join('');
       } else {
