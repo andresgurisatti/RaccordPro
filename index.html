@@ -2170,17 +2170,48 @@
 
     .menu-dirty-dot {
       position: absolute;
-      top: -3px;
-      right: -3px;
-      width: 17px;
-      height: 17px;
+      top: 2px;
+      right: 2px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #fb923c, #ea580c);
-      border: 2.5px solid var(--bg-850);
-      box-shadow: 0 0 12px rgba(249, 115, 22, 0.95), 0 0 4px #f97316;
+      background: #f97316;
+      border: 1.8px solid var(--bg-850);
+      box-shadow: 0 0 4px rgba(249, 115, 22, 0.4);
       pointer-events: none;
       z-index: 60;
-      animation: redDotPulse 2.4s ease-in-out infinite;
+    }
+
+    .cloud-syncing-pill {
+      position: fixed;
+      top: calc(14px + env(safe-area-inset-top, 0px));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 95;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(20, 25, 34, 0.92);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #fde68a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      pointer-events: none;
+    }
+
+    .cloud-syncing-mini-spinner {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 2px solid rgba(245, 158, 11, 0.25);
+      border-top-color: var(--amber);
+      animation: authSpin 0.75s linear infinite;
+      flex-shrink: 0;
     }
 
     @keyframes helpCardSwapUp {
@@ -3618,7 +3649,7 @@
         <div style="width:100%; border-top:1px solid var(--border-700); padding-top:14px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-muted);">
           <div>
             <span data-i18n="app_info_version_label">Versión</span>:
-            <strong id="app-info-version-val" style="color:#fff;">0.114</strong>
+            <strong id="app-info-version-val" style="color:#fff;">0.115</strong>
           </div>
           <div>
             <span data-i18n="app_info_created_by">Creado por</span>:
@@ -3627,6 +3658,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="cloud-syncing-pill" class="cloud-syncing-pill hidden" role="status" aria-live="polite">
+    <div class="cloud-syncing-mini-spinner"></div>
+    <span data-i18n="cloud_syncing_status">Sincronizando...</span>
   </div>
 
   <!-- ========================================== -->
@@ -4008,6 +4044,7 @@
         auth_signing_in_loading: 'Iniciando sesión...',
         app_loading_startup: 'Cargando...',
         offline_mode_banner_text: 'Modo offline · Sin conexión',
+        cloud_syncing_status: 'Sincronizando...',
         app_info_version_label: 'Versión',
         app_info_created_by: 'Creado por',
         pdf_include_profile: 'Incluir nombre y departamento',
@@ -4355,6 +4392,7 @@
         auth_signing_in_loading: 'Signing in...',
         app_loading_startup: 'Loading...',
         offline_mode_banner_text: 'Offline mode · No connection',
+        cloud_syncing_status: 'Syncing...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Created by',
         pdf_include_profile: 'Include name & department',
@@ -4716,6 +4754,7 @@
         auth_signing_in_loading: 'Entrando...',
         app_loading_startup: 'Carregando...',
         offline_mode_banner_text: 'Modo offline · Sem conexão',
+        cloud_syncing_status: 'Sincronizando...',
         app_info_version_label: 'Versão',
         app_info_created_by: 'Criado por',
         pdf_include_profile: 'Incluir nome e departamento',
@@ -5063,6 +5102,7 @@
         auth_signing_in_loading: 'Accesso in corso...',
         app_loading_startup: 'Caricamento...',
         offline_mode_banner_text: 'Modalità offline · Nessuna connessione',
+        cloud_syncing_status: 'Sincronizzazione...',
         app_info_version_label: 'Versione',
         app_info_created_by: 'Creato da',
         pdf_include_profile: 'Includi nome e reparto',
@@ -5410,6 +5450,7 @@
         auth_signing_in_loading: 'Anmeldung läuft...',
         app_loading_startup: 'Wird geladen...',
         offline_mode_banner_text: 'Offline-Modus · Keine Verbindung',
+        cloud_syncing_status: 'Synchronisiere...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Erstellt von',
         pdf_include_profile: 'Name & Abteilung einschließen',
@@ -5757,6 +5798,7 @@
         auth_signing_in_loading: 'Connexion en cours...',
         app_loading_startup: 'Chargement...',
         offline_mode_banner_text: 'Mode hors ligne · Aucune connexion',
+        cloud_syncing_status: 'Synchronisation...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Créé par',
         pdf_include_profile: 'Inclure nom et département',
@@ -6127,12 +6169,16 @@
       } catch (e) {}
     }
 
+    function shouldShowDirtyCloudIndicators() {
+      return !navigator.onLine || (typeof cloudConnectionFailed !== 'undefined' && cloudConnectionFailed);
+    }
+
     function refreshProjectMenuBackupIndicator() {
       const dot = document.getElementById('project-menu-dirty-dot');
       const badge = document.getElementById('menu-dirty-backup-badge');
-      const isDirty = Boolean(activeProjectId && isProjectModifiedSinceBackup({ id: activeProjectId }));
-      if (dot) dot.classList.toggle('hidden', !isDirty);
-      if (badge) badge.classList.toggle('hidden', !isDirty);
+      const showDirty = shouldShowDirtyCloudIndicators() && Boolean(activeProjectId && isProjectModifiedSinceBackup({ id: activeProjectId }));
+      if (dot) dot.classList.toggle('hidden', !showDirty);
+      if (badge) badge.classList.toggle('hidden', !showDirty);
     }
 
     function markProjectModified(projId) {
@@ -6198,7 +6244,9 @@
 
     function refreshUnsavedBackupsBanner(projects) {
       const homeDot = document.getElementById('home-menu-dirty-dot');
-      const dirtyCount = (projects || []).filter(p => isProjectModifiedSinceBackup(p)).length;
+      const dirtyCount = shouldShowDirtyCloudIndicators()
+        ? (projects || []).filter(p => isProjectModifiedSinceBackup(p)).length
+        : 0;
       if (homeDot) homeDot.classList.toggle('hidden', dirtyCount === 0);
       if (!unsavedBackupsBanner || !unsavedBackupsLabel) return;
       if (dirtyCount === 0) {
@@ -6690,7 +6738,7 @@
                 ${proj.pinned ? `<span class="project-pin-icon" title="${t('pinned_project_title')}">${ICON_PIN_SVG}</span>` : ''}
                 <span>${escapeHtml(proj.name)}</span>
                 ${proj.completed ? `<span class="project-completed-badge" title="${t('completed_project_title')}">${ICON_COMPLETED_SVG}<span>${t('badge_completed')}</span></span>` : ''}
-                ${isProjectModifiedSinceBackup(proj) ? `<span class="project-dirty-badge" title="${t('dirty_project_title')}">${t('menu_dirty_backup_badge')}</span>` : ''}
+                ${shouldShowDirtyCloudIndicators() && isProjectModifiedSinceBackup(proj) ? `<span class="project-dirty-badge" title="${t('dirty_project_title')}">${t('menu_dirty_backup_badge')}</span>` : ''}
               </div>
               <p class="project-card-meta">
                 ${prodValue ? escapeHtml(prodValue) + ' • ' : ''}${t('created_label')}: ${new Date(proj.createdAt).toLocaleDateString(currentAppLang === 'es' ? 'es-ES' : currentAppLang)}
@@ -10609,7 +10657,9 @@
     const homeMenuAccountLabel = document.getElementById('home-menu-account-label');
     const homeMenuAccountStatus = document.getElementById('home-menu-account-status');
     const offlineModeBanner = document.getElementById('offline-mode-banner');
+    const cloudSyncingPill = document.getElementById('cloud-syncing-pill');
     let cloudConnectionFailed = false;
+    let isCloudSyncPending = false;
 
     function updateOfflineBanner() {
       if (!offlineModeBanner) return;
@@ -10617,8 +10667,22 @@
       offlineModeBanner.classList.toggle('hidden', !isOffline);
     }
 
+    function updateCloudSyncingPill() {
+      if (!cloudSyncingPill) return;
+      const overlayVisible = authLoadingOverlay && !authLoadingOverlay.classList.contains('hidden');
+      const showPill = Boolean(
+        currentCloudUser &&
+        navigator.onLine &&
+        !cloudConnectionFailed &&
+        (isCloudSyncPending || isCloudSyncing) &&
+        !overlayVisible
+      );
+      cloudSyncingPill.classList.toggle('hidden', !showPill);
+    }
+
     function updateCloudAccountUI() {
       updateOfflineBanner();
+      updateCloudSyncingPill();
       const profile = getLocalUserProfile();
       if (currentCloudUser) {
         authLoggedOutView?.classList.add('hidden');
@@ -10677,11 +10741,13 @@
     });
 
     function scheduleCloudSync() {
-      if (!currentCloudUser || !navigator.onLine) return;
+      if (!currentCloudUser || !navigator.onLine || cloudConnectionFailed) return;
+      isCloudSyncPending = true;
+      updateCloudAccountUI();
       clearTimeout(cloudSyncDebounceTimer);
       cloudSyncDebounceTimer = setTimeout(() => {
         syncAllWithCloud({ silent: true });
-      }, 2500);
+      }, 1200);
     }
 
     async function handleCloudSyncAction() {
@@ -10721,6 +10787,7 @@
         authLoadingText.textContent = t(msgKey);
       }
       authLoadingOverlay?.classList.toggle('hidden', !active);
+      updateCloudSyncingPill();
     }
 
     let handlingAuthUid = null;
@@ -10994,6 +11061,7 @@
     async function syncAllWithCloud({ silent = false } = {}) {
       if (!currentCloudUser || !firebaseDb || !navigator.onLine || isCloudSyncing) return;
       isCloudSyncing = true;
+      isCloudSyncPending = false;
       updateCloudAccountUI();
       const userRef = firebaseDb.collection('users').doc(currentCloudUser.uid);
 
@@ -11162,10 +11230,18 @@
       } catch (err) {
         console.error('Cloud sync error:', err);
         cloudConnectionFailed = true;
+        isCloudSyncPending = false;
+        refreshProjectMenuBackupIndicator();
+        if (!viewProjects.classList.contains('hidden')) {
+          await renderProjects();
+        }
         if (!silent) showToast(t('toast_cloud_sync_error'));
       } finally {
         isCloudSyncing = false;
         updateCloudAccountUI();
+        if (isCloudSyncPending && navigator.onLine && !cloudConnectionFailed) {
+          syncAllWithCloud({ silent: true });
+        }
       }
     }
 
@@ -11277,10 +11353,19 @@
 
         window.addEventListener('online', () => {
           cloudConnectionFailed = false;
+          refreshProjectMenuBackupIndicator();
+          if (viewProjects && !viewProjects.classList.contains('hidden')) {
+            renderProjects();
+          }
           updateCloudAccountUI();
           if (currentCloudUser) syncAllWithCloud({ silent: true });
         });
         window.addEventListener('offline', () => {
+          isCloudSyncPending = false;
+          refreshProjectMenuBackupIndicator();
+          if (viewProjects && !viewProjects.classList.contains('hidden')) {
+            renderProjects();
+          }
           updateCloudAccountUI();
         });
       } catch (e) {
