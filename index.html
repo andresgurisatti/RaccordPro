@@ -2338,7 +2338,7 @@
   <!-- ========================================== -->
   <div id="view-auth" class="app-view auth-screen hidden">
     <div class="auth-card">
-      <div class="auth-brand-head">
+      <div id="auth-brand-trigger" class="auth-brand-head" role="button" tabindex="0" style="cursor:pointer;">
         <div class="auth-brand-icon">
           <svg width="46" height="46" viewBox="88 86 336 336" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="114" y="112" width="284" height="284" rx="44" ry="44" fill="none" stroke="#f59e0b" stroke-width="21"/>
@@ -2415,7 +2415,7 @@
   <!-- ========================================== -->
   <div id="view-projects" class="app-view hidden">
     <header class="app-header">
-      <div class="brand-box">
+      <div id="home-brand-trigger" class="brand-box" role="button" tabindex="0" style="cursor:pointer;">
         <div class="brand-icon">
           <svg width="34" height="34" viewBox="88 86 336 336" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="114" y="112" width="284" height="284" rx="44" ry="44" fill="none" stroke="#f59e0b" stroke-width="21"/>
@@ -3525,6 +3525,47 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- MODAL: INFORMACIÓN DE LA APP               -->
+  <!-- ========================================== -->
+  <div id="app-info-modal" class="modal-backdrop hidden" style="z-index: 88;">
+    <div class="modal-card" style="max-width:340px; text-align:center; position:relative;">
+      <button type="button" id="btn-close-app-info-modal" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title" style="position:absolute; top:10px; right:10px; z-index:2;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="modal-body" style="padding:28px 24px 26px 24px; display:flex; flex-direction:column; align-items:center;">
+        <div class="auth-brand-icon" style="width:76px; height:76px; border-radius:18px; margin-bottom:14px;">
+          <svg width="50" height="50" viewBox="88 86 336 336" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="114" y="112" width="284" height="284" rx="44" ry="44" fill="none" stroke="#f59e0b" stroke-width="21"/>
+            <rect x="167" y="112" width="21" height="284" fill="#f59e0b"/>
+            <circle cx="145.5" cy="175" r="10.5" fill="#f59e0b"/>
+            <circle cx="145.5" cy="254" r="10.5" fill="#f59e0b"/>
+            <circle cx="145.5" cy="333" r="10.5" fill="#f59e0b"/>
+            <polygon points="289,101.5 351,101.5 351,197 320,164 289,197" fill="#ffffff"/>
+            <rect x="222" y="228" width="95" height="21" rx="10.5" fill="#f59e0b"/>
+            <rect x="222" y="275" width="127" height="21" rx="10.5" fill="#f59e0b"/>
+            <rect x="222" y="322" width="50" height="21" rx="10.5" fill="#f59e0b"/>
+            <rect x="288" y="322" width="36" height="21" rx="10.5" fill="#f59e0b"/>
+          </svg>
+        </div>
+
+        <h2 class="brand-title" style="font-size:24px; margin-bottom:4px;">Set<span>Bible</span></h2>
+        <p style="margin:0 0 18px 0; font-size:13.5px; font-weight:700; color:var(--text-muted);">Film &amp; Video Continuity</p>
+
+        <div style="width:100%; border-top:1px solid var(--border-700); padding-top:14px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-muted);">
+          <div>
+            <span data-i18n="app_info_version_label">Versión</span>:
+            <strong id="app-info-version-val" style="color:#fff;">0.113</strong>
+          </div>
+          <div>
+            <span data-i18n="app_info_created_by">Creado por</span>:
+            <strong style="color:var(--amber);">Marziano</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL: CONFIRMACIÓN                        -->
   <!-- ========================================== -->
   <div id="confirm-modal" class="modal-backdrop hidden" style="z-index: 80;">
@@ -3890,7 +3931,22 @@
         auth_skip_local: 'Continuar sin cuenta (solo en este dispositivo)',
         auth_profile_onboarding_desc: 'Completa tus datos para identificar tus reportes PDF.',
         auth_btn_save_continue: 'Guardar y continuar',
+        app_info_version_label: 'Versión',
+        app_info_created_by: 'Creado por',
         pdf_include_profile: 'Incluir nombre y departamento',
+        toast_select_scene: 'Por favor selecciona una escena',
+        toast_firebase_unavailable: 'Firebase no disponible sin conexión',
+        toast_offline_saved_local: 'Sin señal. Tus cambios están guardados en local.',
+        toast_google_login_error: 'Error al iniciar sesión con Google',
+        toast_enter_email_pass: 'Ingresa correo y contraseña',
+        toast_login_error: 'Error al iniciar sesión',
+        toast_password_min_6: 'Contraseña mínima de 6 caracteres',
+        toast_account_created: 'Cuenta creada',
+        toast_account_create_error: 'Error al crear cuenta',
+        toast_signed_out: 'Sesión cerrada',
+        toast_profile_saved: 'Perfil guardado',
+        toast_cloud_synced: 'Sincronizado con la nube',
+        toast_cloud_sync_error: 'Error al sincronizar con la nube',
         toast_no_takes_for_pdf: 'Aún no hay continuidades registradas para exportar',
         toast_entry_added: 'Entrada añadida a la continuidad',
         toast_scene_already_has_take: 'La Escena {scene} ya tiene una continuidad registrada',
@@ -4219,7 +4275,22 @@
         auth_skip_local: 'Continue without account (this device only)',
         auth_profile_onboarding_desc: 'Complete your details to identify your PDF reports.',
         auth_btn_save_continue: 'Save and continue',
+        app_info_version_label: 'Version',
+        app_info_created_by: 'Created by',
         pdf_include_profile: 'Include name & department',
+        toast_select_scene: 'Please select a scene',
+        toast_firebase_unavailable: 'Firebase unavailable offline',
+        toast_offline_saved_local: 'Offline. Your changes are saved locally.',
+        toast_google_login_error: 'Error signing in with Google',
+        toast_enter_email_pass: 'Enter email and password',
+        toast_login_error: 'Sign in error',
+        toast_password_min_6: 'Password must be at least 6 characters',
+        toast_account_created: 'Account created',
+        toast_account_create_error: 'Error creating account',
+        toast_signed_out: 'Signed out',
+        toast_profile_saved: 'Profile saved',
+        toast_cloud_synced: 'Synced to cloud',
+        toast_cloud_sync_error: 'Error syncing to cloud',
         toast_no_takes_for_pdf: 'No continuities recorded to export yet',
         toast_entry_added: 'Entry added to continuity',
         toast_scene_already_has_take: 'Scene {scene} already has a continuity record',
@@ -4535,7 +4606,49 @@
         view_word: 'VER',
         no_photo_label: 'Sem foto',
         no_note_label: 'Sem nota',
-        general_notes_label: 'Notas Gerais da Cena'
+        general_notes_label: 'Notas Gerais da Cena',
+        btn_cloud_upload_quick: 'Enviar',
+        menu_cloud_account: 'Nuvem / Conta',
+        menu_cloud_sync: 'Enviar para a nuvem',
+        cloud_status_offline_short: 'Sem sessão',
+        modal_cloud_account_title: 'NUVEM E PERFIL',
+        auth_intro: 'Entre para salvar e sincronizar seus projetos na nuvem. O app continua funcionando sem sinal o tempo todo.',
+        auth_btn_google: 'Continuar com Google',
+        auth_or_email: 'ou com e-mail',
+        auth_email_label: 'E-mail',
+        auth_password_label: 'Senha',
+        auth_btn_login: 'Entrar',
+        auth_btn_register: 'Criar conta',
+        auth_signed_in_as: 'Sessão iniciada',
+        profile_name_label: 'Seu nome (para relatórios PDF)',
+        profile_dept_label: 'Departamento',
+        dept_none: 'Não especificado',
+        dept_costume: 'Figurino',
+        dept_hair_makeup: 'Maquiagem / Cabelo',
+        dept_props: 'Objetos de cena',
+        dept_art: 'Arte',
+        profile_btn_save: 'Salvar perfil',
+        cloud_btn_sync_now: 'Sincronizar com a nuvem agora',
+        auth_btn_logout: 'Sair',
+        auth_skip_local: 'Continuar sem conta (apenas neste dispositivo)',
+        auth_profile_onboarding_desc: 'Complete seus dados para identificar seus relatórios em PDF.',
+        auth_btn_save_continue: 'Salvar e continuar',
+        app_info_version_label: 'Versão',
+        app_info_created_by: 'Criado por',
+        pdf_include_profile: 'Incluir nome e departamento',
+        toast_select_scene: 'Por favor, selecione uma cena',
+        toast_firebase_unavailable: 'Firebase indisponível sem conexão',
+        toast_offline_saved_local: 'Sem sinal. Suas alterações foram salvas localmente.',
+        toast_google_login_error: 'Erro ao entrar com Google',
+        toast_enter_email_pass: 'Digite e-mail e senha',
+        toast_login_error: 'Erro ao entrar',
+        toast_password_min_6: 'A senha deve ter pelo menos 6 caracteres',
+        toast_account_created: 'Conta criada',
+        toast_account_create_error: 'Erro ao criar conta',
+        toast_signed_out: 'Sessão encerrada',
+        toast_profile_saved: 'Perfil salvo',
+        toast_cloud_synced: 'Sincronizado com a nuvem',
+        toast_cloud_sync_error: 'Erro ao sincronizar com a nuvem'
       },
       it: {
         lang_name: 'Italiano',
@@ -4837,7 +4950,49 @@
         view_word: 'VEDI',
         no_photo_label: 'Nessuna foto',
         no_note_label: 'Nessuna nota',
-        general_notes_label: 'Note Generali della Scena'
+        general_notes_label: 'Note Generali della Scena',
+        btn_cloud_upload_quick: 'Carica',
+        menu_cloud_account: 'Cloud / Account',
+        menu_cloud_sync: 'Carica nel cloud',
+        cloud_status_offline_short: 'Non connesso',
+        modal_cloud_account_title: 'CLOUD E PROFILO',
+        auth_intro: 'Accedi per salvare e sincronizzare i tuoi progetti nel cloud. L\'app continua a funzionare offline in ogni momento.',
+        auth_btn_google: 'Continua con Google',
+        auth_or_email: 'o con email',
+        auth_email_label: 'Email',
+        auth_password_label: 'Password',
+        auth_btn_login: 'Accedi',
+        auth_btn_register: 'Crea account',
+        auth_signed_in_as: 'Accesso effettuato',
+        profile_name_label: 'Il tuo nome (per report PDF)',
+        profile_dept_label: 'Reparto',
+        dept_none: 'Non specificato',
+        dept_costume: 'Costumi',
+        dept_hair_makeup: 'Trucco / Parrucco',
+        dept_props: 'Oggetti di scena',
+        dept_art: 'Scenografia',
+        profile_btn_save: 'Salva profilo',
+        cloud_btn_sync_now: 'Sincronizza ora con il cloud',
+        auth_btn_logout: 'Esci',
+        auth_skip_local: 'Continua senza account (solo su questo dispositivo)',
+        auth_profile_onboarding_desc: 'Completa i tuoi dati per identificare i report PDF.',
+        auth_btn_save_continue: 'Salva e continua',
+        app_info_version_label: 'Versione',
+        app_info_created_by: 'Creato da',
+        pdf_include_profile: 'Includi nome e reparto',
+        toast_select_scene: 'Seleziona una scena',
+        toast_firebase_unavailable: 'Firebase non disponibile offline',
+        toast_offline_saved_local: 'Nessun segnale. Le modifiche sono salvate in locale.',
+        toast_google_login_error: 'Errore di accesso con Google',
+        toast_enter_email_pass: 'Inserisci email e password',
+        toast_login_error: 'Errore di accesso',
+        toast_password_min_6: 'La password deve avere almeno 6 caratteri',
+        toast_account_created: 'Account creato',
+        toast_account_create_error: 'Errore nella creazione dell\'account',
+        toast_signed_out: 'Disconnesso',
+        toast_profile_saved: 'Profilo salvato',
+        toast_cloud_synced: 'Sincronizzato con il cloud',
+        toast_cloud_sync_error: 'Errore di sincronizzazione con il cloud'
       },
       de: {
         lang_name: 'Deutsch',
@@ -5139,7 +5294,49 @@
         view_word: 'ANSEHEN',
         no_photo_label: 'Kein Foto',
         no_note_label: 'Keine Notiz',
-        general_notes_label: 'Allgemeine Szenennotizen'
+        general_notes_label: 'Allgemeine Szenennotizen',
+        btn_cloud_upload_quick: 'Hochladen',
+        menu_cloud_account: 'Cloud / Konto',
+        menu_cloud_sync: 'In die Cloud hochladen',
+        cloud_status_offline_short: 'Abgemeldet',
+        modal_cloud_account_title: 'CLOUD & PROFIL',
+        auth_intro: 'Melde dich an, um deine Projekte in der Cloud zu sichern und zu synchronisieren. Die App funktioniert weiterhin jederzeit offline.',
+        auth_btn_google: 'Mit Google fortfahren',
+        auth_or_email: 'oder per E-Mail',
+        auth_email_label: 'E-Mail',
+        auth_password_label: 'Passwort',
+        auth_btn_login: 'Anmelden',
+        auth_btn_register: 'Konto erstellen',
+        auth_signed_in_as: 'Angemeldet als',
+        profile_name_label: 'Dein Name (für PDF-Berichte)',
+        profile_dept_label: 'Abteilung',
+        dept_none: 'Nicht angegeben',
+        dept_costume: 'Kostüm',
+        dept_hair_makeup: 'Maske / Haare',
+        dept_props: 'Requisite',
+        dept_art: 'Szenenbild',
+        profile_btn_save: 'Profil speichern',
+        cloud_btn_sync_now: 'Jetzt mit der Cloud synchronisieren',
+        auth_btn_logout: 'Abmelden',
+        auth_skip_local: 'Ohne Konto fortfahren (nur dieses Gerät)',
+        auth_profile_onboarding_desc: 'Vervollständige deine Daten zur Kennzeichnung deiner PDF-Berichte.',
+        auth_btn_save_continue: 'Speichern und fortfahren',
+        app_info_version_label: 'Version',
+        app_info_created_by: 'Erstellt von',
+        pdf_include_profile: 'Name & Abteilung einschließen',
+        toast_select_scene: 'Bitte eine Szene auswählen',
+        toast_firebase_unavailable: 'Firebase offline nicht verfügbar',
+        toast_offline_saved_local: 'Kein Netz. Deine Änderungen wurden lokal gespeichert.',
+        toast_google_login_error: 'Fehler bei der Google-Anmeldung',
+        toast_enter_email_pass: 'E-Mail und Passwort eingeben',
+        toast_login_error: 'Anmeldefehler',
+        toast_password_min_6: 'Passwort muss mindestens 6 Zeichen lang sein',
+        toast_account_created: 'Konto erstellt',
+        toast_account_create_error: 'Fehler beim Erstellen des Kontos',
+        toast_signed_out: 'Abgemeldet',
+        toast_profile_saved: 'Profil gespeichert',
+        toast_cloud_synced: 'Mit der Cloud synchronisiert',
+        toast_cloud_sync_error: 'Fehler bei der Cloud-Synchronisierung'
       },
       fr: {
         lang_name: 'Français',
@@ -5441,7 +5638,49 @@
         view_word: 'VOIR',
         no_photo_label: 'Sans photo',
         no_note_label: 'Sans note',
-        general_notes_label: 'Notes Générales de la Scène'
+        general_notes_label: 'Notes Générales de la Scène',
+        btn_cloud_upload_quick: 'Envoyer',
+        menu_cloud_account: 'Cloud / Compte',
+        menu_cloud_sync: 'Envoyer vers le cloud',
+        cloud_status_offline_short: 'Déconnecté',
+        modal_cloud_account_title: 'CLOUD ET PROFIL',
+        auth_intro: 'Connectez-vous pour sauvegarder et synchroniser vos projets dans le cloud. L\'application continue de fonctionner hors ligne à tout moment.',
+        auth_btn_google: 'Continuer avec Google',
+        auth_or_email: 'ou par e-mail',
+        auth_email_label: 'E-mail',
+        auth_password_label: 'Mot de passe',
+        auth_btn_login: 'Se connecter',
+        auth_btn_register: 'Créer un compte',
+        auth_signed_in_as: 'Connecté',
+        profile_name_label: 'Votre nom (pour rapports PDF)',
+        profile_dept_label: 'Département',
+        dept_none: 'Non spécifié',
+        dept_costume: 'Costumes',
+        dept_hair_makeup: 'Maquillage / Coiffure',
+        dept_props: 'Accessoires',
+        dept_art: 'Décors',
+        profile_btn_save: 'Enregistrer le profil',
+        cloud_btn_sync_now: 'Synchroniser maintenant avec le cloud',
+        auth_btn_logout: 'Se déconnecter',
+        auth_skip_local: 'Continuer sans compte (cet appareil uniquement)',
+        auth_profile_onboarding_desc: 'Complétez vos informations pour identifier vos rapports PDF.',
+        auth_btn_save_continue: 'Enregistrer et continuer',
+        app_info_version_label: 'Version',
+        app_info_created_by: 'Créé par',
+        pdf_include_profile: 'Inclure nom et département',
+        toast_select_scene: 'Veuillez sélectionner une scène',
+        toast_firebase_unavailable: 'Firebase indisponible hors ligne',
+        toast_offline_saved_local: 'Hors ligne. Vos modifications sont enregistrées localement.',
+        toast_google_login_error: 'Erreur de connexion avec Google',
+        toast_enter_email_pass: 'Entrez votre e-mail et mot de passe',
+        toast_login_error: 'Erreur de connexion',
+        toast_password_min_6: 'Le mot de passe doit contenir au moins 6 caractères',
+        toast_account_created: 'Compte créé',
+        toast_account_create_error: 'Erreur lors de la création du compte',
+        toast_signed_out: 'Déconnecté',
+        toast_profile_saved: 'Profil enregistré',
+        toast_cloud_synced: 'Synchronisé avec le cloud',
+        toast_cloud_sync_error: 'Erreur de synchronisation avec le cloud'
       }
     };
 
@@ -9998,7 +10237,7 @@
       const notes = document.getElementById('input-notes').value.trim();
 
       if (!scene) {
-        showToast('Por favor selecciona una escena');
+        showToast(t('toast_select_scene'));
         return;
       }
 
@@ -10346,7 +10585,7 @@
 
     async function handleCloudSyncAction() {
       if (!firebaseAuth || !firebaseDb) {
-        showToast('Firebase no disponible sin conexión');
+        showToast(t('toast_firebase_unavailable'));
         return;
       }
       if (!currentCloudUser) {
@@ -10354,7 +10593,7 @@
         return;
       }
       if (!navigator.onLine) {
-        showToast('Sin señal. Tus cambios están guardados en local.');
+        showToast(t('toast_offline_saved_local'));
         return;
       }
       await syncAllWithCloud({ silent: false });
@@ -10378,7 +10617,7 @@
         if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
           await firebaseAuth.signInWithRedirect(provider);
         } else {
-          showToast(err?.message || 'Error al iniciar sesión con Google');
+          showToast(err?.message || t('toast_google_login_error'));
         }
       }
     });
@@ -10387,11 +10626,11 @@
       if (!firebaseAuth) return;
       const email = (document.getElementById('auth-email-input')?.value || '').trim();
       const pass = document.getElementById('auth-password-input')?.value || '';
-      if (!email || !pass) { showToast('Ingresa correo y contraseña'); return; }
+      if (!email || !pass) { showToast(t('toast_enter_email_pass')); return; }
       try {
         await firebaseAuth.signInWithEmailAndPassword(email, pass);
       } catch (err) {
-        showToast(err?.message || 'Error al iniciar sesión');
+        showToast(err?.message || t('toast_login_error'));
       }
     });
 
@@ -10399,12 +10638,12 @@
       if (!firebaseAuth) return;
       const email = (document.getElementById('auth-email-input')?.value || '').trim();
       const pass = document.getElementById('auth-password-input')?.value || '';
-      if (!email || pass.length < 6) { showToast('Contraseña mínima de 6 caracteres'); return; }
+      if (!email || pass.length < 6) { showToast(t('toast_password_min_6')); return; }
       try {
         await firebaseAuth.createUserWithEmailAndPassword(email, pass);
-        showToast('Cuenta creada');
+        showToast(t('toast_account_created'));
       } catch (err) {
-        showToast(err?.message || 'Error al crear cuenta');
+        showToast(err?.message || t('toast_account_create_error'));
       }
     });
 
@@ -10441,7 +10680,7 @@
     }
 
     document.getElementById('btn-screen-auth-google')?.addEventListener('click', async () => {
-      if (!firebaseAuth) { showToast('Firebase no disponible sin conexión'); return; }
+      if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
       const provider = new firebase.auth.GoogleAuthProvider();
       try {
         await firebaseAuth.signInWithPopup(provider);
@@ -10449,33 +10688,33 @@
         if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
           await firebaseAuth.signInWithRedirect(provider);
         } else {
-          showToast(err?.message || 'Error al iniciar sesión con Google');
+          showToast(err?.message || t('toast_google_login_error'));
         }
       }
     });
 
     document.getElementById('btn-screen-auth-login')?.addEventListener('click', async () => {
-      if (!firebaseAuth) { showToast('Firebase no disponible sin conexión'); return; }
+      if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
       const email = (document.getElementById('screen-auth-email')?.value || '').trim();
       const pass = document.getElementById('screen-auth-password')?.value || '';
-      if (!email || !pass) { showToast('Ingresa correo y contraseña'); return; }
+      if (!email || !pass) { showToast(t('toast_enter_email_pass')); return; }
       try {
         await firebaseAuth.signInWithEmailAndPassword(email, pass);
       } catch (err) {
-        showToast(err?.message || 'Error al iniciar sesión');
+        showToast(err?.message || t('toast_login_error'));
       }
     });
 
     document.getElementById('btn-screen-auth-register')?.addEventListener('click', async () => {
-      if (!firebaseAuth) { showToast('Firebase no disponible sin conexión'); return; }
+      if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
       const email = (document.getElementById('screen-auth-email')?.value || '').trim();
       const pass = document.getElementById('screen-auth-password')?.value || '';
-      if (!email || pass.length < 6) { showToast('Contraseña mínima de 6 caracteres'); return; }
+      if (!email || pass.length < 6) { showToast(t('toast_password_min_6')); return; }
       try {
         await firebaseAuth.createUserWithEmailAndPassword(email, pass);
-        showToast('Cuenta creada');
+        showToast(t('toast_account_created'));
       } catch (err) {
-        showToast(err?.message || 'Error al crear cuenta');
+        showToast(err?.message || t('toast_account_create_error'));
       }
     });
 
@@ -10507,7 +10746,7 @@
       authModal?.classList.add('hidden');
       activeProjectId = null;
       showAuthScreen('login');
-      showToast('Sesión cerrada');
+      showToast(t('toast_signed_out'));
     });
 
     document.getElementById('btn-save-profile')?.addEventListener('click', async () => {
@@ -10523,7 +10762,7 @@
           await firebaseDb.collection('users').doc(currentCloudUser.uid).collection('profile').doc('main').set(nextProfile);
         } catch (e) {}
       }
-      showToast('Perfil guardado');
+      showToast(t('toast_profile_saved'));
     });
 
     async function ensurePhotoUnder1MB(dataUrl) {
@@ -10733,10 +10972,10 @@
         } else if (!viewProjects.classList.contains('hidden')) {
           await renderProjects();
         }
-        if (!silent) showToast('Sincronizado con la nube');
+        if (!silent) showToast(t('toast_cloud_synced'));
       } catch (err) {
         console.error('Cloud sync error:', err);
-        if (!silent) showToast('Error al sincronizar con la nube');
+        if (!silent) showToast(t('toast_cloud_sync_error'));
       } finally {
         isCloudSyncing = false;
         updateCloudAccountUI();
@@ -10796,6 +11035,44 @@
       }
     }
 
+    const appInfoModal = document.getElementById('app-info-modal');
+    const appInfoVersionVal = document.getElementById('app-info-version-val');
+
+    async function openAppInfoModal() {
+      if (!appInfoModal) return;
+      appInfoModal.classList.remove('hidden');
+      try {
+        const res = await fetch('./sw.js', { cache: 'no-store' });
+        if (res.ok) {
+          const text = await res.text();
+          const match = text.match(/setbible-v(\d+)/i);
+          if (match && match[1] && appInfoVersionVal) {
+            appInfoVersionVal.textContent = '0.' + match[1];
+          }
+        }
+      } catch (e) {}
+    }
+
+    function closeAppInfoModal() {
+      appInfoModal?.classList.add('hidden');
+    }
+
+    ['home-brand-trigger', 'auth-brand-trigger'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', openAppInfoModal);
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openAppInfoModal();
+        }
+      });
+    });
+    document.getElementById('btn-close-app-info-modal')?.addEventListener('click', closeAppInfoModal);
+    appInfoModal?.addEventListener('click', (e) => {
+      if (e.target === appInfoModal) closeAppInfoModal();
+    });
+
     /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
     if ('serviceWorker' in navigator) {
       let refreshing = false;
@@ -10815,6 +11092,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
+      try { await screen.orientation?.lock?.('portrait'); } catch (e) {}
       initLanguage();
       await initDB();
       await refreshBackupFolderLabel();
