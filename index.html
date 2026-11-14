@@ -3618,7 +3618,7 @@
         <div style="width:100%; border-top:1px solid var(--border-700); padding-top:14px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-muted);">
           <div>
             <span data-i18n="app_info_version_label">Versión</span>:
-            <strong id="app-info-version-val" style="color:#fff;">0.113</strong>
+            <strong id="app-info-version-val" style="color:#fff;">0.114</strong>
           </div>
           <div>
             <span data-i18n="app_info_created_by">Creado por</span>:
@@ -10709,6 +10709,9 @@
       await handleCloudSyncAction();
     });
 
+    const AUTH_SKIPPED_KEY = 'rp_auth_skipped';
+    const AUTH_HAS_SESSION_KEY = 'rp_has_auth_session';
+    const AUTH_PENDING_TS_KEY = 'rp_auth_pending_ts';
     const authLoadingOverlay = document.getElementById('auth-loading-overlay');
     const authLoadingText = document.getElementById('auth-loading-text');
 
@@ -10720,23 +10723,75 @@
       authLoadingOverlay?.classList.toggle('hidden', !active);
     }
 
+    let handlingAuthUid = null;
+
+    async function handleAuthenticatedUser(user, { isInitialStartup = false } = {}) {
+      if (!user) return;
+      currentCloudUser = user;
+      localStorage.setItem(AUTH_HAS_SESSION_KEY, '1');
+      localStorage.removeItem(AUTH_PENDING_TS_KEY);
+      localStorage.removeItem(AUTH_SKIPPED_KEY);
+      authModal?.classList.add('hidden');
+      updateCloudAccountUI();
+
+      if (handlingAuthUid === user.uid) return;
+      handlingAuthUid = user.uid;
+
+      try {
+        // Ensure background view is rendered behind the blurred loading overlay
+        await enterAppFromAuth();
+
+        if (navigator.onLine) {
+          setAuthLoading(true, isInitialStartup ? 'app_loading_startup' : 'auth_signing_in_loading');
+          await Promise.race([
+            syncAllWithCloud({ silent: true }),
+            new Promise((resolve) => setTimeout(resolve, 4500))
+          ]);
+        }
+
+        const prof = getLocalUserProfile();
+        if (!prof.name && !prof.department) {
+          showAuthScreen('profile');
+        } else {
+          await enterAppFromAuth();
+        }
+      } finally {
+        handlingAuthUid = null;
+        setAuthLoading(false);
+      }
+    }
+
     async function handleGoogleSignIn() {
       if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
-      setAuthLoading(true);
+      localStorage.setItem(AUTH_PENDING_TS_KEY, String(Date.now()));
+      setAuthLoading(true, 'auth_signing_in_loading');
       const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
       try {
-        await firebaseAuth.signInWithPopup(provider);
+        const cred = await firebaseAuth.signInWithPopup(provider);
+        if (cred && cred.user) {
+          await handleAuthenticatedUser(cred.user, { isInitialStartup: false });
+        }
       } catch (err) {
-        if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
+        const code = err?.code || '';
+        if (
+          code === 'auth/popup-blocked' ||
+          code === 'auth/operation-not-supported-in-this-environment' ||
+          code === 'auth/cancelled-popup-request'
+        ) {
           try {
             await firebaseAuth.signInWithRedirect(provider);
           } catch (redirErr) {
+            localStorage.removeItem(AUTH_PENDING_TS_KEY);
             setAuthLoading(false);
             showToast(redirErr?.message || t('toast_google_login_error'));
           }
         } else {
+          localStorage.removeItem(AUTH_PENDING_TS_KEY);
           setAuthLoading(false);
-          showToast(err?.message || t('toast_google_login_error'));
+          if (code !== 'auth/popup-closed-by-user') {
+            showToast(err?.message || t('toast_google_login_error'));
+          }
         }
       }
     }
@@ -10748,9 +10803,14 @@
       const email = (document.getElementById('auth-email-input')?.value || '').trim();
       const pass = document.getElementById('auth-password-input')?.value || '';
       if (!email || !pass) { showToast(t('toast_enter_email_pass')); return; }
+      setAuthLoading(true, 'auth_signing_in_loading');
       try {
-        await firebaseAuth.signInWithEmailAndPassword(email, pass);
+        const cred = await firebaseAuth.signInWithEmailAndPassword(email, pass);
+        if (cred && cred.user) {
+          await handleAuthenticatedUser(cred.user, { isInitialStartup: false });
+        }
       } catch (err) {
+        setAuthLoading(false);
         showToast(err?.message || t('toast_login_error'));
       }
     });
@@ -10760,15 +10820,19 @@
       const email = (document.getElementById('auth-email-input')?.value || '').trim();
       const pass = document.getElementById('auth-password-input')?.value || '';
       if (!email || pass.length < 6) { showToast(t('toast_password_min_6')); return; }
+      setAuthLoading(true, 'auth_signing_in_loading');
       try {
-        await firebaseAuth.createUserWithEmailAndPassword(email, pass);
+        const cred = await firebaseAuth.createUserWithEmailAndPassword(email, pass);
         showToast(t('toast_account_created'));
+        if (cred && cred.user) {
+          await handleAuthenticatedUser(cred.user, { isInitialStartup: false });
+        }
       } catch (err) {
+        setAuthLoading(false);
         showToast(err?.message || t('toast_account_create_error'));
       }
     });
 
-    const AUTH_SKIPPED_KEY = 'rp_auth_skipped';
     const viewAuth = document.getElementById('view-auth');
     const authScreenLoginStep = document.getElementById('auth-screen-login-step');
     const authScreenProfileStep = document.getElementById('auth-screen-profile-step');
@@ -10807,9 +10871,14 @@
       const email = (document.getElementById('screen-auth-email')?.value || '').trim();
       const pass = document.getElementById('screen-auth-password')?.value || '';
       if (!email || !pass) { showToast(t('toast_enter_email_pass')); return; }
+      setAuthLoading(true, 'auth_signing_in_loading');
       try {
-        await firebaseAuth.signInWithEmailAndPassword(email, pass);
+        const cred = await firebaseAuth.signInWithEmailAndPassword(email, pass);
+        if (cred && cred.user) {
+          await handleAuthenticatedUser(cred.user, { isInitialStartup: false });
+        }
       } catch (err) {
+        setAuthLoading(false);
         showToast(err?.message || t('toast_login_error'));
       }
     });
@@ -10819,10 +10888,15 @@
       const email = (document.getElementById('screen-auth-email')?.value || '').trim();
       const pass = document.getElementById('screen-auth-password')?.value || '';
       if (!email || pass.length < 6) { showToast(t('toast_password_min_6')); return; }
+      setAuthLoading(true, 'auth_signing_in_loading');
       try {
-        await firebaseAuth.createUserWithEmailAndPassword(email, pass);
+        const cred = await firebaseAuth.createUserWithEmailAndPassword(email, pass);
         showToast(t('toast_account_created'));
+        if (cred && cred.user) {
+          await handleAuthenticatedUser(cred.user, { isInitialStartup: false });
+        }
       } catch (err) {
+        setAuthLoading(false);
         showToast(err?.message || t('toast_account_create_error'));
       }
     });
@@ -10851,6 +10925,8 @@
     document.getElementById('btn-auth-logout')?.addEventListener('click', async () => {
       if (!firebaseAuth) return;
       localStorage.removeItem(AUTH_SKIPPED_KEY);
+      localStorage.removeItem(AUTH_HAS_SESSION_KEY);
+      localStorage.removeItem(AUTH_PENDING_TS_KEY);
       await firebaseAuth.signOut();
       authModal?.classList.add('hidden');
       activeProjectId = null;
@@ -11095,14 +11171,24 @@
 
     function initFirebaseCloud() {
       const skipped = localStorage.getItem(AUTH_SKIPPED_KEY) === '1';
+      const hadSession = localStorage.getItem(AUTH_HAS_SESSION_KEY) === '1';
+      const pendingTs = Number(localStorage.getItem(AUTH_PENDING_TS_KEY) || 0);
+      const isPendingRedirect = pendingTs > 0 && (Date.now() - pendingTs < 120000);
+
+      if (isPendingRedirect) {
+        setAuthLoading(true, 'auth_signing_in_loading');
+      }
+
       if (typeof firebase === 'undefined') {
-        if (skipped) enterAppFromAuth().finally(() => setAuthLoading(false));
-        else {
+        if (skipped || hadSession) {
+          enterAppFromAuth().finally(() => setAuthLoading(false));
+        } else {
           showAuthScreen('login');
           setAuthLoading(false);
         }
         return;
       }
+
       try {
         if (!firebase.apps.length) {
           firebase.initializeApp(firebaseConfig);
@@ -11110,48 +11196,83 @@
         firebaseAuth = firebase.auth();
         firebaseDb = firebase.firestore();
         let initialResolved = false;
+
         const startupTimeout = setTimeout(async () => {
           if (initialResolved) return;
           initialResolved = true;
           cloudConnectionFailed = true;
           const prof = getLocalUserProfile();
-          if (skipped || prof.name || prof.department) {
+          if (skipped || hadSession || prof.name || prof.department) {
             await enterAppFromAuth();
           } else {
             showAuthScreen('login');
           }
           updateOfflineBanner();
           setAuthLoading(false);
-        }, 5000);
+        }, 5500);
+
+        const redirectPromise = firebaseAuth.getRedirectResult()
+          .then(async (res) => {
+            if (res && res.user) {
+              clearTimeout(startupTimeout);
+              initialResolved = true;
+              await handleAuthenticatedUser(res.user, { isInitialStartup: false });
+              return res.user;
+            }
+            return null;
+          })
+          .catch((err) => {
+            console.warn('Redirect auth warning:', err);
+            localStorage.removeItem(AUTH_PENDING_TS_KEY);
+            if (isPendingRedirect) {
+              showToast(err?.message || t('toast_google_login_error'));
+            }
+            return null;
+          });
 
         firebaseAuth.onAuthStateChanged(async (user) => {
+          if (user) {
+            clearTimeout(startupTimeout);
+            const firstRun = !initialResolved;
+            initialResolved = true;
+            await handleAuthenticatedUser(user, { isInitialStartup: firstRun });
+            return;
+          }
+
+          // user is null initially: wait for any OAuth redirect result to finish first
+          const redirUser = await redirectPromise;
+          if (redirUser || firebaseAuth.currentUser) {
+            clearTimeout(startupTimeout);
+            initialResolved = true;
+            await handleAuthenticatedUser(redirUser || firebaseAuth.currentUser, { isInitialStartup: false });
+            return;
+          }
+
+          if (isPendingRedirect) {
+            await new Promise((r) => setTimeout(r, 1200));
+            if (firebaseAuth.currentUser) {
+              clearTimeout(startupTimeout);
+              initialResolved = true;
+              await handleAuthenticatedUser(firebaseAuth.currentUser, { isInitialStartup: false });
+              return;
+            }
+            localStorage.removeItem(AUTH_PENDING_TS_KEY);
+          }
+
           clearTimeout(startupTimeout);
-          currentCloudUser = user || null;
+          currentCloudUser = null;
+          localStorage.removeItem(AUTH_HAS_SESSION_KEY);
           updateCloudAccountUI();
-          if (currentCloudUser) {
-            localStorage.removeItem(AUTH_SKIPPED_KEY);
-            authModal?.classList.add('hidden');
-            const prof = getLocalUserProfile();
-            if (!prof.name && !prof.department) {
-              showAuthScreen('profile');
-            } else {
-              await enterAppFromAuth();
-            }
-            setAuthLoading(false);
-            if (navigator.onLine) {
-              syncAllWithCloud({ silent: true });
-            }
-          } else if (!initialResolved) {
+
+          if (!initialResolved) {
+            initialResolved = true;
             if (localStorage.getItem(AUTH_SKIPPED_KEY) === '1') {
               await enterAppFromAuth();
             } else {
               showAuthScreen('login');
             }
-            setAuthLoading(false);
-          } else {
-            setAuthLoading(false);
           }
-          initialResolved = true;
+          setAuthLoading(false);
         });
 
         window.addEventListener('online', () => {
@@ -11225,15 +11346,25 @@
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
-      try { await screen.orientation?.lock?.('portrait'); } catch (e) {}
+      try { screen.orientation?.lock?.('portrait')?.catch?.(() => {}); } catch (e) {}
       initLanguage();
-      setAuthLoading(true, 'app_loading_startup');
+      const pendingTs = Number(localStorage.getItem(AUTH_PENDING_TS_KEY) || 0);
+      const isPendingRedirect = pendingTs > 0 && (Date.now() - pendingTs < 120000);
+      setAuthLoading(true, isPendingRedirect ? 'auth_signing_in_loading' : 'app_loading_startup');
       try {
         await initDB();
-        await refreshBackupFolderLabel();
+        refreshBackupFolderLabel().catch(() => {});
+        const hadSession = localStorage.getItem(AUTH_HAS_SESSION_KEY) === '1';
+        const skipped = localStorage.getItem(AUTH_SKIPPED_KEY) === '1';
+        if (hadSession || skipped) {
+          await enterAppFromAuth();
+        } else {
+          showAuthScreen('login');
+        }
         initFirebaseCloud();
       } catch (e) {
         console.warn('Startup warning:', e);
+        showAuthScreen('login');
         setAuthLoading(false);
       }
     });
