@@ -182,15 +182,15 @@
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 12px 14px;
-      padding-bottom: 75px;
+      padding-bottom: calc(105px + env(safe-area-inset-bottom, 0px));
     }
 
     #view-projects .scroll-area {
-      padding-bottom: 120px;
+      padding-bottom: calc(165px + env(safe-area-inset-bottom, 0px));
     }
 
     #view-takes .scroll-area {
-      padding-bottom: 75px;
+      padding-bottom: calc(105px + env(safe-area-inset-bottom, 0px));
     }
 
     .container-narrow {
@@ -2917,7 +2917,6 @@
           <div class="bulk-action-info">
             <h3 class="bulk-action-title" data-i18n="bulk_clear_take_title">Eliminar entradas de una continuidad</h3>
             <p class="bulk-action-desc" data-i18n="bulk_clear_take_desc">Elimina todas las entradas de la escena seleccionada, manteniendo la continuidad creada.</p>
-            <select id="bulk-clear-take-select" class="form-control" style="margin-top:4px;"></select>
           </div>
           <button type="button" id="btn-bulk-clear-take-entries" class="btn-bulk-square danger" title="Eliminar entradas" data-i18n-title="bulk_clear_take_btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -3325,6 +3324,26 @@
       <div class="modal-footer">
         <button type="button" id="btn-confirm-cancel" class="btn-secondary" data-i18n="btn_cancel">Cancelar</button>
         <button type="button" id="btn-confirm-ok" class="btn-submit" style="background:#ef4444; color:#fff;" data-i18n="btn_delete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ELEGIR CONTINUIDAD PARA ELIMINAR ENTRADAS -->
+  <div id="bulk-clear-take-modal" class="modal-backdrop hidden" style="z-index: 65;">
+    <div class="modal-card" style="max-width:420px;">
+      <div class="modal-header">
+        <h2 class="modal-title" style="color:#f87171;" data-i18n="bulk_clear_take_title">ELIMINAR ENTRADAS DE UNA CONTINUIDAD</h2>
+        <button type="button" id="btn-close-bulk-clear-take" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin:0 0 12px 0; font-size:14px; color:var(--text-muted); line-height:1.45;" data-i18n="bulk_clear_take_desc">Elimina todas las entradas de la escena seleccionada, manteniendo la continuidad creada.</p>
+        <select id="bulk-clear-take-select" class="form-control"></select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-bulk-clear-take" class="btn-secondary" data-i18n="btn_cancel">Cancelar</button>
+        <button type="button" id="btn-confirm-bulk-clear-take" class="btn-submit" style="background:#ef4444; color:#fff;" data-i18n="btn_delete">Eliminar</button>
       </div>
     </div>
   </div>
@@ -8078,7 +8097,29 @@
       });
     }
 
+    const bulkClearTakeModal = document.getElementById('bulk-clear-take-modal');
+    const btnCloseBulkClearTake = document.getElementById('btn-close-bulk-clear-take');
+    const btnCancelBulkClearTake = document.getElementById('btn-cancel-bulk-clear-take');
+    const btnConfirmBulkClearTake = document.getElementById('btn-confirm-bulk-clear-take');
+
     document.getElementById('btn-bulk-clear-take-entries')?.addEventListener('click', async () => {
+      await refreshBulkClearTakeSelect();
+      bulkClearTakeModal?.classList.remove('hidden');
+    });
+
+    if (btnCloseBulkClearTake) {
+      btnCloseBulkClearTake.addEventListener('click', () => bulkClearTakeModal?.classList.add('hidden'));
+    }
+    if (btnCancelBulkClearTake) {
+      btnCancelBulkClearTake.addEventListener('click', () => bulkClearTakeModal?.classList.add('hidden'));
+    }
+    if (bulkClearTakeModal) {
+      bulkClearTakeModal.addEventListener('click', (e) => {
+        if (e.target === bulkClearTakeModal) bulkClearTakeModal.classList.add('hidden');
+      });
+    }
+
+    btnConfirmBulkClearTake?.addEventListener('click', async () => {
       const takeId = bulkClearTakeSelect ? bulkClearTakeSelect.value : '';
       if (!takeId) {
         showToast(t('bulk_select_take_placeholder'));
@@ -8093,6 +8134,7 @@
         target.updatedAt = Date.now();
         await saveTakeToDB(target);
         await refreshBulkClearTakeSelect();
+        bulkClearTakeModal?.classList.add('hidden');
         await renderTakes();
         showToast(t('toast_bulk_take_cleared', { scene: target.scene }));
       });
