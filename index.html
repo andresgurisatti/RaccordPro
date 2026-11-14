@@ -789,9 +789,15 @@
       padding: 9px 12px;
     }
 
+    .raccord-scene-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
     .raccord-scene-badge {
       display: block;
-      width: 100%;
       color: var(--amber);
       font-family: monospace;
       font-weight: 900;
@@ -799,6 +805,27 @@
       letter-spacing: 0.4px;
       line-height: 1.2;
       padding: 0;
+      min-width: 0;
+    }
+
+    .btn-duplicate-take {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.38);
+      color: var(--amber);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 0;
+      transition: transform 0.12s, background 0.12s;
+    }
+
+    .btn-duplicate-take:active {
+      transform: scale(0.92);
+      background: rgba(245, 158, 11, 0.28);
     }
 
     .raccord-scene-desc {
@@ -2462,7 +2489,7 @@
 
         <div class="form-group">
           <label class="form-label" for="screen-auth-email" data-i18n="auth_email_label">Correo electrónico</label>
-          <input type="email" id="screen-auth-email" class="form-control" autocomplete="email" placeholder="nombre@ejemplo.com">
+          <input type="email" id="screen-auth-email" class="form-control" autocomplete="email" placeholder="nombre@ejemplo.com" data-i18n-placeholder="ph_auth_email">
         </div>
         <div class="form-group" style="margin-bottom:16px;">
           <label class="form-label" for="screen-auth-password" data-i18n="auth_password_label">Contraseña</label>
@@ -2483,8 +2510,8 @@
           Completa tus datos para identificar tus reportes PDF.
         </p>
         <div class="form-group">
-          <label class="form-label" for="screen-profile-name" data-i18n="profile_name_label">Tu nombre (para reportes PDF)</label>
-          <input type="text" id="screen-profile-name" class="form-control" placeholder="Ej. Andrés Gurisatti">
+          <label class="form-label" for="screen-profile-name" data-i18n="profile_name_label">Tu nombre</label>
+          <input type="text" id="screen-profile-name" class="form-control" placeholder="Ej. Andrés Gurisatti" data-i18n-placeholder="ph_profile_name">
         </div>
         <div class="form-group" style="margin-bottom:18px;">
           <label class="form-label" for="screen-profile-dept" data-i18n="profile_dept_label">Departamento</label>
@@ -2529,7 +2556,7 @@
       <div id="home-menu-backdrop" class="menu-backdrop"></div>
 
       <div style="display:flex; align-items:center;">
-        <button type="button" id="btn-home-menu-toggle" class="btn-icon" title="Menú de Proyectos">
+        <button type="button" id="btn-home-menu-toggle" class="btn-icon" title="Menú de Proyectos" data-i18n-title="home_menu_title">
           <span class="menu-icon-stage">
             <svg class="icon-wrench" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
@@ -2539,7 +2566,7 @@
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </span>
-          <span id="home-menu-dirty-dot" class="menu-dirty-dot hidden" title="Proyectos sin respaldar"></span>
+          <span id="home-menu-dirty-dot" class="menu-dirty-dot hidden" title="Proyectos sin respaldar" data-i18n-title="dirty_project_title"></span>
         </button>
       </div>
 
@@ -2849,7 +2876,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="project-modal-title" class="modal-title" data-i18n="modal_new_project">NUEVO PROYECTO</h2>
-        <button type="button" id="btn-close-project-modal" class="btn-close-touch" title="Cerrar">
+        <button type="button" id="btn-close-project-modal" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
@@ -2859,11 +2886,11 @@
 
           <div class="form-group">
             <label class="form-label" data-i18n="form_project_name">Nombre del Proyecto *</label>
-            <input type="text" id="proj-name" required placeholder="Ej: 'El Despertar del Diablo'" class="form-control">
+            <input type="text" id="proj-name" required placeholder="Ej: 'El Despertar del Diablo'" class="form-control" data-i18n-placeholder="ph_proj_name">
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="form_producer">Productora (Opcional)</label>
-            <input type="text" id="proj-producer" placeholder="Ej: TIS Producciones" class="form-control">
+            <input type="text" id="proj-producer" placeholder="Ej: TIS Producciones" class="form-control" data-i18n-placeholder="ph_proj_producer">
           </div>
 
           <div id="edit-project-flags-box" class="hidden" style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
@@ -2952,8 +2979,12 @@
         <div class="summary-section-card" style="margin-bottom:0;">
           <h3 class="summary-section-title" data-i18n="summary_status_title">Estado y respaldo</h3>
           <div class="summary-top-row">
-            <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_backup_label">Respaldo</span>
+            <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_local_backup_label">Respaldo en dispositivo</span>
             <span id="summary-backup-status" style="font-weight:800;"></span>
+          </div>
+          <div class="summary-top-row">
+            <span style="color:var(--text-muted); font-weight:700;" data-i18n="summary_cloud_sync_label">Sincronización en la nube</span>
+            <span id="summary-cloud-status" style="font-weight:800;"></span>
           </div>
           <div class="summary-top-row" style="gap:10px;">
             <span style="color:var(--text-muted); font-weight:700; min-width:0;" data-i18n="summary_updated_label">Última modificación</span>
@@ -3201,7 +3232,7 @@
     <div class="modal-card">
       <div class="modal-header">
         <h2 id="modal-title" class="modal-title" data-i18n="modal_new_continuity">NUEVA CONTINUIDAD</h2>
-        <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar">
+        <button type="button" id="btn-close-modal" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
@@ -3389,7 +3420,7 @@
           <h2 class="modal-title" style="color:var(--amber); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" data-i18n="modal_export_pdf">EXPORTAR PDF</h2>
           <span id="pdf-preview-page-count" style="color:var(--amber); font-size:12px; font-weight:900; background:rgba(245,158,11,0.15); padding:2px 8px; border-radius:8px; flex-shrink:0;">1 pág</span>
         </div>
-        <button type="button" id="btn-close-pdf-preview" class="btn-close-touch" title="Cerrar">
+        <button type="button" id="btn-close-pdf-preview" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
@@ -3490,7 +3521,7 @@
       </div>
       <div class="modal-body">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
-          <span id="batch-projects-subtitle" class="form-label" style="margin:0;" data-i18n="batch_sub_default">Selecciona los proyectos:</span>
+          <span id="batch-projects-subtitle" class="form-label" style="margin:0; text-transform:none;" data-i18n="batch_sub_default">Selecciona los proyectos:</span>
           <div style="display:flex; align-items:center; gap:8px;">
             <button type="button" id="btn-toggle-dirty-batch-projects" class="hidden" style="color:#f87171; font-size:12.5px; font-weight:800; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.35); padding:3px 8px; border-radius:8px;">Solo sin respaldar</button>
             <button type="button" id="btn-toggle-all-batch-projects" style="color:var(--amber); font-size:13px; font-weight:800;" data-i18n="btn_uncheck_all_m">Desmarcar Todos</button>
@@ -3535,7 +3566,7 @@
 
           <div class="form-group">
             <label class="form-label" for="auth-email-input" data-i18n="auth_email_label">Correo electrónico</label>
-            <input type="email" id="auth-email-input" class="form-control" autocomplete="email" placeholder="nombre@ejemplo.com">
+            <input type="email" id="auth-email-input" class="form-control" autocomplete="email" placeholder="nombre@ejemplo.com" data-i18n-placeholder="ph_auth_email">
           </div>
           <div class="form-group" style="margin-bottom:16px;">
             <label class="form-label" for="auth-password-input" data-i18n="auth_password_label">Contraseña</label>
@@ -3557,8 +3588,8 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="profile-name-input" data-i18n="profile_name_label">Tu nombre (para reportes PDF)</label>
-            <input type="text" id="profile-name-input" class="form-control" placeholder="Ej. Andrés Gurisatti">
+            <label class="form-label" for="profile-name-input" data-i18n="profile_name_label">Tu nombre</label>
+            <input type="text" id="profile-name-input" class="form-control" placeholder="Ej. Andrés Gurisatti" data-i18n-placeholder="ph_profile_name">
           </div>
 
           <div class="form-group" style="margin-bottom:16px;">
@@ -3649,7 +3680,7 @@
         <div style="width:100%; border-top:1px solid var(--border-700); padding-top:14px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-muted);">
           <div>
             <span data-i18n="app_info_version_label">Versión</span>:
-            <strong id="app-info-version-val" style="color:#fff;">0.115</strong>
+            <strong id="app-info-version-val" style="color:#fff;">0.116</strong>
           </div>
           <div>
             <span data-i18n="app_info_created_by">Creado por</span>:
@@ -3697,7 +3728,7 @@
   <div id="bulk-clear-take-modal" class="modal-backdrop hidden" style="z-index: 65;">
     <div class="modal-card" style="max-width:420px;">
       <div class="modal-header">
-        <h2 class="modal-title" style="color:#f87171;" data-i18n="bulk_clear_take_title">ELIMINAR ENTRADAS DE UNA CONTINUIDAD</h2>
+        <h2 class="modal-title" style="color:#f87171;" data-i18n="bulk_clear_take_modal_title">ELIMINAR ENTRADAS</h2>
         <button type="button" id="btn-close-bulk-clear-take" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
@@ -3709,6 +3740,32 @@
       <div class="modal-footer">
         <button type="button" id="btn-cancel-bulk-clear-take" class="btn-secondary" data-i18n="btn_cancel">Cancelar</button>
         <button type="button" id="btn-confirm-bulk-clear-take" class="btn-submit" style="background:#ef4444; color:#fff;" data-i18n="btn_delete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DUPLICAR CONTINUIDAD -->
+  <div id="duplicate-take-modal" class="modal-backdrop hidden" style="z-index: 65;">
+    <div class="modal-card" style="max-width:460px;">
+      <div class="modal-header">
+        <h2 class="modal-title" style="color:var(--amber);" data-i18n="duplicate_take_modal_title">DUPLICAR CONTINUIDAD</h2>
+        <button type="button" id="btn-close-duplicate-take" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="duplicate-take-scene-select" data-i18n="duplicate_take_target_scene">Escena de destino *</label>
+          <select id="duplicate-take-scene-select" class="form-control" style="font-weight:800; color:var(--amber);"></select>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" data-i18n="duplicate_take_entries_label">Entradas a incluir</label>
+          <div id="duplicate-take-entries-list" style="max-height:240px; overflow-y:auto;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-cancel-duplicate-take" class="btn-secondary" data-i18n="btn_cancel">Cancelar</button>
+        <button type="button" id="btn-confirm-duplicate-take" class="btn-submit" data-i18n="btn_duplicate">Duplicar</button>
       </div>
     </div>
   </div>
@@ -3805,7 +3862,7 @@
         batch_title_export: 'GUARDAR RESPALDOS',
         batch_title_delete: 'BORRAR PROYECTOS',
         batch_sub_default: 'Selecciona los proyectos:',
-        batch_sub_pin: 'Marca los proyectos que quieres fijar arriba:',
+        batch_sub_pin: 'Marca los proyectos que quieres ver primero',
         batch_sub_complete: 'Marca los proyectos terminados:',
         batch_sub_export: 'Selecciona los proyectos a respaldar:',
         batch_sub_export_dirty: 'Proyectos modificados sin respaldar:',
@@ -4028,7 +4085,7 @@
         auth_btn_login: 'Iniciar sesión',
         auth_btn_register: 'Crear cuenta',
         auth_signed_in_as: 'Sesión iniciada',
-        profile_name_label: 'Tu nombre (para reportes PDF)',
+        profile_name_label: 'Tu nombre',
         profile_dept_label: 'Departamento',
         dept_none: 'Sin especificar',
         dept_costume: 'Vestuario',
@@ -4045,6 +4102,29 @@
         app_loading_startup: 'Cargando...',
         offline_mode_banner_text: 'Modo offline · Sin conexión',
         cloud_syncing_status: 'Sincronizando...',
+        scene_abbr: 'ESC',
+        ph_proj_name: "Ej: 'El Despertar del Diablo'",
+        ph_proj_producer: 'Ej: TIS Producciones',
+        ph_auth_email: 'nombre@ejemplo.com',
+        ph_profile_name: 'Ej. Andrés Gurisatti',
+        home_menu_title: 'Menú de Proyectos',
+        summary_local_backup_label: 'Respaldo en dispositivo',
+        summary_local_backup_up_to_date: 'Guardado (al día)',
+        summary_local_backup_outdated: 'Con cambios sin exportar',
+        summary_local_backup_none: 'Sin respaldo local',
+        summary_cloud_sync_label: 'Sincronización en la nube',
+        summary_cloud_synced: 'Sincronizado',
+        summary_cloud_pending: 'Pendiente de subir',
+        cloud_status_online: 'En línea',
+        cloud_status_no_signal: 'Sin señal (local)',
+        bulk_clear_take_modal_title: 'ELIMINAR ENTRADAS',
+        duplicate_take_title: 'Duplicar continuidad',
+        duplicate_take_modal_title: 'DUPLICAR CONTINUIDAD',
+        duplicate_take_target_scene: 'Escena de destino *',
+        duplicate_take_entries_label: 'Entradas a incluir',
+        duplicate_take_no_entries: 'Esta continuidad no tiene entradas de personajes (se copiarán las notas generales).',
+        btn_duplicate: 'Duplicar',
+        toast_take_duplicated: 'Continuidad duplicada en Escena {scene}',
         app_info_version_label: 'Versión',
         app_info_created_by: 'Creado por',
         pdf_include_profile: 'Incluir nombre y departamento',
@@ -4153,7 +4233,7 @@
         batch_title_export: 'SAVE BACKUPS',
         batch_title_delete: 'DELETE PROJECTS',
         batch_sub_default: 'Select projects:',
-        batch_sub_pin: 'Select projects to pin at the top:',
+        batch_sub_pin: 'Check the projects you want to see first',
         batch_sub_complete: 'Mark completed projects:',
         batch_sub_export: 'Select projects to back up:',
         batch_sub_export_dirty: 'Unsaved modified projects:',
@@ -4376,7 +4456,7 @@
         auth_btn_login: 'Sign in',
         auth_btn_register: 'Create account',
         auth_signed_in_as: 'Signed in as',
-        profile_name_label: 'Your name (for PDF reports)',
+        profile_name_label: 'Your name',
         profile_dept_label: 'Department',
         dept_none: 'Not specified',
         dept_costume: 'Costume',
@@ -4393,6 +4473,29 @@
         app_loading_startup: 'Loading...',
         offline_mode_banner_text: 'Offline mode · No connection',
         cloud_syncing_status: 'Syncing...',
+        scene_abbr: 'SC',
+        ph_proj_name: "E.g. 'The Evil Dead'",
+        ph_proj_producer: 'E.g. TIS Productions',
+        ph_auth_email: 'name@example.com',
+        ph_profile_name: 'E.g. John Doe',
+        home_menu_title: 'Projects Menu',
+        summary_local_backup_label: 'Device backup',
+        summary_local_backup_up_to_date: 'Saved (up to date)',
+        summary_local_backup_outdated: 'Unexported changes',
+        summary_local_backup_none: 'No local backup',
+        summary_cloud_sync_label: 'Cloud sync',
+        summary_cloud_synced: 'Synced',
+        summary_cloud_pending: 'Pending upload',
+        cloud_status_online: 'Online',
+        cloud_status_no_signal: 'Offline (local)',
+        bulk_clear_take_modal_title: 'DELETE ENTRIES',
+        duplicate_take_title: 'Duplicate continuity',
+        duplicate_take_modal_title: 'DUPLICATE CONTINUITY',
+        duplicate_take_target_scene: 'Target scene *',
+        duplicate_take_entries_label: 'Entries to include',
+        duplicate_take_no_entries: 'This continuity has no character entries (general notes will be copied).',
+        btn_duplicate: 'Duplicate',
+        toast_take_duplicated: 'Continuity duplicated to Scene {scene}',
         app_info_version_label: 'Version',
         app_info_created_by: 'Created by',
         pdf_include_profile: 'Include name & department',
@@ -4501,7 +4604,7 @@
         batch_title_export: 'SALVAR BACKUPS',
         batch_title_delete: 'EXCLUIR PROJETOS',
         batch_sub_default: 'Selecione os projetos:',
-        batch_sub_pin: 'Marque os projetos para fixar no topo:',
+        batch_sub_pin: 'Marque os projetos que você quer ver primeiro',
         batch_sub_complete: 'Marque os projetos concluídos:',
         batch_sub_export: 'Selecione os projetos para backup:',
         batch_sub_export_dirty: 'Projetos modificados não salvos:',
@@ -4738,7 +4841,7 @@
         auth_btn_login: 'Entrar',
         auth_btn_register: 'Criar conta',
         auth_signed_in_as: 'Sessão iniciada',
-        profile_name_label: 'Seu nome (para relatórios PDF)',
+        profile_name_label: 'Seu nome',
         profile_dept_label: 'Departamento',
         dept_none: 'Não especificado',
         dept_costume: 'Figurino',
@@ -4755,6 +4858,29 @@
         app_loading_startup: 'Carregando...',
         offline_mode_banner_text: 'Modo offline · Sem conexão',
         cloud_syncing_status: 'Sincronizando...',
+        scene_abbr: 'CENA',
+        ph_proj_name: "Ex: 'A Morte do Demônio'",
+        ph_proj_producer: 'Ex: TIS Produções',
+        ph_auth_email: 'nome@exemplo.com',
+        ph_profile_name: 'Ex. João Silva',
+        home_menu_title: 'Menu de Projetos',
+        summary_local_backup_label: 'Backup no dispositivo',
+        summary_local_backup_up_to_date: 'Salvo (atualizado)',
+        summary_local_backup_outdated: 'Alterações não exportadas',
+        summary_local_backup_none: 'Sem backup local',
+        summary_cloud_sync_label: 'Sincronização na nuvem',
+        summary_cloud_synced: 'Sincronizado',
+        summary_cloud_pending: 'Pendente de envio',
+        cloud_status_online: 'Online',
+        cloud_status_no_signal: 'Sem sinal (local)',
+        bulk_clear_take_modal_title: 'EXCLUIR ENTRADAS',
+        duplicate_take_title: 'Duplicar continuidade',
+        duplicate_take_modal_title: 'DUPLICAR CONTINUIDADE',
+        duplicate_take_target_scene: 'Cena de destino *',
+        duplicate_take_entries_label: 'Entradas para incluir',
+        duplicate_take_no_entries: 'Esta continuidade não tem entradas de personagens (as notas gerais serão copiadas).',
+        btn_duplicate: 'Duplicar',
+        toast_take_duplicated: 'Continuidade duplicada na Cena {scene}',
         app_info_version_label: 'Versão',
         app_info_created_by: 'Criado por',
         pdf_include_profile: 'Incluir nome e departamento',
@@ -4849,7 +4975,7 @@
         batch_title_export: 'SALVA BACKUP',
         batch_title_delete: 'ELIMINA PROGETTI',
         batch_sub_default: 'Seleziona i progetti:',
-        batch_sub_pin: 'Seleziona i progetti da fissare in alto:',
+        batch_sub_pin: 'Seleziona i progetti che vuoi vedere per primi',
         batch_sub_complete: 'Seleziona i progetti completati:',
         batch_sub_export: 'Seleziona i progetti da salvare:',
         batch_sub_export_dirty: 'Progetti modificati non salvati:',
@@ -5086,7 +5212,7 @@
         auth_btn_login: 'Accedi',
         auth_btn_register: 'Crea account',
         auth_signed_in_as: 'Accesso effettuato',
-        profile_name_label: 'Il tuo nome (per report PDF)',
+        profile_name_label: 'Il tuo nome',
         profile_dept_label: 'Reparto',
         dept_none: 'Non specificato',
         dept_costume: 'Costumi',
@@ -5103,6 +5229,29 @@
         app_loading_startup: 'Caricamento...',
         offline_mode_banner_text: 'Modalità offline · Nessuna connessione',
         cloud_syncing_status: 'Sincronizzazione...',
+        scene_abbr: 'SC',
+        ph_proj_name: "Es: 'La Casa'",
+        ph_proj_producer: 'Es: TIS Produzioni',
+        ph_auth_email: 'nome@esempio.com',
+        ph_profile_name: 'Es. Marco Rossi',
+        home_menu_title: 'Menu Progetti',
+        summary_local_backup_label: 'Backup sul dispositivo',
+        summary_local_backup_up_to_date: 'Salvato (aggiornato)',
+        summary_local_backup_outdated: 'Modifiche non esportate',
+        summary_local_backup_none: 'Nessun backup locale',
+        summary_cloud_sync_label: 'Sincronizzazione cloud',
+        summary_cloud_synced: 'Sincronizzato',
+        summary_cloud_pending: 'In attesa di caricamento',
+        cloud_status_online: 'Online',
+        cloud_status_no_signal: 'Offline (locale)',
+        bulk_clear_take_modal_title: 'ELIMINA VOCI',
+        duplicate_take_title: 'Duplica continuità',
+        duplicate_take_modal_title: 'DUPLICA CONTINUITÀ',
+        duplicate_take_target_scene: 'Scena di destinazione *',
+        duplicate_take_entries_label: 'Voci da includere',
+        duplicate_take_no_entries: 'Questa continuità non ha voci di personaggi (verranno copiate le note generali).',
+        btn_duplicate: 'Duplica',
+        toast_take_duplicated: 'Continuità duplicata nella Scena {scene}',
         app_info_version_label: 'Versione',
         app_info_created_by: 'Creato da',
         pdf_include_profile: 'Includi nome e reparto',
@@ -5197,7 +5346,7 @@
         batch_title_export: 'BACKUPS SPEICHERN',
         batch_title_delete: 'PROJEKTE LÖSCHEN',
         batch_sub_default: 'Projekte auswählen:',
-        batch_sub_pin: 'Projekte zum Anheften oben wählen:',
+        batch_sub_pin: 'Markiere die Projekte, die du zuerst sehen möchtest',
         batch_sub_complete: 'Abgeschlossene Projekte markieren:',
         batch_sub_export: 'Projekte für Backup wählen:',
         batch_sub_export_dirty: 'Geänderte ungesicherte Projekte:',
@@ -5434,7 +5583,7 @@
         auth_btn_login: 'Anmelden',
         auth_btn_register: 'Konto erstellen',
         auth_signed_in_as: 'Angemeldet als',
-        profile_name_label: 'Dein Name (für PDF-Berichte)',
+        profile_name_label: 'Dein Name',
         profile_dept_label: 'Abteilung',
         dept_none: 'Nicht angegeben',
         dept_costume: 'Kostüm',
@@ -5451,6 +5600,29 @@
         app_loading_startup: 'Wird geladen...',
         offline_mode_banner_text: 'Offline-Modus · Keine Verbindung',
         cloud_syncing_status: 'Synchronisiere...',
+        scene_abbr: 'SZ',
+        ph_proj_name: "Z. B. 'Tanz der Teufel'",
+        ph_proj_producer: 'Z. B. TIS Produktion',
+        ph_auth_email: 'name@beispiel.de',
+        ph_profile_name: 'Z. B. Max Mustermann',
+        home_menu_title: 'Projektmenü',
+        summary_local_backup_label: 'Geräte-Backup',
+        summary_local_backup_up_to_date: 'Gespeichert (aktuell)',
+        summary_local_backup_outdated: 'Nicht exportierte Änderungen',
+        summary_local_backup_none: 'Kein lokales Backup',
+        summary_cloud_sync_label: 'Cloud-Synchronisierung',
+        summary_cloud_synced: 'Synchronisiert',
+        summary_cloud_pending: 'Upload ausstehend',
+        cloud_status_online: 'Online',
+        cloud_status_no_signal: 'Kein Netz (lokal)',
+        bulk_clear_take_modal_title: 'EINTRÄGE LÖSCHEN',
+        duplicate_take_title: 'Kontinuität duplizieren',
+        duplicate_take_modal_title: 'KONTINUITÄT DUPLIZIEREN',
+        duplicate_take_target_scene: 'Zielszene *',
+        duplicate_take_entries_label: 'Einzuschließende Einträge',
+        duplicate_take_no_entries: 'Diese Kontinuität hat keine Figuren-Einträge (allgemeine Notizen werden kopiert).',
+        btn_duplicate: 'Duplizieren',
+        toast_take_duplicated: 'Kontinuität in Szene {scene} dupliziert',
         app_info_version_label: 'Version',
         app_info_created_by: 'Erstellt von',
         pdf_include_profile: 'Name & Abteilung einschließen',
@@ -5545,7 +5717,7 @@
         batch_title_export: 'ENREGISTRER SAUVEGARDES',
         batch_title_delete: 'SUPPRIMER DES PROJETS',
         batch_sub_default: 'Sélectionnez les projets :',
-        batch_sub_pin: 'Cochez les projets à épingler en haut :',
+        batch_sub_pin: 'Cochez les projets que vous voulez voir en premier',
         batch_sub_complete: 'Cochez les projets terminés :',
         batch_sub_export: 'Sélectionnez les projets à sauvegarder :',
         batch_sub_export_dirty: 'Projets modifiés non sauvegardés :',
@@ -5782,7 +5954,7 @@
         auth_btn_login: 'Se connecter',
         auth_btn_register: 'Créer un compte',
         auth_signed_in_as: 'Connecté',
-        profile_name_label: 'Votre nom (pour rapports PDF)',
+        profile_name_label: 'Votre nom',
         profile_dept_label: 'Département',
         dept_none: 'Non spécifié',
         dept_costume: 'Costumes',
@@ -5799,6 +5971,29 @@
         app_loading_startup: 'Chargement...',
         offline_mode_banner_text: 'Mode hors ligne · Aucune connexion',
         cloud_syncing_status: 'Synchronisation...',
+        scene_abbr: 'SC',
+        ph_proj_name: "Ex : 'Evil Dead'",
+        ph_proj_producer: 'Ex : TIS Productions',
+        ph_auth_email: 'nom@exemple.com',
+        ph_profile_name: 'Ex. Jean Dupont',
+        home_menu_title: 'Menu des Projets',
+        summary_local_backup_label: 'Sauvegarde sur l\'appareil',
+        summary_local_backup_up_to_date: 'Enregistré (à jour)',
+        summary_local_backup_outdated: 'Modifications non exportées',
+        summary_local_backup_none: 'Aucune sauvegarde locale',
+        summary_cloud_sync_label: 'Synchronisation cloud',
+        summary_cloud_synced: 'Synchronisé',
+        summary_cloud_pending: 'En attente d\'envoi',
+        cloud_status_online: 'En ligne',
+        cloud_status_no_signal: 'Hors ligne (local)',
+        bulk_clear_take_modal_title: 'SUPPRIMER LES ENTRÉES',
+        duplicate_take_title: 'Dupliquer la continuité',
+        duplicate_take_modal_title: 'DUPLIQUER LA CONTINUITÉ',
+        duplicate_take_target_scene: 'Scène de destination *',
+        duplicate_take_entries_label: 'Entrées à inclure',
+        duplicate_take_no_entries: 'Cette continuité n\'a pas d\'entrées de personnage (les notes générales seront copiées).',
+        btn_duplicate: 'Dupliquer',
+        toast_take_duplicated: 'Continuité dupliquée dans la Scène {scene}',
         app_info_version_label: 'Version',
         app_info_created_by: 'Créé par',
         pdf_include_profile: 'Inclure nom et département',
@@ -5900,6 +6095,7 @@
 
       renderPdfLangSelectorUI();
       if (typeof refreshBackupFolderLabel === 'function') refreshBackupFolderLabel();
+      if (typeof updateCloudAccountUI === 'function') updateCloudAccountUI();
 
       if (activeProjectId) {
         if (typeof renderTakes === 'function') renderTakes();
@@ -5918,6 +6114,7 @@
     const ICON_USER_SVG = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
     const ICON_PHOTO_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>`;
     const ICON_EYE_SVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+    const ICON_DUPLICATE_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
 
     const DB_NAME = 'RaccordProDB';
     const DB_VERSION = 5;
@@ -7887,6 +8084,10 @@
 
       const hasAnyDirty = projects.some(p => isProjectModifiedSinceBackup(p));
 
+      if (btnToggleAllBatchProjects) {
+        btnToggleAllBatchProjects.classList.toggle('hidden', mode === 'pin');
+      }
+
       if (btnToggleDirtyBatchProjects) {
         if (isExport && hasAnyDirty) {
           const dirtyCount = projects.filter(p => isProjectModifiedSinceBackup(p)).length;
@@ -7913,8 +8114,8 @@
               <strong style="color:#fff; font-size:15px; display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                 ${proj.pinned ? `<span class="project-pin-icon">${ICON_PIN_SVG}</span>` : ''}
                 <span style="overflow:hidden; text-overflow:ellipsis;">${escapeHtml(proj.name)}</span>
-                ${proj.completed ? `<span class="project-completed-badge">${ICON_COMPLETED_SVG}<span>TERMINADO</span></span>` : ''}
-                ${isExport && isDirty ? `<span class="project-dirty-badge">SIN RESPALDAR</span>` : ''}
+                ${proj.completed ? `<span class="project-completed-badge">${ICON_COMPLETED_SVG}<span>${t('badge_completed')}</span></span>` : ''}
+                ${isExport && shouldShowDirtyCloudIndicators() && isDirty ? `<span class="project-dirty-badge">${t('menu_dirty_backup_badge')}</span>` : ''}
               </strong>
               <span style="color:var(--text-muted); font-size:12.5px; display:block;">${prodValue ? escapeHtml(prodValue) + ' • ' : ''}${new Date(proj.createdAt).toLocaleDateString()}</span>
             </div>
@@ -8385,13 +8586,43 @@
       document.getElementById('summary-coverage-pct').textContent = `${pct}%`;
       document.getElementById('summary-coverage-bar').style.width = `${pct}%`;
 
+      const backupMap = getBackupStateMap();
+      const projBackupState = backupMap[activeProjectId] || {};
+      const lastMod = projBackupState.lastModifiedAt || activeProjectData.updatedAt || activeProjectData.createdAt || 0;
+      const lastLocalBackup = projBackupState.lastBackupAt || 0;
+      const lastCloudSync = projBackupState.lastCloudSyncAt || 0;
+
       const backupStatusEl = document.getElementById('summary-backup-status');
-      if (activeProjectData.dirty) {
-        backupStatusEl.textContent = t('summary_backup_pending');
-        backupStatusEl.style.color = '#f87171';
-      } else {
-        backupStatusEl.textContent = t('summary_backup_synced');
-        backupStatusEl.style.color = '#34d399';
+      if (backupStatusEl) {
+        if (lastLocalBackup > 0) {
+          if (lastLocalBackup >= lastMod) {
+            backupStatusEl.textContent = t('summary_local_backup_up_to_date');
+            backupStatusEl.style.color = '#34d399';
+          } else {
+            backupStatusEl.textContent = t('summary_local_backup_outdated');
+            backupStatusEl.style.color = '#fbbf24';
+          }
+        } else {
+          backupStatusEl.textContent = t('summary_local_backup_none');
+          backupStatusEl.style.color = '#9ca3af';
+        }
+      }
+
+      const cloudStatusEl = document.getElementById('summary-cloud-status');
+      if (cloudStatusEl) {
+        if (!currentCloudUser) {
+          cloudStatusEl.textContent = t('cloud_status_offline_short');
+          cloudStatusEl.style.color = '#9ca3af';
+        } else if (isCloudSyncing || isCloudSyncPending) {
+          cloudStatusEl.textContent = t('cloud_syncing_status');
+          cloudStatusEl.style.color = '#fbbf24';
+        } else if (lastCloudSync > 0 && lastCloudSync >= lastMod) {
+          cloudStatusEl.textContent = t('summary_cloud_synced');
+          cloudStatusEl.style.color = '#34d399';
+        } else {
+          cloudStatusEl.textContent = t('summary_cloud_pending');
+          cloudStatusEl.style.color = '#fb923c';
+        }
       }
 
       const ts = activeProjectData.updatedAt || activeProjectData.createdAt;
@@ -8444,7 +8675,7 @@
       scenesListContainer.innerHTML = scenes.map(s => `
         <div class="manager-item" data-id="${s.id}">
           <div style="min-width:0; flex:1;">
-            <strong style="color:var(--amber); font-size:15px; margin-right:8px;">ESC ${escapeHtml(s.sceneNum)}</strong>
+            <strong style="color:var(--amber); font-size:15px; margin-right:8px;">${t('scene_abbr')} ${escapeHtml(s.sceneNum)}</strong>
             <span style="color:#d1d5db; font-size:13.5px;">${escapeHtml(s.desc || '')}</span>
           </div>
           <div style="display:flex; gap:6px;">
@@ -8515,7 +8746,7 @@
       const target = scenes.find(s => s.id === id);
       if (!target) return;
 
-      const label = target.desc ? `ESC ${target.sceneNum} — ${target.desc}` : `ESC ${target.sceneNum}`;
+      const label = target.desc ? `${t('scene_abbr')} ${target.sceneNum} — ${target.desc}` : `${t('scene_abbr')} ${target.sceneNum}`;
       askConfirmation(t('confirm_delete_scene', { label }), async () => {
         await deleteEntityFromDB(STORE_SCENES, id);
         if (editSceneId.value === id) resetSceneForm();
@@ -9148,7 +9379,7 @@
       return `<option value="">${t('form_select_character')}</option>` + 
         cachedCharactersForProject.map(c => {
           const isSelected = (c.name === selectedChar) ? 'selected' : '';
-          return `<option value="${escapeHtml(c.name)}" ${isSelected}>${c.pinned ? '★ ' : ''}${escapeHtml(c.name)}${c.actor ? ' (' + escapeHtml(c.actor) + ')' : ''}</option>`;
+          return `<option value="${escapeHtml(c.name)}" ${isSelected}>${c.pinned ? '★ ' : ''}${escapeHtml(c.name)}</option>`;
         }).join('');
     }
 
@@ -9189,16 +9420,16 @@
 
       cachedTakesForPdf.sort((a, b) => compareSceneNumbers(a.scene, b.scene));
 
-      pdfScenesChecklist.innerHTML = cachedTakesForPdf.map(t => {
-        const photosCount = getNormalizedPhotos(t).filter(p => p.photo).length;
+      pdfScenesChecklist.innerHTML = cachedTakesForPdf.map(tk => {
+        const photosCount = getNormalizedPhotos(tk).filter(p => p.photo).length;
         return `
           <label class="pdf-scene-check-item">
-            <input type="checkbox" class="pdf-scene-checkbox" value="${t.id}" checked>
+            <input type="checkbox" class="pdf-scene-checkbox" value="${tk.id}" checked>
             <div style="min-width:0; flex:1;">
-              <strong style="color:var(--amber); font-size:15px; display:block;">ESCENA ${escapeHtml(t.scene)}</strong>
-              ${t.sceneDesc ? `<span style="color:#d1d5db; font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(t.sceneDesc)}</span>` : ''}
+              <strong style="color:var(--amber); font-size:15px; display:block;">${t('scene_prefix')} ${escapeHtml(tk.scene)}</strong>
+              ${tk.sceneDesc ? `<span style="color:#d1d5db; font-size:13px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(tk.sceneDesc)}</span>` : ''}
             </div>
-            <span class="raccord-photo-chip">${photosCount} ${photosCount === 1 ? 'foto' : 'fotos'}</span>
+            <span class="raccord-photo-chip">${ICON_PHOTO_SVG}<span>${photosCount}</span></span>
           </label>
         `;
       }).join('');
@@ -9206,7 +9437,7 @@
       btnToggleAllPdfScenes.textContent = t('btn_uncheck_all');
       updatePdfScenesButtonLabel();
       syncPdfTuningControlsUI();
-      pdfPreviewStage.innerHTML = '<p style="color:var(--text-muted); font-weight:700; padding:30px 0; grid-column:1/-1; text-align:center;">Generando vista previa...</p>';
+      pdfPreviewStage.innerHTML = `<p style="color:var(--text-muted); font-weight:700; padding:30px 0; grid-column:1/-1; text-align:center;">${t('app_loading_startup')}</p>`;
       pdfPreviewModal.classList.remove('hidden');
       await renderLivePdfPreview();
     });
@@ -10045,7 +10276,12 @@
           <div class="raccord-card" data-action="open-viewer" data-id="${take.id}">
             <div>
               <div class="raccord-scene-header">
-                <span class="raccord-scene-badge">${t('scene_prefix')} ${escapeHtml(take.scene)}</span>
+                <div class="raccord-scene-top-row">
+                  <span class="raccord-scene-badge">${t('scene_prefix')} ${escapeHtml(take.scene)}</span>
+                  <button type="button" class="btn-duplicate-take" data-action="duplicate-take" data-id="${take.id}" title="${t('duplicate_take_title')}">
+                    ${ICON_DUPLICATE_SVG}
+                  </button>
+                </div>
                 ${take.sceneDesc ? `<p class="raccord-scene-desc">${escapeHtml(take.sceneDesc)}</p>` : ''}
               </div>
               ${entriesHtml ? `<div class="raccord-card-body">${entriesHtml}</div>` : ''}
@@ -10055,7 +10291,132 @@
       }).join('');
     }
 
+    const duplicateTakeModal = document.getElementById('duplicate-take-modal');
+    const duplicateTakeSceneSelect = document.getElementById('duplicate-take-scene-select');
+    const duplicateTakeEntriesList = document.getElementById('duplicate-take-entries-list');
+    const btnCloseDuplicateTake = document.getElementById('btn-close-duplicate-take');
+    const btnCancelDuplicateTake = document.getElementById('btn-cancel-duplicate-take');
+    const btnConfirmDuplicateTake = document.getElementById('btn-confirm-duplicate-take');
+    let duplicatingSourceTake = null;
+
+    async function openDuplicateTakeModal(takeId) {
+      if (!activeProjectId || !takeId || !duplicateTakeModal) return;
+      await updateCatalogCaches(null);
+      const allTakes = await getAllTakesForProject(activeProjectId);
+      const sourceTake = allTakes.find(tk => tk.id === takeId);
+      if (!sourceTake) return;
+
+      duplicatingSourceTake = sourceTake;
+      const usedScenesSet = new Set(
+        allTakes.map(tk => String(tk.scene || '').trim().toUpperCase())
+      );
+
+      if (duplicateTakeSceneSelect) {
+        duplicateTakeSceneSelect.innerHTML = `<option value="">${t('form_select_scene')}</option>` +
+          cachedScenesForProject.map(s => {
+            const scUpper = String(s.sceneNum).trim().toUpperCase();
+            const isTaken = usedScenesSet.has(scUpper);
+            const disabledAttr = isTaken ? 'disabled' : '';
+            const takenLabel = isTaken ? ` (${t('already_has_continuity')})` : '';
+            return `<option value="${escapeHtml(s.sceneNum)}" data-desc="${escapeHtml(s.desc || '')}" ${disabledAttr}>${t('scene_prefix')} ${escapeHtml(s.sceneNum)}${s.desc ? ' — ' + escapeHtml(s.desc) : ''}${takenLabel}</option>`;
+          }).join('');
+        duplicateTakeSceneSelect.value = '';
+      }
+
+      const entries = getNormalizedPhotos(sourceTake);
+      if (duplicateTakeEntriesList) {
+        if (entries.length === 0) {
+          duplicateTakeEntriesList.innerHTML = `<p style="margin:6px 0; font-size:13.5px; color:var(--text-muted); text-align:center;">${t('duplicate_take_no_entries')}</p>`;
+        } else {
+          duplicateTakeEntriesList.innerHTML = entries.map((entry, idx) => `
+            <label class="pdf-scene-check-item">
+              <input type="checkbox" class="duplicate-entry-checkbox" value="${idx}" checked>
+              ${entry.photo
+                ? `<img src="${entry.photo}" alt="${escapeHtml(entry.character || '')}" style="width:36px; height:36px; border-radius:8px; object-fit:cover; flex-shrink:0;">`
+                : `<div style="width:36px; height:36px; border-radius:8px; background:var(--bg-850); border:1px solid var(--border-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;">${getCharacterAvatarHtml(entry.character, true)}</div>`
+              }
+              <div style="min-width:0; flex:1;">
+                <strong style="color:#fff; font-size:14.5px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(entry.character || t('no_char'))}</strong>
+                <span style="color:var(--text-muted); font-size:12.5px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(entry.note || t('no_note_label'))}</span>
+              </div>
+            </label>
+          `).join('');
+        }
+      }
+
+      duplicateTakeModal.classList.remove('hidden');
+    }
+
+    function closeDuplicateTakeModal() {
+      duplicateTakeModal?.classList.add('hidden');
+      duplicatingSourceTake = null;
+    }
+
+    btnCloseDuplicateTake?.addEventListener('click', closeDuplicateTakeModal);
+    btnCancelDuplicateTake?.addEventListener('click', closeDuplicateTakeModal);
+    duplicateTakeModal?.addEventListener('click', (e) => {
+      if (e.target === duplicateTakeModal) closeDuplicateTakeModal();
+    });
+
+    btnConfirmDuplicateTake?.addEventListener('click', async () => {
+      if (!duplicatingSourceTake || !activeProjectId) return;
+      const targetScene = (duplicateTakeSceneSelect?.value || '').trim();
+      if (!targetScene) {
+        showToast(t('toast_select_scene'));
+        return;
+      }
+
+      const allTakes = await getAllTakesForProject(activeProjectId);
+      const conflict = allTakes.find(tk => String(tk.scene).trim().toUpperCase() === targetScene.toUpperCase());
+      if (conflict) {
+        showToast(t('toast_scene_already_has_take', { scene: targetScene }));
+        return;
+      }
+
+      const selectedOption = duplicateTakeSceneSelect.options[duplicateTakeSceneSelect.selectedIndex];
+      const sceneDesc = selectedOption ? (selectedOption.getAttribute('data-desc') || '') : '';
+      const sourceEntries = getNormalizedPhotos(duplicatingSourceTake);
+      const checkedIndices = new Set(
+        Array.from(document.querySelectorAll('.duplicate-entry-checkbox:checked'))
+          .map(cb => Number(cb.value))
+      );
+
+      const now = Date.now();
+      const clonedPhotos = sourceEntries
+        .filter((_, idx) => checkedIndices.has(idx))
+        .map((entry, idx) => ({
+          id: 'p_' + now + '_' + idx + '_' + Math.random().toString(36).slice(2, 6),
+          character: entry.character || '',
+          note: entry.note || '',
+          photo: entry.photo || null
+        }));
+
+      const newTake = {
+        id: 'take_' + now + '_' + Math.random().toString(36).slice(2, 6),
+        projectId: activeProjectId,
+        scene: targetScene,
+        sceneDesc,
+        notes: duplicatingSourceTake.notes || '',
+        photos: clonedPhotos,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      await saveEntityToDB(STORE_TAKES, newTake);
+      closeDuplicateTakeModal();
+      await updateCatalogCaches();
+      await renderTakes();
+      showToast(t('toast_take_duplicated', { scene: targetScene }));
+    });
+
     recordsGrid.addEventListener('click', (e) => {
+      const dupBtn = e.target.closest('[data-action="duplicate-take"]');
+      if (dupBtn) {
+        e.stopPropagation();
+        const id = dupBtn.getAttribute('data-id');
+        openDuplicateTakeModal(id);
+        return;
+      }
       const card = e.target.closest('[data-action="open-viewer"]');
       if (card) {
         const id = card.getAttribute('data-id');
@@ -10141,8 +10502,8 @@
             <p class="subentry-note-snippet">${escapeHtml(item.note || t('no_note_label'))}</p>
           </div>
           <div class="subentry-actions">
-            <button type="button" class="btn-action-small edit" onclick="openEditSubentry('${item.id}')" title="Editar entrada">${ICON_EDIT_SVG}</button>
-            <button type="button" class="btn-action-small delete" onclick="deleteSubentryItem('${item.id}')" title="Eliminar entrada">${ICON_DELETE_SVG}</button>
+            <button type="button" class="btn-action-small edit" onclick="openEditSubentry('${item.id}')" title="${t('btn_edit_title')}">${ICON_EDIT_SVG}</button>
+            <button type="button" class="btn-action-small delete" onclick="deleteSubentryItem('${item.id}')" title="${t('btn_delete')}">${ICON_DELETE_SVG}</button>
           </div>
         </div>
       `).join('');
@@ -10687,32 +11048,32 @@
       if (currentCloudUser) {
         authLoggedOutView?.classList.add('hidden');
         authLoggedInView?.classList.remove('hidden');
-        if (authUserEmailEl) authUserEmailEl.textContent = currentCloudUser.email || currentCloudUser.displayName || 'Usuario';
+        if (authUserEmailEl) authUserEmailEl.textContent = currentCloudUser.email || currentCloudUser.displayName || t('menu_cloud_account');
         if (profileNameInput) profileNameInput.value = profile.name || currentCloudUser.displayName || '';
         if (profileDeptSelect) profileDeptSelect.value = profile.department || '';
 
         const deptLabel = getDepartmentLabel(profile.department);
-        const displayName = profile.name || currentCloudUser.displayName || currentCloudUser.email || 'Cuenta';
+        const displayName = profile.name || currentCloudUser.displayName || currentCloudUser.email || t('menu_cloud_account');
         if (homeMenuAccountLabel) homeMenuAccountLabel.textContent = displayName;
         if (homeMenuAccountStatus) {
-          if (isCloudSyncing) {
-            homeMenuAccountStatus.textContent = 'Sincronizando...';
+          if (isCloudSyncing || isCloudSyncPending) {
+            homeMenuAccountStatus.textContent = t('cloud_syncing_status');
             homeMenuAccountStatus.style.color = '#fb923c';
-          } else if (!navigator.onLine) {
-            homeMenuAccountStatus.textContent = 'Offline';
+          } else if (!navigator.onLine || cloudConnectionFailed) {
+            homeMenuAccountStatus.textContent = t('cloud_status_no_signal');
             homeMenuAccountStatus.style.color = '#9ca3af';
           } else {
-            homeMenuAccountStatus.textContent = deptLabel || 'En línea';
+            homeMenuAccountStatus.textContent = deptLabel || t('cloud_status_online');
             homeMenuAccountStatus.style.color = '#6ee7b7';
           }
         }
         if (authSyncPillEl) {
-          if (isCloudSyncing) {
-            authSyncPillEl.textContent = 'Sincronizando...';
-          } else if (!navigator.onLine) {
-            authSyncPillEl.textContent = 'Sin señal (local)';
+          if (isCloudSyncing || isCloudSyncPending) {
+            authSyncPillEl.textContent = t('cloud_syncing_status');
+          } else if (!navigator.onLine || cloudConnectionFailed) {
+            authSyncPillEl.textContent = t('cloud_status_no_signal');
           } else {
-            authSyncPillEl.textContent = 'En línea';
+            authSyncPillEl.textContent = t('cloud_status_online');
           }
         }
       } else {
