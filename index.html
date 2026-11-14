@@ -3610,10 +3610,10 @@
   <!-- ========================================== -->
   <!-- OVERLAY: CARGA DE INICIO DE SESIÓN         -->
   <!-- ========================================== -->
-  <div id="auth-loading-overlay" class="auth-loading-overlay hidden" role="status" aria-live="polite">
+  <div id="auth-loading-overlay" class="auth-loading-overlay" role="status" aria-live="polite">
     <div class="auth-loading-card">
       <div class="auth-loading-spinner"></div>
-      <div style="font-size:15px; font-weight:800; color:#fff;" data-i18n="auth_signing_in_loading">Iniciando sesión...</div>
+      <div id="auth-loading-text" style="font-size:15px; font-weight:800; color:#fff;" data-i18n="app_loading_startup">Cargando...</div>
     </div>
   </div>
 
@@ -3984,6 +3984,7 @@
         auth_profile_onboarding_desc: 'Completa tus datos para identificar tus reportes PDF.',
         auth_btn_save_continue: 'Guardar y continuar',
         auth_signing_in_loading: 'Iniciando sesión...',
+        app_loading_startup: 'Cargando...',
         app_info_version_label: 'Versión',
         app_info_created_by: 'Creado por',
         pdf_include_profile: 'Incluir nombre y departamento',
@@ -4329,6 +4330,7 @@
         auth_profile_onboarding_desc: 'Complete your details to identify your PDF reports.',
         auth_btn_save_continue: 'Save and continue',
         auth_signing_in_loading: 'Signing in...',
+        app_loading_startup: 'Loading...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Created by',
         pdf_include_profile: 'Include name & department',
@@ -4688,6 +4690,7 @@
         auth_profile_onboarding_desc: 'Complete seus dados para identificar seus relatórios em PDF.',
         auth_btn_save_continue: 'Salvar e continuar',
         auth_signing_in_loading: 'Entrando...',
+        app_loading_startup: 'Carregando...',
         app_info_version_label: 'Versão',
         app_info_created_by: 'Criado por',
         pdf_include_profile: 'Incluir nome e departamento',
@@ -5033,6 +5036,7 @@
         auth_profile_onboarding_desc: 'Completa i tuoi dati per identificare i report PDF.',
         auth_btn_save_continue: 'Salva e continua',
         auth_signing_in_loading: 'Accesso in corso...',
+        app_loading_startup: 'Caricamento...',
         app_info_version_label: 'Versione',
         app_info_created_by: 'Creato da',
         pdf_include_profile: 'Includi nome e reparto',
@@ -5378,6 +5382,7 @@
         auth_profile_onboarding_desc: 'Vervollständige deine Daten zur Kennzeichnung deiner PDF-Berichte.',
         auth_btn_save_continue: 'Speichern und fortfahren',
         auth_signing_in_loading: 'Anmeldung läuft...',
+        app_loading_startup: 'Wird geladen...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Erstellt von',
         pdf_include_profile: 'Name & Abteilung einschließen',
@@ -5723,6 +5728,7 @@
         auth_profile_onboarding_desc: 'Complétez vos informations pour identifier vos rapports PDF.',
         auth_btn_save_continue: 'Enregistrer et continuer',
         auth_signing_in_loading: 'Connexion en cours...',
+        app_loading_startup: 'Chargement...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Créé par',
         pdf_include_profile: 'Inclure nom et département',
@@ -10667,8 +10673,13 @@
     });
 
     const authLoadingOverlay = document.getElementById('auth-loading-overlay');
+    const authLoadingText = document.getElementById('auth-loading-text');
 
-    function setAuthLoading(active) {
+    function setAuthLoading(active, msgKey = 'auth_signing_in_loading') {
+      if (active && authLoadingText) {
+        authLoadingText.setAttribute('data-i18n', msgKey);
+        authLoadingText.textContent = t(msgKey);
+      }
       authLoadingOverlay?.classList.toggle('hidden', !active);
     }
 
@@ -11046,8 +11057,11 @@
     function initFirebaseCloud() {
       const skipped = localStorage.getItem(AUTH_SKIPPED_KEY) === '1';
       if (typeof firebase === 'undefined') {
-        if (skipped) enterAppFromAuth();
-        else showAuthScreen('login');
+        if (skipped) enterAppFromAuth().finally(() => setAuthLoading(false));
+        else {
+          showAuthScreen('login');
+          setAuthLoading(false);
+        }
         return;
       }
       try {
@@ -11096,7 +11110,7 @@
         });
       } catch (e) {
         console.warn('Firebase init warning:', e);
-        enterAppFromAuth();
+        enterAppFromAuth().finally(() => setAuthLoading(false));
       }
     }
 
@@ -11159,9 +11173,15 @@
     window.addEventListener('DOMContentLoaded', async () => {
       try { await screen.orientation?.lock?.('portrait'); } catch (e) {}
       initLanguage();
-      await initDB();
-      await refreshBackupFolderLabel();
-      initFirebaseCloud();
+      setAuthLoading(true, 'app_loading_startup');
+      try {
+        await initDB();
+        await refreshBackupFolderLabel();
+        initFirebaseCloud();
+      } catch (e) {
+        console.warn('Startup warning:', e);
+        setAuthLoading(false);
+      }
     });
   </script>
 </body>
