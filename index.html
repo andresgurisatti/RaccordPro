@@ -2398,7 +2398,7 @@
   <!-- ========================================== -->
   <div id="view-auth" class="app-view auth-screen hidden">
     <div class="auth-card">
-      <div id="auth-brand-trigger" class="auth-brand-head" role="button" tabindex="0" style="cursor:pointer;">
+      <div class="auth-brand-head">
         <div class="auth-brand-icon">
           <svg width="46" height="46" viewBox="88 86 336 336" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="114" y="112" width="284" height="284" rx="44" ry="44" fill="none" stroke="#f59e0b" stroke-width="21"/>
@@ -11190,7 +11190,7 @@
       appInfoModal?.classList.add('hidden');
     }
 
-    ['home-brand-trigger', 'auth-brand-trigger'].forEach((id) => {
+    ['home-brand-trigger'].forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
       el.addEventListener('click', openAppInfoModal);
