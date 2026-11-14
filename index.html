@@ -2329,6 +2329,48 @@
       margin-bottom: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     }
+
+    .auth-loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      background: rgba(7, 9, 12, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      pointer-events: auto;
+      user-select: none;
+    }
+
+    .auth-loading-card {
+      background: var(--bg-800);
+      border: 1px solid var(--border-700);
+      border-radius: 18px;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+      text-align: center;
+      min-width: 220px;
+    }
+
+    .auth-loading-spinner {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 3px solid rgba(245, 158, 11, 0.22);
+      border-top-color: var(--amber);
+      animation: authSpin 0.8s linear infinite;
+    }
+
+    @keyframes authSpin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -3566,6 +3608,16 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- OVERLAY: CARGA DE INICIO DE SESIÓN         -->
+  <!-- ========================================== -->
+  <div id="auth-loading-overlay" class="auth-loading-overlay hidden" role="status" aria-live="polite">
+    <div class="auth-loading-card">
+      <div class="auth-loading-spinner"></div>
+      <div style="font-size:15px; font-weight:800; color:#fff;" data-i18n="auth_signing_in_loading">Iniciando sesión...</div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL: CONFIRMACIÓN                        -->
   <!-- ========================================== -->
   <div id="confirm-modal" class="modal-backdrop hidden" style="z-index: 80;">
@@ -3931,6 +3983,7 @@
         auth_skip_local: 'Continuar sin cuenta (solo en este dispositivo)',
         auth_profile_onboarding_desc: 'Completa tus datos para identificar tus reportes PDF.',
         auth_btn_save_continue: 'Guardar y continuar',
+        auth_signing_in_loading: 'Iniciando sesión...',
         app_info_version_label: 'Versión',
         app_info_created_by: 'Creado por',
         pdf_include_profile: 'Incluir nombre y departamento',
@@ -4275,6 +4328,7 @@
         auth_skip_local: 'Continue without account (this device only)',
         auth_profile_onboarding_desc: 'Complete your details to identify your PDF reports.',
         auth_btn_save_continue: 'Save and continue',
+        auth_signing_in_loading: 'Signing in...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Created by',
         pdf_include_profile: 'Include name & department',
@@ -4633,6 +4687,7 @@
         auth_skip_local: 'Continuar sem conta (apenas neste dispositivo)',
         auth_profile_onboarding_desc: 'Complete seus dados para identificar seus relatórios em PDF.',
         auth_btn_save_continue: 'Salvar e continuar',
+        auth_signing_in_loading: 'Entrando...',
         app_info_version_label: 'Versão',
         app_info_created_by: 'Criado por',
         pdf_include_profile: 'Incluir nome e departamento',
@@ -4977,6 +5032,7 @@
         auth_skip_local: 'Continua senza account (solo su questo dispositivo)',
         auth_profile_onboarding_desc: 'Completa i tuoi dati per identificare i report PDF.',
         auth_btn_save_continue: 'Salva e continua',
+        auth_signing_in_loading: 'Accesso in corso...',
         app_info_version_label: 'Versione',
         app_info_created_by: 'Creato da',
         pdf_include_profile: 'Includi nome e reparto',
@@ -5321,6 +5377,7 @@
         auth_skip_local: 'Ohne Konto fortfahren (nur dieses Gerät)',
         auth_profile_onboarding_desc: 'Vervollständige deine Daten zur Kennzeichnung deiner PDF-Berichte.',
         auth_btn_save_continue: 'Speichern und fortfahren',
+        auth_signing_in_loading: 'Anmeldung läuft...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Erstellt von',
         pdf_include_profile: 'Name & Abteilung einschließen',
@@ -5665,6 +5722,7 @@
         auth_skip_local: 'Continuer sans compte (cet appareil uniquement)',
         auth_profile_onboarding_desc: 'Complétez vos informations pour identifier vos rapports PDF.',
         auth_btn_save_continue: 'Enregistrer et continuer',
+        auth_signing_in_loading: 'Connexion en cours...',
         app_info_version_label: 'Version',
         app_info_created_by: 'Créé par',
         pdf_include_profile: 'Inclure nom et département',
@@ -10608,19 +10666,34 @@
       await handleCloudSyncAction();
     });
 
-    document.getElementById('btn-auth-google')?.addEventListener('click', async () => {
-      if (!firebaseAuth) return;
+    const authLoadingOverlay = document.getElementById('auth-loading-overlay');
+
+    function setAuthLoading(active) {
+      authLoadingOverlay?.classList.toggle('hidden', !active);
+    }
+
+    async function handleGoogleSignIn() {
+      if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
+      setAuthLoading(true);
       const provider = new firebase.auth.GoogleAuthProvider();
       try {
         await firebaseAuth.signInWithPopup(provider);
       } catch (err) {
         if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
-          await firebaseAuth.signInWithRedirect(provider);
+          try {
+            await firebaseAuth.signInWithRedirect(provider);
+          } catch (redirErr) {
+            setAuthLoading(false);
+            showToast(redirErr?.message || t('toast_google_login_error'));
+          }
         } else {
+          setAuthLoading(false);
           showToast(err?.message || t('toast_google_login_error'));
         }
       }
-    });
+    }
+
+    document.getElementById('btn-auth-google')?.addEventListener('click', handleGoogleSignIn);
 
     document.getElementById('btn-auth-login')?.addEventListener('click', async () => {
       if (!firebaseAuth) return;
@@ -10679,19 +10752,7 @@
       }
     }
 
-    document.getElementById('btn-screen-auth-google')?.addEventListener('click', async () => {
-      if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
-      const provider = new firebase.auth.GoogleAuthProvider();
-      try {
-        await firebaseAuth.signInWithPopup(provider);
-      } catch (err) {
-        if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
-          await firebaseAuth.signInWithRedirect(provider);
-        } else {
-          showToast(err?.message || t('toast_google_login_error'));
-        }
-      }
-    });
+    document.getElementById('btn-screen-auth-google')?.addEventListener('click', handleGoogleSignIn);
 
     document.getElementById('btn-screen-auth-login')?.addEventListener('click', async () => {
       if (!firebaseAuth) { showToast(t('toast_firebase_unavailable')); return; }
@@ -11012,12 +11073,16 @@
             } else {
               await enterAppFromAuth();
             }
+            setAuthLoading(false);
           } else if (!initialResolved) {
             if (localStorage.getItem(AUTH_SKIPPED_KEY) === '1') {
               await enterAppFromAuth();
             } else {
               showAuthScreen('login');
             }
+            setAuthLoading(false);
+          } else {
+            setAuthLoading(false);
           }
           initialResolved = true;
         });
