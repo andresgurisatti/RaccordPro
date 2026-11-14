@@ -2082,6 +2082,24 @@
       display: none;
     }
 
+    .offline-mode-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      border-radius: 10px;
+      padding: 7px 12px;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .offline-mode-banner.hidden {
+      display: none;
+    }
+
     .unsaved-backups-text {
       display: flex;
       align-items: center;
@@ -2593,6 +2611,10 @@
 
     <main class="scroll-area">
       <div class="container-narrow">
+        <div id="offline-mode-banner" class="offline-mode-banner hidden">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="2" y1="2" x2="22" y2="22"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M2 8.82a15 15 0 0 1 4.17-2.65"/><path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76"/><path d="M16.85 11.25a10 10 0 0 1 2.22 1.68"/><path d="M5 13a10 10 0 0 1 5.24-2.76"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+          <span data-i18n="offline_mode_banner_text">Modo offline · Sin conexión</span>
+        </div>
         <div id="unsaved-backups-banner" class="unsaved-backups-banner hidden">
           <div class="unsaved-backups-text">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
@@ -3985,6 +4007,7 @@
         auth_btn_save_continue: 'Guardar y continuar',
         auth_signing_in_loading: 'Iniciando sesión...',
         app_loading_startup: 'Cargando...',
+        offline_mode_banner_text: 'Modo offline · Sin conexión',
         app_info_version_label: 'Versión',
         app_info_created_by: 'Creado por',
         pdf_include_profile: 'Incluir nombre y departamento',
@@ -4331,6 +4354,7 @@
         auth_btn_save_continue: 'Save and continue',
         auth_signing_in_loading: 'Signing in...',
         app_loading_startup: 'Loading...',
+        offline_mode_banner_text: 'Offline mode · No connection',
         app_info_version_label: 'Version',
         app_info_created_by: 'Created by',
         pdf_include_profile: 'Include name & department',
@@ -4691,6 +4715,7 @@
         auth_btn_save_continue: 'Salvar e continuar',
         auth_signing_in_loading: 'Entrando...',
         app_loading_startup: 'Carregando...',
+        offline_mode_banner_text: 'Modo offline · Sem conexão',
         app_info_version_label: 'Versão',
         app_info_created_by: 'Criado por',
         pdf_include_profile: 'Incluir nome e departamento',
@@ -5037,6 +5062,7 @@
         auth_btn_save_continue: 'Salva e continua',
         auth_signing_in_loading: 'Accesso in corso...',
         app_loading_startup: 'Caricamento...',
+        offline_mode_banner_text: 'Modalità offline · Nessuna connessione',
         app_info_version_label: 'Versione',
         app_info_created_by: 'Creato da',
         pdf_include_profile: 'Includi nome e reparto',
@@ -5383,6 +5409,7 @@
         auth_btn_save_continue: 'Speichern und fortfahren',
         auth_signing_in_loading: 'Anmeldung läuft...',
         app_loading_startup: 'Wird geladen...',
+        offline_mode_banner_text: 'Offline-Modus · Keine Verbindung',
         app_info_version_label: 'Version',
         app_info_created_by: 'Erstellt von',
         pdf_include_profile: 'Name & Abteilung einschließen',
@@ -5729,6 +5756,7 @@
         auth_btn_save_continue: 'Enregistrer et continuer',
         auth_signing_in_loading: 'Connexion en cours...',
         app_loading_startup: 'Chargement...',
+        offline_mode_banner_text: 'Mode hors ligne · Aucune connexion',
         app_info_version_label: 'Version',
         app_info_created_by: 'Créé par',
         pdf_include_profile: 'Inclure nom et département',
@@ -10580,8 +10608,17 @@
     const profileDeptSelect = document.getElementById('profile-dept-select');
     const homeMenuAccountLabel = document.getElementById('home-menu-account-label');
     const homeMenuAccountStatus = document.getElementById('home-menu-account-status');
+    const offlineModeBanner = document.getElementById('offline-mode-banner');
+    let cloudConnectionFailed = false;
+
+    function updateOfflineBanner() {
+      if (!offlineModeBanner) return;
+      const isOffline = !navigator.onLine || cloudConnectionFailed;
+      offlineModeBanner.classList.toggle('hidden', !isOffline);
+    }
 
     function updateCloudAccountUI() {
+      updateOfflineBanner();
       const profile = getLocalUserProfile();
       if (currentCloudUser) {
         authLoggedOutView?.classList.add('hidden');
@@ -11045,8 +11082,10 @@
           await renderProjects();
         }
         if (!silent) showToast(t('toast_cloud_synced'));
+        cloudConnectionFailed = false;
       } catch (err) {
         console.error('Cloud sync error:', err);
+        cloudConnectionFailed = true;
         if (!silent) showToast(t('toast_cloud_sync_error'));
       } finally {
         isCloudSyncing = false;
@@ -11071,16 +11110,27 @@
         firebaseAuth = firebase.auth();
         firebaseDb = firebase.firestore();
         let initialResolved = false;
+        const startupTimeout = setTimeout(async () => {
+          if (initialResolved) return;
+          initialResolved = true;
+          cloudConnectionFailed = true;
+          const prof = getLocalUserProfile();
+          if (skipped || prof.name || prof.department) {
+            await enterAppFromAuth();
+          } else {
+            showAuthScreen('login');
+          }
+          updateOfflineBanner();
+          setAuthLoading(false);
+        }, 5000);
 
         firebaseAuth.onAuthStateChanged(async (user) => {
+          clearTimeout(startupTimeout);
           currentCloudUser = user || null;
           updateCloudAccountUI();
           if (currentCloudUser) {
             localStorage.removeItem(AUTH_SKIPPED_KEY);
             authModal?.classList.add('hidden');
-            if (navigator.onLine) {
-              await syncAllWithCloud({ silent: true });
-            }
             const prof = getLocalUserProfile();
             if (!prof.name && !prof.department) {
               showAuthScreen('profile');
@@ -11088,6 +11138,9 @@
               await enterAppFromAuth();
             }
             setAuthLoading(false);
+            if (navigator.onLine) {
+              syncAllWithCloud({ silent: true });
+            }
           } else if (!initialResolved) {
             if (localStorage.getItem(AUTH_SKIPPED_KEY) === '1') {
               await enterAppFromAuth();
@@ -11102,6 +11155,7 @@
         });
 
         window.addEventListener('online', () => {
+          cloudConnectionFailed = false;
           updateCloudAccountUI();
           if (currentCloudUser) syncAllWithCloud({ silent: true });
         });
