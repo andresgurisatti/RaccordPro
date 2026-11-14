@@ -3680,7 +3680,7 @@
         <div style="width:100%; border-top:1px solid var(--border-700); padding-top:14px; display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-muted);">
           <div>
             <span data-i18n="app_info_version_label">Versión</span>:
-            <strong id="app-info-version-val" style="color:#fff;">0.116</strong>
+            <strong id="app-info-version-val" style="color:#fff;">0.117</strong>
           </div>
           <div>
             <span data-i18n="app_info_created_by">Creado por</span>:
@@ -9063,9 +9063,15 @@
       const target = takes.find(tk => tk.id === takeId);
       if (!target) return;
       askConfirmation(t('confirm_bulk_clear_take', { scene: target.scene }), async () => {
+        const now = Date.now();
+        const delMap = { ...(target.deletedEntries || {}) };
+        getNormalizedPhotos(target).forEach(p => {
+          if (p && p.id) delMap[p.id] = now;
+        });
+        target.deletedEntries = delMap;
         target.photos = [];
         delete target.photo;
-        target.updatedAt = Date.now();
+        target.updatedAt = now;
         await saveTakeToDB(target);
         await refreshBulkClearTakeSelect();
         bulkClearTakeModal?.classList.add('hidden');
@@ -10585,12 +10591,16 @@
         if (!target) return;
 
         askConfirmation(t('confirm_delete_entry', { name: target.character || t('no_char') }), async () => {
+          const now = Date.now();
           const updatedPhotos = entries.filter(p => p.id !== targetEntryId);
           const uniqueChars = Array.from(new Set(updatedPhotos.map(p => p.character).filter(Boolean)));
+          const deletedEntries = { ...(targetTake.deletedEntries || {}), [targetEntryId]: now };
           await saveTakeToDB({
             ...targetTake,
             character: uniqueChars.join(', '),
-            photos: updatedPhotos
+            photos: updatedPhotos,
+            deletedEntries,
+            updatedAt: now
           });
           editingSubentryDirectlyInViewer = false;
           subentryModal.classList.add('hidden');
@@ -10657,11 +10667,13 @@
         return;
       }
 
+      const nowTs = Date.now();
       const newEntryObj = {
-        id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        id: 'ph_' + nowTs + '_' + Math.random().toString(36).slice(2, 7),
         character: charName,
         photo: currentSubentryPhotoBase64 || null,
-        note
+        note,
+        updatedAt: nowTs
       };
 
       const existingId = subentryIdInput.value;
@@ -10672,14 +10684,15 @@
         if (targetTake) {
           const updatedPhotos = getNormalizedPhotos(targetTake).map(p =>
             p.id === existingId
-              ? { ...p, character: charName, photo: currentSubentryPhotoBase64 || null, note }
+              ? { ...p, character: charName, photo: currentSubentryPhotoBase64 || null, note, updatedAt: nowTs }
               : p
           );
           const uniqueChars = Array.from(new Set(updatedPhotos.map(p => p.character).filter(Boolean)));
           await saveTakeToDB({
             ...targetTake,
             character: uniqueChars.join(', '),
-            photos: updatedPhotos
+            photos: updatedPhotos,
+            updatedAt: nowTs
           });
           editingSubentryDirectlyInViewer = false;
           subentryModal.classList.add('hidden');
@@ -10699,7 +10712,8 @@
           await saveTakeToDB({
             ...targetTake,
             character: uniqueChars.join(', '),
-            photos: updatedPhotos
+            photos: updatedPhotos,
+            updatedAt: nowTs
           });
           addingSubentryDirectlyToViewer = false;
           subentryModal.classList.add('hidden');
@@ -10713,7 +10727,7 @@
       if (existingId) {
         currentPhotoItems = currentPhotoItems.map(p =>
           p.id === existingId
-            ? { ...p, character: charName, photo: currentSubentryPhotoBase64 || null, note }
+            ? { ...p, character: charName, photo: currentSubentryPhotoBase64 || null, note, updatedAt: nowTs }
             : p
         );
       } else {
@@ -11500,6 +11514,10 @@
                 }
                 await userRef.collection(STORE_CHARACTERS).doc(localItem.id).set(payload);
               } else if (storeName === STORE_TAKES) {
+                if (cloudItem && !cloudItem.deletedAt) {
+                  // Both local and cloud have this take: merge entries instead of overwriting
+                  continue;
+                }
                 const entries = getNormalizedPhotos(localItem);
                 const cloudEntries = [];
                 for (const entry of entries) {
@@ -11519,7 +11537,7 @@
             }
           }
 
-          // Pull cloud -> local
+          // Pull / Merge cloud <-> local
           for (const [id, cloudItem] of cloudMap.entries()) {
             const localItem = localMap.get(id);
             const localDelAt = deletedMap.get(`${storeName}:${id}`) || 0;
@@ -11538,6 +11556,122 @@
             }
 
             if (localDelAt >= cloudUpdated) continue;
+
+            // Smart entry-level merge when both local and cloud have the same take
+            if (storeName === STORE_TAKES && localItem) {
+              const localUpdated = localItem.updatedAt || localItem.createdAt || 0;
+              const mergedDeleted = { ...(cloudItem.deletedEntries || {}) };
+              for (const [eId, delTs] of Object.entries(localItem.deletedEntries || {})) {
+                mergedDeleted[eId] = Math.max(mergedDeleted[eId] || 0, Number(delTs) || 0);
+              }
+
+              const localEntries = getNormalizedPhotos(localItem);
+              const cloudEntries = Array.isArray(cloudItem.photos) ? cloudItem.photos : [];
+              const localEntryMap = new Map(localEntries.map(e => [e.id, e]));
+              const cloudEntryMap = new Map(cloudEntries.map(e => [e.id, e]));
+              const allEntryIds = Array.from(new Set([...localEntryMap.keys(), ...cloudEntryMap.keys()]));
+
+              const mergedPhotos = [];
+              let needCloudPush = false;
+              let needLocalSave = false;
+
+              for (const entryId of allEntryIds) {
+                const lEntry = localEntryMap.get(entryId);
+                const cEntry = cloudEntryMap.get(entryId);
+                const lTs = lEntry ? (lEntry.updatedAt || localUpdated || 1) : 0;
+                const cTs = cEntry ? (cEntry.updatedAt || cloudUpdated || 1) : 0;
+                const delTs = mergedDeleted[entryId] || 0;
+
+                if (delTs >= Math.max(lTs, cTs)) {
+                  if (lEntry) needLocalSave = true;
+                  if (cEntry) needCloudPush = true;
+                  continue;
+                }
+
+                if (lEntry && cEntry) {
+                  if (cTs > lTs) {
+                    let photoData = lEntry.photo || null;
+                    if (cEntry.photoId) {
+                      const fetched = await fetchPhotoDoc(userRef, cEntry.photoId);
+                      if (fetched) photoData = fetched;
+                    } else {
+                      photoData = null;
+                    }
+                    const clean = { ...cEntry, photo: photoData, updatedAt: cTs };
+                    delete clean.photoId;
+                    mergedPhotos.push(clean);
+                    needLocalSave = true;
+                  } else {
+                    mergedPhotos.push({ ...lEntry, updatedAt: lTs });
+                    if (lTs > cTs) needCloudPush = true;
+                  }
+                } else if (lEntry) {
+                  mergedPhotos.push({ ...lEntry, updatedAt: lTs });
+                  needCloudPush = true;
+                } else if (cEntry) {
+                  let photoData = null;
+                  if (cEntry.photoId) {
+                    photoData = await fetchPhotoDoc(userRef, cEntry.photoId);
+                  }
+                  const clean = { ...cEntry, photo: photoData || null, updatedAt: cTs };
+                  delete clean.photoId;
+                  mergedPhotos.push(clean);
+                  needLocalSave = true;
+                }
+              }
+
+              const newerTake = cloudUpdated > localUpdated ? cloudItem : localItem;
+              const olderTake = cloudUpdated > localUpdated ? localItem : cloudItem;
+              const mergedNotes = (newerTake.notes || '').trim() || (olderTake.notes || '').trim();
+              const mergedSceneDesc = (newerTake.sceneDesc || '').trim() || (olderTake.sceneDesc || '').trim();
+
+              if (cloudUpdated !== localUpdated) {
+                if (cloudUpdated > localUpdated) needLocalSave = true;
+                else needCloudPush = true;
+              }
+
+              if (needLocalSave || needCloudPush) {
+                const mergedUpdatedAt = Math.max(localUpdated, cloudUpdated);
+                const uniqueChars = Array.from(new Set(mergedPhotos.map(p => p.character).filter(Boolean)));
+                const mergedTake = {
+                  ...olderTake,
+                  ...newerTake,
+                  id: localItem.id,
+                  projectId: localItem.projectId || cloudItem.projectId,
+                  scene: localItem.scene || cloudItem.scene,
+                  sceneDesc: mergedSceneDesc,
+                  notes: mergedNotes,
+                  character: uniqueChars.join(', '),
+                  photos: mergedPhotos,
+                  deletedEntries: mergedDeleted,
+                  updatedAt: mergedUpdatedAt
+                };
+                delete mergedTake.photo;
+
+                if (needLocalSave) {
+                  await saveEntityToDB(STORE_TAKES, mergedTake, { markDirty: false });
+                  anyChange = true;
+                }
+                if (needCloudPush) {
+                  const cloudPhotosPayload = [];
+                  for (const entry of mergedPhotos) {
+                    if (entry && entry.photo) {
+                      const photoId = `take_${mergedTake.id}_${entry.id}`;
+                      await uploadPhotoDoc(userRef, photoId, entry.photo, mergedTake.projectId, entry.updatedAt || mergedUpdatedAt);
+                      cloudPhotosPayload.push({ ...entry, photo: null, photoId });
+                    } else {
+                      cloudPhotosPayload.push({ ...entry, photo: null, photoId: null });
+                    }
+                  }
+                  await userRef.collection(STORE_TAKES).doc(mergedTake.id).set({
+                    ...mergedTake,
+                    photo: null,
+                    photos: cloudPhotosPayload
+                  });
+                }
+              }
+              continue;
+            }
 
             const localUpdated = localItem ? (localItem.updatedAt || localItem.createdAt || 0) : 0;
             if (!localItem || cloudUpdated > localUpdated) {
@@ -11570,6 +11704,89 @@
               anyChange = true;
             }
           }
+        }
+
+        // 4. Deduplicate takes created offline on two devices for the same project + scene number
+        const allTakesAfterSync = await getAllLocalEntities(STORE_TAKES);
+        const takesByProjectScene = new Map();
+        for (const tk of allTakesAfterSync) {
+          if (!tk || !tk.projectId || !tk.scene) continue;
+          const key = `${tk.projectId}::${String(tk.scene).trim().toUpperCase()}`;
+          if (!takesByProjectScene.has(key)) {
+            takesByProjectScene.set(key, [tk]);
+          } else {
+            takesByProjectScene.get(key).push(tk);
+          }
+        }
+        for (const group of takesByProjectScene.values()) {
+          if (group.length < 2) continue;
+          group.sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+          const primary = group[0];
+          const mergedEntryMap = new Map();
+          const mergedDeleted = { ...(primary.deletedEntries || {}) };
+          let combinedNotes = (primary.notes || '').trim();
+          let combinedDesc = (primary.sceneDesc || '').trim();
+
+          for (const tk of group) {
+            for (const [eId, delTs] of Object.entries(tk.deletedEntries || {})) {
+              mergedDeleted[eId] = Math.max(mergedDeleted[eId] || 0, Number(delTs) || 0);
+            }
+            for (const entry of getNormalizedPhotos(tk)) {
+              if (!entry || !entry.id) continue;
+              if ((mergedDeleted[entry.id] || 0) >= (entry.updatedAt || 1)) continue;
+              const prev = mergedEntryMap.get(entry.id);
+              if (!prev || (entry.updatedAt || 0) > (prev.updatedAt || 0)) {
+                mergedEntryMap.set(entry.id, entry);
+              }
+            }
+            const n = (tk.notes || '').trim();
+            if (n && !combinedNotes.includes(n)) {
+              combinedNotes = combinedNotes ? `${combinedNotes}\n${n}` : n;
+            }
+            if (!combinedDesc && tk.sceneDesc) combinedDesc = tk.sceneDesc;
+          }
+
+          const mergedPhotos = Array.from(mergedEntryMap.values());
+          const uniqueChars = Array.from(new Set(mergedPhotos.map(p => p.character).filter(Boolean)));
+          const nowMerge = Date.now();
+          const unifiedTake = {
+            ...primary,
+            sceneDesc: combinedDesc,
+            notes: combinedNotes,
+            character: uniqueChars.join(', '),
+            photos: mergedPhotos,
+            deletedEntries: mergedDeleted,
+            updatedAt: nowMerge
+          };
+          await saveEntityToDB(STORE_TAKES, unifiedTake, { markDirty: false });
+
+          const cloudPhotosPayload = [];
+          for (const entry of mergedPhotos) {
+            if (entry && entry.photo) {
+              const photoId = `take_${unifiedTake.id}_${entry.id}`;
+              await uploadPhotoDoc(userRef, photoId, entry.photo, unifiedTake.projectId, entry.updatedAt || nowMerge);
+              cloudPhotosPayload.push({ ...entry, photo: null, photoId });
+            } else {
+              cloudPhotosPayload.push({ ...entry, photo: null, photoId: null });
+            }
+          }
+          await userRef.collection(STORE_TAKES).doc(unifiedTake.id).set({
+            ...unifiedTake,
+            photo: null,
+            photos: cloudPhotosPayload
+          });
+
+          for (let i = 1; i < group.length; i++) {
+            const dup = group[i];
+            await deleteEntityFromDB(STORE_TAKES, dup.id, { markDirty: false, skipCloudDelete: true });
+            await userRef.collection(STORE_TAKES).doc(dup.id).set({
+              id: dup.id,
+              projectId: dup.projectId || null,
+              deletedAt: nowMerge,
+              updatedAt: nowMerge
+            }, { merge: true });
+          }
+          anyChange = true;
         }
 
         // Mark all local projects as synced
