@@ -39,6 +39,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
@@ -2068,8 +2071,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: rgba(239, 68, 68, 0.14);
-      border: 1px solid rgba(239, 68, 68, 0.48);
+      background: rgba(249, 115, 22, 0.14);
+      border: 1px solid rgba(249, 115, 22, 0.48);
       border-radius: 12px;
       padding: 9px 12px;
       margin-bottom: 14px;
@@ -2085,24 +2088,24 @@
       gap: 8px;
       font-size: 13px;
       font-weight: 800;
-      color: #fecaca;
+      color: #ffedd5;
       min-width: 0;
     }
 
     .unsaved-backups-btn {
       padding: 6px 12px;
       border-radius: 9px;
-      background: #ef4444;
+      background: #f97316;
       color: #fff;
       font-size: 12px;
       font-weight: 900;
       flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
     }
 
     .unsaved-backups-btn:active {
       transform: scale(0.95);
-      background: #dc2626;
+      background: #ea580c;
     }
 
     .project-dirty-badge {
@@ -2111,9 +2114,9 @@
       gap: 5px;
       font-size: 10px;
       font-weight: 900;
-      color: #fecaca;
-      background: rgba(239, 68, 68, 0.16);
-      border: 1px solid rgba(239, 68, 68, 0.52);
+      color: #ffedd5;
+      background: rgba(249, 115, 22, 0.16);
+      border: 1px solid rgba(249, 115, 22, 0.52);
       padding: 2px 7px;
       border-radius: 999px;
       letter-spacing: 0.03em;
@@ -2125,8 +2128,8 @@
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: #ff3b30;
-      box-shadow: 0 0 6px #ef4444;
+      background: #f97316;
+      box-shadow: 0 0 6px #f97316;
       display: inline-block;
       flex-shrink: 0;
     }
@@ -2139,11 +2142,11 @@
     @keyframes redDotPulse {
       0%, 100% {
         transform: scale(1);
-        box-shadow: 0 0 10px rgba(255, 59, 48, 0.9), 0 0 4px #ff3b30;
+        box-shadow: 0 0 10px rgba(249, 115, 22, 0.9), 0 0 4px #f97316;
       }
       50% {
         transform: scale(1.15);
-        box-shadow: 0 0 18px rgba(255, 59, 48, 1), 0 0 8px #ff4d4d;
+        box-shadow: 0 0 18px rgba(249, 115, 22, 1), 0 0 8px #fb923c;
       }
     }
 
@@ -2154,9 +2157,9 @@
       width: 17px;
       height: 17px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #ff5252, #e11d48);
+      background: radial-gradient(circle at 35% 35%, #fb923c, #ea580c);
       border: 2.5px solid var(--bg-850);
-      box-shadow: 0 0 12px rgba(239, 68, 68, 0.95), 0 0 4px #ff3b30;
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.95), 0 0 4px #f97316;
       pointer-events: none;
       z-index: 60;
       animation: redDotPulse 2.4s ease-in-out infinite;
@@ -2334,6 +2337,16 @@
       </div>
 
       <div id="home-dropdown-menu" class="dropdown-menu">
+        <button type="button" class="dropdown-item highlight" id="home-menu-opt-account">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1; gap:8px; min-width:0;">
+            <span id="home-menu-account-label" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" data-i18n="menu_cloud_account">Nube / Cuenta</span>
+            <span id="home-menu-account-status" style="color:var(--amber); font-size:11px; font-weight:900; flex-shrink:0;" data-i18n="cloud_status_offline_short">Sin sesión</span>
+          </div>
+        </button>
+
+        <div class="dropdown-divider"></div>
+
         <button type="button" class="dropdown-item" id="home-menu-opt-sort">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
           <div style="display:flex; justify-content:space-between; align-items:center; flex:1;">
@@ -2424,10 +2437,10 @@
       <div class="container-narrow">
         <div id="unsaved-backups-banner" class="unsaved-backups-banner hidden">
           <div class="unsaved-backups-text">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            <span id="unsaved-backups-label">1 proyecto modificado sin respaldar</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            <span id="unsaved-backups-label">1 proyecto sin subir a la nube</span>
           </div>
-          <button type="button" id="btn-quick-backup-dirty" class="unsaved-backups-btn" data-i18n="btn_backup_quick">Respaldar</button>
+          <button type="button" id="btn-quick-backup-dirty" class="unsaved-backups-btn" data-i18n="btn_cloud_upload_quick">Subir</button>
         </div>
         <div id="projects-list"></div>
 
@@ -2523,16 +2536,20 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           <span data-i18n="menu_export_pdf">Exportar Reporte PDF</span>
         </button>
+        <button type="button" class="dropdown-item highlight" id="project-menu-opt-cloud-sync">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex:1; gap:8px;">
+            <span data-i18n="menu_cloud_sync">Subir a la nube</span>
+            <span id="menu-dirty-backup-badge" class="project-dirty-badge hidden" data-i18n="menu_dirty_backup_badge">SIN SUBIR</span>
+          </div>
+        </button>
         <button type="button" class="dropdown-item" id="menu-opt-export-json">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
             <polyline points="17 21 17 13 7 13 7 21"/>
             <polyline points="7 3 7 8 15 8"/>
           </svg>
-          <div style="display:flex; justify-content:space-between; align-items:center; flex:1; gap:8px;">
-            <span data-i18n="menu_save_backup">Guardar Respaldo</span>
-            <span id="menu-dirty-backup-badge" class="project-dirty-badge hidden" data-i18n="menu_dirty_backup_badge">SIN RESPALDAR</span>
-          </div>
+          <span data-i18n="menu_save_backup">Guardar Respaldo</span>
         </button>
         <button type="button" class="dropdown-item sub-option hidden" id="menu-opt-change-json-folder">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
@@ -3201,6 +3218,13 @@
               <span class="rp-switch-track"></span>
             </span>
           </label>
+          <label class="pdf-menu-row" style="cursor:pointer; user-select:none;">
+            <span class="pdf-menu-label" data-i18n="pdf_include_profile">Incluir nombre y departamento</span>
+            <span class="rp-switch">
+              <input type="checkbox" id="pdf-include-profile-checkbox" checked>
+              <span class="rp-switch-track"></span>
+            </span>
+          </label>
         </div>
 
         <div id="pdf-preview-stage" class="pdf-preview-stage"></div>
@@ -3271,6 +3295,80 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- ========================================== -->
+  <!-- MODAL: CUENTA EN LA NUBE Y PERFIL          -->
+  <!-- ========================================== -->
+  <div id="auth-modal" class="modal-backdrop hidden" style="z-index: 86;">
+    <div class="modal-card" style="max-width:420px;">
+      <div class="modal-header">
+        <h2 class="modal-title" style="color:var(--amber);" data-i18n="modal_cloud_account_title">NUBE Y PERFIL</h2>
+        <button type="button" id="btn-close-auth-modal" class="btn-close-touch" title="Cerrar" data-i18n-title="close_title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="auth-logged-out-view">
+          <p style="margin:0 0 14px 0; font-size:13.5px; color:var(--text-muted); line-height:1.45;" data-i18n="auth_intro">
+            Inicia sesión para respaldar y sincronizar tus proyectos en la nube. La app sigue funcionando sin señal en todo momento.
+          </p>
+          <button type="button" id="btn-auth-google" class="btn-secondary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:13px 16px; margin-bottom:14px; font-weight:800;">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.5 3.8-5.5 3.8-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.3 14.6 2.4 12 2.4 6.7 2.4 2.4 6.7 2.4 12s4.3 9.6 9.6 9.6c5.5 0 9.2-3.9 9.2-9.4 0-.6-.1-1.1-.2-1.6H12z"/></svg>
+            <span data-i18n="auth_btn_google">Continuar con Google</span>
+          </button>
+
+          <div style="display:flex; align-items:center; gap:10px; margin:12px 0; color:var(--text-muted); font-size:12px; font-weight:700;">
+            <div style="flex:1; height:1px; background:var(--border-700);"></div>
+            <span data-i18n="auth_or_email">o con correo</span>
+            <div style="flex:1; height:1px; background:var(--border-700);"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="auth-email-input" data-i18n="auth_email_label">Correo electrónico</label>
+            <input type="email" id="auth-email-input" class="form-control" autocomplete="email" placeholder="nombre@ejemplo.com">
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label" for="auth-password-input" data-i18n="auth_password_label">Contraseña</label>
+            <input type="password" id="auth-password-input" class="form-control" autocomplete="current-password" placeholder="••••••">
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" id="btn-auth-login" class="btn-primary" style="flex:1;" data-i18n="auth_btn_login">Iniciar sesión</button>
+            <button type="button" id="btn-auth-register" class="btn-secondary" style="flex:1;" data-i18n="auth_btn_register">Crear cuenta</button>
+          </div>
+        </div>
+
+        <div id="auth-logged-in-view" class="hidden">
+          <div style="background:var(--bg-800); border:1px solid var(--border-700); border-radius:12px; padding:12px; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+            <div style="min-width:0;">
+              <div style="font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase;" data-i18n="auth_signed_in_as">Sesión iniciada</div>
+              <div id="auth-user-email" style="font-size:14px; font-weight:800; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">—</div>
+            </div>
+            <span id="auth-sync-pill" style="font-size:11px; font-weight:900; padding:4px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#6ee7b7; border:1px solid rgba(16,185,129,0.4); flex-shrink:0;">Al día</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="profile-name-input" data-i18n="profile_name_label">Tu nombre (para reportes PDF)</label>
+            <input type="text" id="profile-name-input" class="form-control" placeholder="Ej. Andrés Gurisatti">
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label" for="profile-dept-select" data-i18n="profile_dept_label">Departamento</label>
+            <select id="profile-dept-select" class="form-control">
+              <option value="" data-i18n="dept_none">Sin especificar</option>
+              <option value="costume" data-i18n="dept_costume">Vestuario</option>
+              <option value="hair_makeup" data-i18n="dept_hair_makeup">Maquillaje / Peinado</option>
+              <option value="props" data-i18n="dept_props">Props</option>
+              <option value="art" data-i18n="dept_art">Arte</option>
+            </select>
+          </div>
+
+          <button type="button" id="btn-save-profile" class="btn-primary" style="width:100%; margin-bottom:10px;" data-i18n="profile_btn_save">Guardar perfil</button>
+          <button type="button" id="btn-sync-now" class="btn-secondary" style="width:100%; margin-bottom:10px; border-color:rgba(249,115,22,0.5); color:#fdba74;" data-i18n="cloud_btn_sync_now">Sincronizar ahora con la nube</button>
+          <button type="button" id="btn-auth-logout" class="btn-secondary" style="width:100%; color:#f87171; border-color:rgba(239,68,68,0.35);" data-i18n="auth_btn_logout">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: SELECCIÓN DE IDIOMA                 -->
   <!-- ========================================== -->
   <div id="language-modal" class="modal-backdrop hidden" style="z-index: 85;">
@@ -3525,7 +3623,7 @@
         menu_characters: 'Personajes',
         menu_export_pdf: 'Exportar Reporte PDF',
         menu_save_backup: 'Guardar Respaldo',
-        menu_dirty_backup_badge: 'SIN RESPALDAR',
+        menu_dirty_backup_badge: 'SIN SUBIR',
         menu_change_backup_folder: 'Cambiar carpeta de respaldo',
         search_projects_placeholder: 'Buscar proyecto o productora...',
         search_takes_placeholder: 'Buscar escena, personaje o nota...',
@@ -3645,11 +3743,35 @@
         btn_cancel: 'Cancelar',
         btn_delete: 'Eliminar',
         btn_backup_quick: 'Respaldar',
+        btn_cloud_upload_quick: 'Subir',
         badge_completed: 'TERMINADO',
         created_label: 'Creado',
         edit_project_title: 'Editar proyecto',
-        unsaved_banner_single: '1 proyecto modificado sin respaldar',
-        unsaved_banner_plural: '{count} proyectos modificados sin respaldar',
+        unsaved_banner_single: '1 proyecto sin subir a la nube',
+        unsaved_banner_plural: '{count} proyectos sin subir a la nube',
+        menu_cloud_account: 'Nube / Cuenta',
+        menu_cloud_sync: 'Subir a la nube',
+        cloud_status_offline_short: 'Sin sesión',
+        modal_cloud_account_title: 'NUBE Y PERFIL',
+        auth_intro: 'Inicia sesión para respaldar y sincronizar tus proyectos en la nube. La app sigue funcionando sin señal en todo momento.',
+        auth_btn_google: 'Continuar con Google',
+        auth_or_email: 'o con correo',
+        auth_email_label: 'Correo electrónico',
+        auth_password_label: 'Contraseña',
+        auth_btn_login: 'Iniciar sesión',
+        auth_btn_register: 'Crear cuenta',
+        auth_signed_in_as: 'Sesión iniciada',
+        profile_name_label: 'Tu nombre (para reportes PDF)',
+        profile_dept_label: 'Departamento',
+        dept_none: 'Sin especificar',
+        dept_costume: 'Vestuario',
+        dept_hair_makeup: 'Maquillaje / Peinado',
+        dept_props: 'Props',
+        dept_art: 'Arte',
+        profile_btn_save: 'Guardar perfil',
+        cloud_btn_sync_now: 'Sincronizar ahora con la nube',
+        auth_btn_logout: 'Cerrar sesión',
+        pdf_include_profile: 'Incluir nombre y departamento',
         toast_no_takes_for_pdf: 'Aún no hay continuidades registradas para exportar',
         toast_entry_added: 'Entrada añadida a la continuidad',
         toast_scene_already_has_take: 'La Escena {scene} ya tiene una continuidad registrada',
@@ -3827,7 +3949,7 @@
         menu_characters: 'Characters',
         menu_export_pdf: 'Export PDF Report',
         menu_save_backup: 'Save Backup',
-        menu_dirty_backup_badge: 'UNSAVED',
+        menu_dirty_backup_badge: 'NOT SYNCED',
         menu_change_backup_folder: 'Change backup folder',
         search_projects_placeholder: 'Search project or company...',
         search_takes_placeholder: 'Search scene, character or note...',
@@ -3947,11 +4069,35 @@
         btn_cancel: 'Cancel',
         btn_delete: 'Delete',
         btn_backup_quick: 'Backup',
+        btn_cloud_upload_quick: 'Upload',
         badge_completed: 'COMPLETED',
         created_label: 'Created',
         edit_project_title: 'Edit project',
-        unsaved_banner_single: '1 unsaved modified project',
-        unsaved_banner_plural: '{count} unsaved modified projects',
+        unsaved_banner_single: '1 project not uploaded to cloud',
+        unsaved_banner_plural: '{count} projects not uploaded to cloud',
+        menu_cloud_account: 'Cloud / Account',
+        menu_cloud_sync: 'Upload to cloud',
+        cloud_status_offline_short: 'Signed out',
+        modal_cloud_account_title: 'CLOUD & PROFILE',
+        auth_intro: 'Sign in to back up and sync your projects to the cloud. The app keeps working offline at all times.',
+        auth_btn_google: 'Continue with Google',
+        auth_or_email: 'or with email',
+        auth_email_label: 'Email',
+        auth_password_label: 'Password',
+        auth_btn_login: 'Sign in',
+        auth_btn_register: 'Create account',
+        auth_signed_in_as: 'Signed in as',
+        profile_name_label: 'Your name (for PDF reports)',
+        profile_dept_label: 'Department',
+        dept_none: 'Not specified',
+        dept_costume: 'Costume',
+        dept_hair_makeup: 'Hair / Makeup',
+        dept_props: 'Props',
+        dept_art: 'Art',
+        profile_btn_save: 'Save profile',
+        cloud_btn_sync_now: 'Sync with cloud now',
+        auth_btn_logout: 'Sign out',
+        pdf_include_profile: 'Include name & department',
         toast_no_takes_for_pdf: 'No continuities recorded to export yet',
         toast_entry_added: 'Entry added to continuity',
         toast_scene_already_has_take: 'Scene {scene} already has a continuity record',
@@ -5542,19 +5688,35 @@
       const prev = map[projId] || {};
       map[projId] = {
         lastModifiedAt: Date.now(),
-        lastBackupAt: prev.lastBackupAt || 0
+        lastBackupAt: prev.lastBackupAt || 0,
+        lastCloudSyncAt: prev.lastCloudSyncAt || 0
       };
       saveBackupStateMap(map);
       if (projId === activeProjectId) refreshProjectMenuBackupIndicator();
+      if (typeof scheduleCloudSync === 'function') scheduleCloudSync();
     }
 
     function markProjectBackedUp(projId) {
       if (!projId) return;
       const map = getBackupStateMap();
+      const prev = map[projId] || {};
       const now = Date.now();
       map[projId] = {
-        lastModifiedAt: (map[projId] && map[projId].lastModifiedAt) ? map[projId].lastModifiedAt : now,
-        lastBackupAt: now
+        lastModifiedAt: prev.lastModifiedAt || now,
+        lastBackupAt: now,
+        lastCloudSyncAt: prev.lastCloudSyncAt || 0
+      };
+      saveBackupStateMap(map);
+    }
+
+    function markProjectCloudSynced(projId, syncedAt = Date.now()) {
+      if (!projId) return;
+      const map = getBackupStateMap();
+      const prev = map[projId] || {};
+      map[projId] = {
+        lastModifiedAt: prev.lastModifiedAt || syncedAt,
+        lastBackupAt: prev.lastBackupAt || 0,
+        lastCloudSyncAt: syncedAt
       };
       saveBackupStateMap(map);
       if (projId === activeProjectId) refreshProjectMenuBackupIndicator();
@@ -5574,7 +5736,7 @@
       const map = getBackupStateMap();
       const st = map[proj.id];
       if (!st) return false;
-      return (st.lastModifiedAt || 0) > (st.lastBackupAt || 0);
+      return (st.lastModifiedAt || 0) > (st.lastCloudSyncAt || 0);
     }
 
     const unsavedBackupsBanner = document.getElementById('unsaved-backups-banner');
@@ -5597,7 +5759,11 @@
     }
 
     if (btnQuickBackupDirty) {
-      btnQuickBackupDirty.addEventListener('click', () => openBatchProjectsModal('export-dirty'));
+      btnQuickBackupDirty.addEventListener('click', () => {
+        if (typeof handleCloudSyncAction === 'function') {
+          handleCloudSyncAction();
+        }
+      });
     }
 
     function saveEntityToDB(storeName, item, options = {}) {
@@ -5662,8 +5828,36 @@
       });
     }
 
-    function deleteEntityFromDB(storeName, id) {
-      if (activeProjectId) markProjectModified(activeProjectId);
+    const CLOUD_DELETES_KEY = 'rp_cloud_deletes';
+
+    function getCloudDeletes() {
+      try {
+        const list = JSON.parse(localStorage.getItem(CLOUD_DELETES_KEY) || '[]');
+        return Array.isArray(list) ? list : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function setCloudDeletes(list) {
+      try {
+        localStorage.setItem(CLOUD_DELETES_KEY, JSON.stringify(list || []));
+      } catch (e) {}
+    }
+
+    function recordCloudDelete(storeName, id, projectId = null) {
+      if (!id || suppressBackupDirtyTracking) return;
+      const list = getCloudDeletes().filter(x => !(x.store === storeName && x.id === id));
+      list.push({ store: storeName, id, projectId, deletedAt: Date.now() });
+      setCloudDeletes(list);
+      if (typeof scheduleCloudSync === 'function') scheduleCloudSync();
+    }
+
+    function deleteEntityFromDB(storeName, id, options = {}) {
+      if (options.markDirty !== false && activeProjectId) markProjectModified(activeProjectId);
+      if (options.skipCloudDelete !== true) {
+        recordCloudDelete(storeName, id, activeProjectId || null);
+      }
       setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.id !== id));
 
       if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
@@ -5683,6 +5877,8 @@
     }
 
     function deleteAllEntitiesForProject(storeName, projId) {
+      const fbItems = getFallbackList('rp_' + storeName).filter(x => x.projectId === projId);
+      fbItems.forEach(x => recordCloudDelete(storeName, x.id, projId));
       setFallbackList('rp_' + storeName, getFallbackList('rp_' + storeName).filter(x => x.projectId !== projId));
 
       if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
@@ -5695,7 +5891,10 @@
           const store = tx.objectStore(storeName);
           const req = store.getAll();
           req.onsuccess = () => {
-            (req.result || []).filter(x => x.projectId === projId).forEach(x => store.delete(x.id));
+            (req.result || []).filter(x => x.projectId === projId).forEach(x => {
+              recordCloudDelete(storeName, x.id, projId);
+              store.delete(x.id);
+            });
           };
           tx.oncomplete = () => resolve();
           tx.onerror = () => resolve();
@@ -5732,8 +5931,11 @@
       });
     }
 
-    function deleteProjectFromDB(projId) {
+    function deleteProjectFromDB(projId, options = {}) {
       removeProjectBackupState(projId);
+      if (options.skipCloudDelete !== true) {
+        recordCloudDelete(STORE_PROJECTS, projId, projId);
+      }
       setFallbackList('rp_projects', getFallbackList('rp_projects').filter(p => p.id !== projId));
       setFallbackList('rp_takes', getFallbackList('rp_takes').filter(t => t.projectId !== projId));
       setFallbackList('rp_scenes', getFallbackList('rp_scenes').filter(s => s.projectId !== projId));
@@ -8238,6 +8440,39 @@
       });
     });
 
+    const MAX_FIRESTORE_IMAGE_BYTES = 900000;
+
+    function encodeImgUnderMaxBytes(img, maxDim, initialQuality, maxBytes = MAX_FIRESTORE_IMAGE_BYTES) {
+      let w = Math.max(1, img.width || 1);
+      let h = Math.max(1, img.height || 1);
+      if (w > maxDim || h > maxDim) {
+        const ratio = Math.min(maxDim / w, maxDim / h);
+        w = Math.max(1, Math.round(w * ratio));
+        h = Math.max(1, Math.round(h * ratio));
+      }
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      let q = initialQuality;
+      let result = '';
+
+      for (let attempt = 0; attempt < 8; attempt++) {
+        canvas.width = w;
+        canvas.height = h;
+        ctx.drawImage(img, 0, 0, w, h);
+        result = canvas.toDataURL('image/jpeg', q);
+        if (result.length <= maxBytes) return result;
+        if (q > 0.45) {
+          q = Math.max(0.42, q - 0.12);
+        } else {
+          w = Math.max(320, Math.round(w * 0.78));
+          h = Math.max(320, Math.round(h * 0.78));
+          q = 0.65;
+        }
+      }
+      return result;
+    }
+
     function recompressDataUrl(dataUrl, maxDim = 1100, quality = 0.72) {
       return new Promise((resolve) => {
         if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
@@ -8246,20 +8481,12 @@
         }
         const img = new Image();
         img.onload = () => {
-          let w = img.width || 1;
-          let h = img.height || 1;
-          if (w > maxDim || h > maxDim) {
-            const ratio = Math.min(maxDim / w, maxDim / h);
-            w = Math.max(1, Math.round(w * ratio));
-            h = Math.max(1, Math.round(h * ratio));
+          const nextUrl = encodeImgUnderMaxBytes(img, maxDim, quality, MAX_FIRESTORE_IMAGE_BYTES);
+          if (dataUrl.length > MAX_FIRESTORE_IMAGE_BYTES || (nextUrl && nextUrl.length < dataUrl.length)) {
+            resolve(nextUrl);
+          } else {
+            resolve(dataUrl);
           }
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const nextUrl = canvas.toDataURL('image/jpeg', quality);
-          resolve(nextUrl && nextUrl.length < dataUrl.length ? nextUrl : dataUrl);
         };
         img.onerror = () => resolve(dataUrl);
         img.src = dataUrl;
@@ -8703,6 +8930,17 @@
       });
     });
 
+    const pdfIncludeProfileCheckbox = document.getElementById('pdf-include-profile-checkbox');
+    let pdfIncludeProfile = localStorage.getItem('rp_pdf_include_profile') !== '0';
+    if (pdfIncludeProfileCheckbox) {
+      pdfIncludeProfileCheckbox.checked = pdfIncludeProfile;
+      pdfIncludeProfileCheckbox.addEventListener('change', () => {
+        pdfIncludeProfile = pdfIncludeProfileCheckbox.checked;
+        localStorage.setItem('rp_pdf_include_profile', pdfIncludeProfile ? '1' : '0');
+        scheduleLivePdfPreviewUpdate();
+      });
+    }
+
     pdfPerRaccordCheckbox.addEventListener('change', () => {
       pdfLayoutMode = pdfPerRaccordCheckbox.checked ? 'per-raccord' : 'flow';
       localStorage.setItem('rp_pdf_layout_mode', pdfLayoutMode);
@@ -8829,6 +9067,9 @@
 
       const projTitle = activeProjectData ? activeProjectData.name : 'Proyecto';
       const prodName = activeProjectData ? (activeProjectData.producer || activeProjectData.director || '') : '';
+      const profileStr = (pdfIncludeProfile && typeof getFormattedProfileForPdf === 'function')
+        ? getFormattedProfileForPdf(lang)
+        : '';
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(10);
       doc.text(`${i18n.projectLabel}: ${projTitle}`, margin, 17.5);
@@ -8836,7 +9077,11 @@
       doc.setTextColor(180, 185, 195);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8.2);
-      const metaLine = `${prodName ? prodName + '  |  ' : ''}${i18n.generatedLabel}: ${new Date().toLocaleDateString()}`;
+      const metaParts = [];
+      if (profileStr) metaParts.push(profileStr);
+      if (prodName) metaParts.push(prodName);
+      metaParts.push(`${i18n.generatedLabel}: ${new Date().toLocaleDateString()}`);
+      const metaLine = metaParts.join('  |  ');
       doc.text(metaLine, margin, 23.2);
 
       y = 33;
@@ -9143,21 +9388,8 @@
         reader.onload = (ev) => {
           const img = new Image();
           img.onload = () => {
-            let width = img.width;
-            let height = img.height;
-
-            if (width > maxWidth || height > maxHeight) {
-              const ratio = Math.min(maxWidth / width, maxHeight / height);
-              width = Math.round(width * ratio);
-              height = Math.round(height * ratio);
-            }
-
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', quality));
+            const maxDim = Math.min(maxWidth, maxHeight);
+            resolve(encodeImgUnderMaxBytes(img, maxDim, quality, MAX_FIRESTORE_IMAGE_BYTES));
           };
           img.onerror = (err) => reject(err);
           img.src = ev.target.result;
@@ -9853,6 +10085,474 @@
       toastTimer = setTimeout(() => tEl.classList.remove('toast-visible'), 2600);
     }
 
+    /* ==========================================================================
+       FIREBASE AUTH + FIRESTORE CLOUD SYNC (OFFLINE-FIRST)
+       ========================================================================== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyOKYEOrY6wmdhdxG3e7DB3fDUztBtMjs",
+      authDomain: "setbible-5c0fa.firebaseapp.com",
+      projectId: "setbible-5c0fa",
+      storageBucket: "setbible-5c0fa.firebasestorage.app",
+      messagingSenderId: "377022914307",
+      appId: "1:377022914307:web:9247eac49fc56aa9809336"
+    };
+
+    const USER_PROFILE_KEY = 'rp_user_profile';
+    let firebaseAuth = null;
+    let firebaseDb = null;
+    let currentCloudUser = null;
+    let isCloudSyncing = false;
+    let cloudSyncDebounceTimer = null;
+
+    function getLocalUserProfile() {
+      try {
+        const p = JSON.parse(localStorage.getItem(USER_PROFILE_KEY) || '{}');
+        return {
+          name: (p && p.name) ? String(p.name) : '',
+          department: (p && p.department) ? String(p.department) : '',
+          updatedAt: (p && p.updatedAt) ? Number(p.updatedAt) : 0
+        };
+      } catch (e) {
+        return { name: '', department: '', updatedAt: 0 };
+      }
+    }
+
+    function saveLocalUserProfile(profile) {
+      try {
+        localStorage.setItem(USER_PROFILE_KEY, JSON.stringify({
+          name: profile.name || '',
+          department: profile.department || '',
+          updatedAt: profile.updatedAt || Date.now()
+        }));
+      } catch (e) {}
+    }
+
+    function getDepartmentLabel(deptCode, langCode = null) {
+      const l = (langCode || currentAppLang || 'es').toUpperCase();
+      const map = {
+        costume:     { ES: 'Vestuario', EN: 'Costume', PT: 'Figurino', IT: 'Costumi', DE: 'Kostüm', FR: 'Costumes' },
+        hair_makeup: { ES: 'Maquillaje / Peinado', EN: 'Hair / Makeup', PT: 'Maquiagem / Cabelo', IT: 'Trucco / Parrucco', DE: 'Maske / Haare', FR: 'Maquillage / Coiffure' },
+        props:       { ES: 'Props', EN: 'Props', PT: 'Props', IT: 'Oggetti di scena', DE: 'Requisite', FR: 'Accessoires' },
+        art:         { ES: 'Arte', EN: 'Art', PT: 'Arte', IT: 'Scenografia', DE: 'Szenenbild', FR: 'Décor' }
+      };
+      if (!deptCode || !map[deptCode]) return '';
+      return map[deptCode][l] || map[deptCode].ES;
+    }
+
+    function getFormattedProfileForPdf(langCode = 'ES') {
+      const p = getLocalUserProfile();
+      const dept = getDepartmentLabel(p.department, langCode);
+      if (dept && p.name) return `${dept} · ${p.name}`;
+      return p.name || dept || '';
+    }
+
+    const authModal = document.getElementById('auth-modal');
+    const authLoggedOutView = document.getElementById('auth-logged-out-view');
+    const authLoggedInView = document.getElementById('auth-logged-in-view');
+    const authUserEmailEl = document.getElementById('auth-user-email');
+    const authSyncPillEl = document.getElementById('auth-sync-pill');
+    const profileNameInput = document.getElementById('profile-name-input');
+    const profileDeptSelect = document.getElementById('profile-dept-select');
+    const homeMenuAccountLabel = document.getElementById('home-menu-account-label');
+    const homeMenuAccountStatus = document.getElementById('home-menu-account-status');
+
+    function updateCloudAccountUI() {
+      const profile = getLocalUserProfile();
+      if (currentCloudUser) {
+        authLoggedOutView?.classList.add('hidden');
+        authLoggedInView?.classList.remove('hidden');
+        if (authUserEmailEl) authUserEmailEl.textContent = currentCloudUser.email || currentCloudUser.displayName || 'Usuario';
+        if (profileNameInput) profileNameInput.value = profile.name || currentCloudUser.displayName || '';
+        if (profileDeptSelect) profileDeptSelect.value = profile.department || '';
+
+        const deptLabel = getDepartmentLabel(profile.department);
+        const displayName = profile.name || currentCloudUser.displayName || currentCloudUser.email || 'Cuenta';
+        if (homeMenuAccountLabel) homeMenuAccountLabel.textContent = displayName;
+        if (homeMenuAccountStatus) {
+          if (isCloudSyncing) {
+            homeMenuAccountStatus.textContent = 'Sincronizando...';
+            homeMenuAccountStatus.style.color = '#fb923c';
+          } else if (!navigator.onLine) {
+            homeMenuAccountStatus.textContent = 'Offline';
+            homeMenuAccountStatus.style.color = '#9ca3af';
+          } else {
+            homeMenuAccountStatus.textContent = deptLabel || 'En línea';
+            homeMenuAccountStatus.style.color = '#6ee7b7';
+          }
+        }
+        if (authSyncPillEl) {
+          if (isCloudSyncing) {
+            authSyncPillEl.textContent = 'Sincronizando...';
+          } else if (!navigator.onLine) {
+            authSyncPillEl.textContent = 'Sin señal (local)';
+          } else {
+            authSyncPillEl.textContent = 'En línea';
+          }
+        }
+      } else {
+        authLoggedOutView?.classList.remove('hidden');
+        authLoggedInView?.classList.add('hidden');
+        if (homeMenuAccountLabel) homeMenuAccountLabel.textContent = t('menu_cloud_account');
+        if (homeMenuAccountStatus) {
+          homeMenuAccountStatus.textContent = t('cloud_status_offline_short');
+          homeMenuAccountStatus.style.color = 'var(--amber)';
+        }
+      }
+    }
+
+    function openAuthModal() {
+      updateCloudAccountUI();
+      authModal?.classList.remove('hidden');
+    }
+
+    document.getElementById('home-menu-opt-account')?.addEventListener('click', () => {
+      closeHomeMenu();
+      openAuthModal();
+    });
+    document.getElementById('btn-close-auth-modal')?.addEventListener('click', () => authModal?.classList.add('hidden'));
+    authModal?.addEventListener('click', (e) => {
+      if (e.target === authModal) authModal.classList.add('hidden');
+    });
+
+    function scheduleCloudSync() {
+      if (!currentCloudUser || !navigator.onLine) return;
+      clearTimeout(cloudSyncDebounceTimer);
+      cloudSyncDebounceTimer = setTimeout(() => {
+        syncAllWithCloud({ silent: true });
+      }, 2500);
+    }
+
+    async function handleCloudSyncAction() {
+      if (!firebaseAuth || !firebaseDb) {
+        showToast('Firebase no disponible sin conexión');
+        return;
+      }
+      if (!currentCloudUser) {
+        openAuthModal();
+        return;
+      }
+      if (!navigator.onLine) {
+        showToast('Sin señal. Tus cambios están guardados en local.');
+        return;
+      }
+      await syncAllWithCloud({ silent: false });
+    }
+
+    document.getElementById('project-menu-opt-cloud-sync')?.addEventListener('click', async () => {
+      closeProjectMenu();
+      await handleCloudSyncAction();
+    });
+
+    document.getElementById('btn-sync-now')?.addEventListener('click', async () => {
+      await handleCloudSyncAction();
+    });
+
+    document.getElementById('btn-auth-google')?.addEventListener('click', async () => {
+      if (!firebaseAuth) return;
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await firebaseAuth.signInWithPopup(provider);
+      } catch (err) {
+        if (err && (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment')) {
+          await firebaseAuth.signInWithRedirect(provider);
+        } else {
+          showToast(err?.message || 'Error al iniciar sesión con Google');
+        }
+      }
+    });
+
+    document.getElementById('btn-auth-login')?.addEventListener('click', async () => {
+      if (!firebaseAuth) return;
+      const email = (document.getElementById('auth-email-input')?.value || '').trim();
+      const pass = document.getElementById('auth-password-input')?.value || '';
+      if (!email || !pass) { showToast('Ingresa correo y contraseña'); return; }
+      try {
+        await firebaseAuth.signInWithEmailAndPassword(email, pass);
+      } catch (err) {
+        showToast(err?.message || 'Error al iniciar sesión');
+      }
+    });
+
+    document.getElementById('btn-auth-register')?.addEventListener('click', async () => {
+      if (!firebaseAuth) return;
+      const email = (document.getElementById('auth-email-input')?.value || '').trim();
+      const pass = document.getElementById('auth-password-input')?.value || '';
+      if (!email || pass.length < 6) { showToast('Contraseña mínima de 6 caracteres'); return; }
+      try {
+        await firebaseAuth.createUserWithEmailAndPassword(email, pass);
+        showToast('Cuenta creada');
+      } catch (err) {
+        showToast(err?.message || 'Error al crear cuenta');
+      }
+    });
+
+    document.getElementById('btn-auth-logout')?.addEventListener('click', async () => {
+      if (!firebaseAuth) return;
+      await firebaseAuth.signOut();
+      authModal?.classList.add('hidden');
+      showToast('Sesión cerrada');
+    });
+
+    document.getElementById('btn-save-profile')?.addEventListener('click', async () => {
+      const nextProfile = {
+        name: (profileNameInput?.value || '').trim(),
+        department: profileDeptSelect?.value || '',
+        updatedAt: Date.now()
+      };
+      saveLocalUserProfile(nextProfile);
+      updateCloudAccountUI();
+      if (currentCloudUser && firebaseDb && navigator.onLine) {
+        try {
+          await firebaseDb.collection('users').doc(currentCloudUser.uid).collection('profile').doc('main').set(nextProfile);
+        } catch (e) {}
+      }
+      showToast('Perfil guardado');
+    });
+
+    async function ensurePhotoUnder1MB(dataUrl) {
+      if (!dataUrl || typeof dataUrl !== 'string') return null;
+      if (dataUrl.length <= MAX_FIRESTORE_IMAGE_BYTES) return dataUrl;
+      return await recompressDataUrl(dataUrl, 1000, 0.65);
+    }
+
+    async function uploadPhotoDoc(userRef, photoId, dataUrl, projectId, updatedAt) {
+      const safeDataUrl = await ensurePhotoUnder1MB(dataUrl);
+      if (!safeDataUrl || safeDataUrl.length > 1000000) return false;
+      await userRef.collection('photos').doc(photoId).set({
+        dataUrl: safeDataUrl,
+        projectId: projectId || null,
+        updatedAt: updatedAt || Date.now()
+      });
+      return true;
+    }
+
+    async function fetchPhotoDoc(userRef, photoId) {
+      if (!photoId) return null;
+      const snap = await userRef.collection('photos').doc(photoId).get();
+      if (!snap.exists) return null;
+      const d = snap.data();
+      return (d && d.dataUrl) ? d.dataUrl : null;
+    }
+
+    async function getAllLocalEntities(storeName) {
+      if (useFallbackStorage || !dbInstance || !dbInstance.objectStoreNames.contains(storeName)) {
+        return getFallbackList('rp_' + storeName);
+      }
+      return new Promise((resolve) => {
+        try {
+          const tx = dbInstance.transaction([storeName], 'readonly');
+          const req = tx.objectStore(storeName).getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => resolve(getFallbackList('rp_' + storeName));
+        } catch (e) {
+          resolve(getFallbackList('rp_' + storeName));
+        }
+      });
+    }
+
+    async function syncAllWithCloud({ silent = false } = {}) {
+      if (!currentCloudUser || !firebaseDb || !navigator.onLine || isCloudSyncing) return;
+      isCloudSyncing = true;
+      updateCloudAccountUI();
+      const userRef = firebaseDb.collection('users').doc(currentCloudUser.uid);
+
+      try {
+        // 1. Sync user profile
+        const localProfile = getLocalUserProfile();
+        const profSnap = await userRef.collection('profile').doc('main').get();
+        if (profSnap.exists) {
+          const cloudProf = profSnap.data() || {};
+          if ((cloudProf.updatedAt || 0) > (localProfile.updatedAt || 0)) {
+            saveLocalUserProfile(cloudProf);
+          } else if ((localProfile.updatedAt || 0) > (cloudProf.updatedAt || 0)) {
+            await userRef.collection('profile').doc('main').set(localProfile);
+          }
+        } else if (localProfile.name || localProfile.department) {
+          await userRef.collection('profile').doc('main').set(localProfile);
+        }
+
+        // 2. Push pending local deletes
+        const pendingDeletes = getCloudDeletes();
+        const remainingDeletes = [];
+        for (const del of pendingDeletes) {
+          try {
+            await userRef.collection(del.store).doc(del.id).set({
+              id: del.id,
+              projectId: del.projectId || null,
+              deletedAt: del.deletedAt,
+              updatedAt: del.deletedAt
+            }, { merge: true });
+          } catch (e) {
+            remainingDeletes.push(del);
+          }
+        }
+        setCloudDeletes(remainingDeletes);
+
+        const deletedMap = new Map();
+        pendingDeletes.forEach(d => deletedMap.set(`${d.store}:${d.id}`, d.deletedAt));
+
+        // 3. Sync collections (projects, scenes, characters, takes)
+        const stores = [STORE_PROJECTS, STORE_SCENES, STORE_CHARACTERS, STORE_TAKES];
+        const syncTs = Date.now();
+        let anyChange = false;
+
+        for (const storeName of stores) {
+          const [localList, cloudSnap] = await Promise.all([
+            getAllLocalEntities(storeName),
+            userRef.collection(storeName).get()
+          ]);
+
+          const localMap = new Map(localList.map(item => [item.id, item]));
+          const cloudMap = new Map();
+          cloudSnap.forEach(doc => cloudMap.set(doc.id, doc.data()));
+
+          // Push local -> cloud
+          for (const localItem of localList) {
+            const cloudItem = cloudMap.get(localItem.id);
+            const localUpdated = localItem.updatedAt || localItem.createdAt || 1;
+            const cloudUpdated = cloudItem ? (cloudItem.updatedAt || cloudItem.createdAt || 0) : 0;
+
+            if (cloudItem && cloudItem.deletedAt && cloudItem.deletedAt >= localUpdated) {
+              continue; // Cloud deleted more recently
+            }
+
+            if (!cloudItem || localUpdated > cloudUpdated) {
+              if (storeName === STORE_CHARACTERS) {
+                const payload = { ...localItem, updatedAt: localUpdated };
+                if (localItem.photo) {
+                  const photoId = `char_${localItem.id}`;
+                  await uploadPhotoDoc(userRef, photoId, localItem.photo, localItem.projectId, localUpdated);
+                  payload.photo = null;
+                  payload.photoId = photoId;
+                } else {
+                  payload.photo = null;
+                  payload.photoId = null;
+                }
+                await userRef.collection(STORE_CHARACTERS).doc(localItem.id).set(payload);
+              } else if (storeName === STORE_TAKES) {
+                const entries = getNormalizedPhotos(localItem);
+                const cloudEntries = [];
+                for (const entry of entries) {
+                  if (entry && entry.photo) {
+                    const photoId = `take_${localItem.id}_${entry.id}`;
+                    await uploadPhotoDoc(userRef, photoId, entry.photo, localItem.projectId, localUpdated);
+                    cloudEntries.push({ ...entry, photo: null, photoId });
+                  } else {
+                    cloudEntries.push({ ...entry, photo: null, photoId: null });
+                  }
+                }
+                const payload = { ...localItem, photo: null, photos: cloudEntries, updatedAt: localUpdated };
+                await userRef.collection(STORE_TAKES).doc(localItem.id).set(payload);
+              } else {
+                await userRef.collection(storeName).doc(localItem.id).set({ ...localItem, updatedAt: localUpdated });
+              }
+            }
+          }
+
+          // Pull cloud -> local
+          for (const [id, cloudItem] of cloudMap.entries()) {
+            const localItem = localMap.get(id);
+            const localDelAt = deletedMap.get(`${storeName}:${id}`) || 0;
+            const cloudUpdated = cloudItem.updatedAt || cloudItem.createdAt || 0;
+
+            if (cloudItem.deletedAt) {
+              if (localItem && cloudItem.deletedAt >= (localItem.updatedAt || localItem.createdAt || 0)) {
+                if (storeName === STORE_PROJECTS) {
+                  await deleteProjectFromDB(id, { skipCloudDelete: true });
+                } else {
+                  await deleteEntityFromDB(storeName, id, { markDirty: false, skipCloudDelete: true });
+                }
+                anyChange = true;
+              }
+              continue;
+            }
+
+            if (localDelAt >= cloudUpdated) continue;
+
+            const localUpdated = localItem ? (localItem.updatedAt || localItem.createdAt || 0) : 0;
+            if (!localItem || cloudUpdated > localUpdated) {
+              let itemToSave = { ...cloudItem };
+              if (storeName === STORE_CHARACTERS) {
+                if (cloudItem.photoId) {
+                  const dataUrl = await fetchPhotoDoc(userRef, cloudItem.photoId);
+                  itemToSave.photo = dataUrl || null;
+                }
+                delete itemToSave.photoId;
+              } else if (storeName === STORE_TAKES) {
+                const entries = Array.isArray(cloudItem.photos) ? cloudItem.photos : [];
+                const resolvedEntries = [];
+                for (const entry of entries) {
+                  if (entry && entry.photoId) {
+                    const dataUrl = await fetchPhotoDoc(userRef, entry.photoId);
+                    const cleanEntry = { ...entry, photo: dataUrl || null };
+                    delete cleanEntry.photoId;
+                    resolvedEntries.push(cleanEntry);
+                  } else {
+                    const cleanEntry = { ...entry };
+                    delete cleanEntry.photoId;
+                    resolvedEntries.push(cleanEntry);
+                  }
+                }
+                itemToSave.photos = resolvedEntries;
+                delete itemToSave.photo;
+              }
+              await saveEntityToDB(storeName, itemToSave, { markDirty: false });
+              anyChange = true;
+            }
+          }
+        }
+
+        // Mark all local projects as synced
+        const allProjects = await getAllProjectsFromDB();
+        allProjects.forEach(p => markProjectCloudSynced(p.id, syncTs));
+        refreshUnsavedBackupsBanner(allProjects);
+        if (anyChange) {
+          if (!viewProjects.classList.contains('hidden')) {
+            await renderProjects();
+          } else if (activeProjectId) {
+            await updateCatalogCaches();
+            await renderTakes();
+          }
+        } else if (!viewProjects.classList.contains('hidden')) {
+          await renderProjects();
+        }
+        if (!silent) showToast('Sincronizado con la nube');
+      } catch (err) {
+        console.error('Cloud sync error:', err);
+        if (!silent) showToast('Error al sincronizar con la nube');
+      } finally {
+        isCloudSyncing = false;
+        updateCloudAccountUI();
+      }
+    }
+
+    function initFirebaseCloud() {
+      if (typeof firebase === 'undefined') return;
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        firebaseAuth = firebase.auth();
+        firebaseDb = firebase.firestore();
+        firebaseAuth.onAuthStateChanged(async (user) => {
+          currentCloudUser = user || null;
+          updateCloudAccountUI();
+          if (currentCloudUser && navigator.onLine) {
+            await syncAllWithCloud({ silent: true });
+          }
+        });
+        window.addEventListener('online', () => {
+          updateCloudAccountUI();
+          if (currentCloudUser) syncAllWithCloud({ silent: true });
+        });
+        window.addEventListener('offline', () => {
+          updateCloudAccountUI();
+        });
+      } catch (e) {
+        console.warn('Firebase init warning:', e);
+      }
+    }
+
     /* AUTO-ACTUALIZACIÓN SILENCIOSA DE SERVICE WORKER */
     if ('serviceWorker' in navigator) {
       let refreshing = false;
@@ -9875,6 +10575,7 @@
       initLanguage();
       await initDB();
       await refreshBackupFolderLabel();
+      initFirebaseCloud();
       await showProjectsView();
     });
   </script>
